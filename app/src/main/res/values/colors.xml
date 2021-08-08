@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColor">@color/darkNavyBlue</color>
+    <color name="secondaryColor">@color/white</color>
+    <color name="darkPrimaryColor">@color/nearBlack</color>
+
+
+    <color name="darkGray">#5C5B5B</color>
+    <color name="gray">#B6A2AB</color>
+
+    <color name="darkNavyBlue">#14191F</color>
+
+    <color name="nearWhite">#FEFDFE</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="white_disable">#4DFFFFFF</color>
+
+    <color name="black">#FF000000</color>
+    <color name="nearBlack">#0E0E0E</color>
+</resources>

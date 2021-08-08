@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Music player</string>
+    <string name="main_toolbar_text">Enjoy The Music</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="all_title_tv">All Music</string>
+    <string name="like_title_tv">Liked</string>
+    <string name="recently_title_tv">Recently</string>
+    <string name="playlist_title_tv">PlayList</string>
+</resources>
