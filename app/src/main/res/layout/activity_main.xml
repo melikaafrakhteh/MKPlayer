@@ -1,104 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/nearWhite"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".views.activities.MainActivity">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/homeAppBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="360dp"
+        android:background="@color/darkNavyBlue"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/homeAppBarLayout"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/homeCollapsingToolbar"
             android:layout_width="match_parent"
-            android:layout_height="360dp"
+            android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark">
+            app:contentScrim="@color/darkNavyBlue"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:statusBarScrim="@color/darkNavyBlue">
 
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/homeCollapsingToolbar"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                app:contentScrim="@color/darkNavyBlue"
-                app:expandedTitleMarginEnd="64dp"
-                app:expandedTitleMarginStart="48dp"
-                android:background="@drawable/home_toolbar_shape"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:statusBarScrim="@color/darkNavyBlue">
+                android:background="@drawable/home_image_shape"
+                android:orientation="vertical">
 
-                <ImageView
+                <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/homeCoverImageIv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
+                    android:background="@color/white"
                     android:fitsSystemWindows="true"
+                    android:paddingBottom="24dp"
                     android:scaleType="centerCrop"
+                    android:src="@drawable/music"
                     app:layout_collapseMode="parallax"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:background="@drawable/home_toolbar_shape"
-                    tools:ignore="ContentDescription"
-                    tools:src="@drawable/music" />
+                    app:riv_corner_radius_bottom_left="48dp"
+                    app:riv_corner_radius_bottom_right="48dp"
+                    tools:ignore="ContentDescription" />
+            </LinearLayout>
 
-                <include
-                    android:id="@+id/mainCustomToolbar"
-                    layout="@layout/activity_main_toolbar" />
+            <include
+                android:id="@+id/homeCustomToolBar"
+                layout="@layout/activity_main_toolbar" />
 
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-        </com.google.android.material.appbar.AppBarLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/homeScrollView"
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/homeScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:paddingTop="2dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
+                android:id="@+id/homeChooseFragLinear"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="60dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="14dp"
+                android:background="@drawable/home_tab_shape"
+                android:orientation="horizontal"
+                android:padding="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/homeTabLayout"
+                <LinearLayout
+                    android:id="@+id/homeAllMusicLinear"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@drawable/home_tab_shape"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tabGravity="center"
-                    app:tabIndicatorHeight="0dp"
-                    app:tabMode ="fixed"
-                    app:tabPaddingEnd="10dp"
-                    app:tabPaddingStart="10dp"
-                    app:tabSelectedTextColor="@color/white"
-                    app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
-                    app:tabTextColor="@color/white_disable" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/homeViewPager"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/homeTabLayout" />
+                    <TextView
+                        android:id="@+id/homeAllMusicTextTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:fontFamily="@font/roboto"
+                        android:gravity="center_horizontal|bottom"
+                        android:paddingStart="8dp"
+                        android:paddingBottom="2dp"
+                        android:text="@string/all_title_tv"
+                        android:textColor="@color/white_disable"
+                        android:textSize="14sp" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <ImageView
+                        android:id="@+id/homeAllMusicCircleIv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="4dp"
+                        android:src="@drawable/ic_circle"
+                        android:visibility="gone"
+                        app:tint="@color/white"
+                        tools:ignore="ContentDescription" />
+                </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
+                <LinearLayout
+                    android:id="@+id/homeLikedLinear"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</LinearLayout>
+                    <TextView
+                        android:id="@+id/homeLikedTextTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:fontFamily="@font/roboto"
+                        android:gravity="center_horizontal|bottom"
+                        android:paddingBottom="2dp"
+                        android:text="@string/like_title_tv"
+                        android:textColor="@color/white_disable"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/homeLikedCircleIv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="4dp"
+                        android:src="@drawable/ic_circle"
+                        android:visibility="gone"
+                        app:tint="@color/white"
+                        tools:ignore="ContentDescription" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/homeRecentlyLinear"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/homeRecentlyTextTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:fontFamily="@font/roboto"
+                        android:gravity="center_horizontal|bottom"
+                        android:paddingBottom="2dp"
+                        android:text="@string/recently_title_tv"
+                        android:textColor="@color/white_disable"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/homeRecentlycCircleIv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="4dp"
+                        android:src="@drawable/ic_circle"
+                        android:visibility="gone"
+                        app:tint="@color/white"
+                        tools:ignore="ContentDescription" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/homePlayListLinear"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/homePlayListTextTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:fontFamily="@font/roboto"
+                        android:gravity="center_horizontal|bottom"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="2dp"
+                        android:text="@string/playlist_title_tv"
+                        android:textColor="@color/white_disable"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/homePlayListCircleIv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="4dp"
+                        android:src="@drawable/ic_circle"
+                        android:visibility="gone"
+                        app:tint="@color/white"
+                        tools:ignore="ContentDescription" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/homeViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="80dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homeChooseFragLinear" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

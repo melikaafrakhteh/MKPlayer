@@ -12,9 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="36dp"
+        android:fontFamily="@font/roboto_bold"
         android:text="@string/all_title_tv"
         android:textColor="@color/darkNavyBlue"
-        android:textSize="36sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,11 +25,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/roboto"
+        android:paddingBottom="3dp"
         android:text="123 songs"
         android:textColor="@color/gray"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/allFragmentTitleTv"
         app:layout_constraintStart_toEndOf="@+id/allFragmentTitleTv" />
 
@@ -45,6 +46,5 @@
         app:layout_constraintTop_toBottomOf="@+id/allFragmentTitleTv"
         tools:itemCount="1"
         tools:listitem="@layout/music_item_row" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

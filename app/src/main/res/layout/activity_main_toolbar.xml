@@ -7,7 +7,6 @@
     android:layout_height="?attr/actionBarSize"
     android:id="@+id/toolbar"
     app:layout_collapseMode="pin"
-    android:visibility="invisible"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     android:background="@color/darkNavyBlue">
 

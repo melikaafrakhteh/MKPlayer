@@ -1,20 +1,21 @@
 package com.afrakhteh.musicplayer.views.adapter
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.afrakhteh.musicplayer.views.fragments.AllMusicFragment
 import com.afrakhteh.musicplayer.views.fragments.LikedFragment
 import com.afrakhteh.musicplayer.views.fragments.PlayListFragment
 import com.afrakhteh.musicplayer.views.fragments.RecentlyFragment
 
-class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class ViewPagerAdapter(activity: AppCompatActivity, val fragmentNumber: Int) : FragmentStateAdapter(activity) {
 
-    override fun getCount(): Int {
-        return 4
+
+    override fun getItemCount(): Int {
+        return fragmentNumber
     }
 
-    override fun getItem(position: Int): Fragment {
+    override fun createFragment(position: Int): Fragment {
         when (position) {
             0 -> {
                 return AllMusicFragment()
@@ -30,15 +31,5 @@ class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
             }
         }
         return AllMusicFragment()
-    }
-
-    override fun getPageTitle(position: Int): CharSequence? {
-        when (position) {
-            0 -> return "All"
-            1 -> return "Liked"
-            2 -> return "Recently"
-            3 -> return "PlayList"
-        }
-        return null
     }
 }

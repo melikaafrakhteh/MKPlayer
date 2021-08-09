@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="90dp"
     android:orientation="horizontal">
 
-    <androidx.cardview.widget.CardView
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/musicItemRowImageIv"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="8dp"
-        app:cardCornerRadius="10dp">
-
-        <ImageView
-            android:id="@+id/musicItemRowImageIv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:src="@drawable/error" />
-    </androidx.cardview.widget.CardView>
+        android:scaleType="fitXY"
+        android:src="@drawable/error"
+        app:riv_corner_radius="20dp"
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
@@ -34,9 +31,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+            android:fontFamily="@font/roboto"
             android:text="spring"
             android:textColor="@color/darkNavyBlue"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -44,9 +42,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+            android:fontFamily="@font/roboto"
             android:text="Rammestein"
             android:textColor="@color/gray"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <ImageView
@@ -55,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_dots"
+        android:src="@drawable/ic_item_menu"
         tools:ignore="ContentDescription" />
 
 </LinearLayout>
