@@ -1,11 +1,10 @@
 package com.afrakhteh.musicplayer.views.activities
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.viewpager.widget.ViewPager
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import android.view.WindowManager
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Constants
 import com.afrakhteh.musicplayer.databinding.ActivityMainBinding
@@ -24,11 +23,10 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = this
-
+        removeStatusBar()
         bindingSetUp()
         defaultPage()
         setUpToolBar()
-        removeStatusBar()
         buttonClick()
        setUpViewPager()
     }
@@ -103,7 +101,7 @@ class MainActivity : BaseActivity() {
 
 
     private fun setUpViewPager() {
-        binding.homeViewPager.adapter = ViewPagerAdapter(this,Constants.FRAGMENTS_NUMBER)
+        binding.homeViewPager.adapter = ViewPagerAdapter(this, Constants.FRAGMENTS_NUMBER)
         binding.homeScrollView.isFillViewport = true
     }
 
@@ -112,7 +110,7 @@ class MainActivity : BaseActivity() {
         binding.homeAppBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
 
             val scroll = -(verticalOffset)
-           // Toast.makeText(context, scroll.toString(), Toast.LENGTH_SHORT).show()
+            // Toast.makeText(context, scroll.toString(), Toast.LENGTH_SHORT).show()
             if (scroll >= 700) {
                 binding.homeCustomToolBar.toolbar.visibility = View.VISIBLE
             } else {
@@ -123,7 +121,14 @@ class MainActivity : BaseActivity() {
     }
 
     private fun removeStatusBar() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        if (Build.VERSION.SDK_INT < 16) {
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        } else {
+            val decorView = window.decorView
+            val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
+            decorView.systemUiVisibility = uiOptions
+        }
     }
 
     private fun bindingSetUp() {
