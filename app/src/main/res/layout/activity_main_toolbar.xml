@@ -10,15 +10,14 @@
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     android:background="@color/darkNavyBlue">
 
-    <ImageView
-        android:id="@+id/homeToolbarIv"
+    <TextView
+        android:id="@+id/homeToolbarTv"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:paddingStart="8dp"
         android:paddingEnd="4dp"
-        app:tint="@color/white_disable"
-        android:src="@drawable/ic_music"
+        android:background="@drawable/ic_music"
         tools:ignore="ContentDescription" />
 
 </androidx.appcompat.widget.Toolbar>

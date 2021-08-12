@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,7 +12,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/homeAppBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="wrap_content"
         android:background="@color/darkNavyBlue"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
@@ -38,11 +37,10 @@
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/homeCoverImageIv"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:background="@color/white"
                     android:fitsSystemWindows="true"
-                    android:paddingBottom="24dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/music"
                     app:layout_collapseMode="parallax"
@@ -53,11 +51,9 @@
                     app:riv_corner_radius_bottom_right="48dp"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
-
             <include
                 android:id="@+id/homeCustomToolBar"
                 layout="@layout/activity_main_toolbar" />
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -76,7 +72,7 @@
             <LinearLayout
                 android:id="@+id/homeChooseFragLinear"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="56dp"
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="14dp"
@@ -97,7 +93,7 @@
                     <TextView
                         android:id="@+id/homeAllMusicTextTv"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="38dp"
                         android:fontFamily="@font/roboto"
                         android:gravity="center_horizontal|bottom"
                         android:paddingStart="8dp"
@@ -128,7 +124,7 @@
                     <TextView
                         android:id="@+id/homeLikedTextTv"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="38dp"
                         android:fontFamily="@font/roboto"
                         android:gravity="center_horizontal|bottom"
                         android:paddingBottom="2dp"
@@ -158,7 +154,7 @@
                     <TextView
                         android:id="@+id/homeRecentlyTextTv"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="38dp"
                         android:fontFamily="@font/roboto"
                         android:gravity="center_horizontal|bottom"
                         android:paddingBottom="2dp"
@@ -188,7 +184,7 @@
                     <TextView
                         android:id="@+id/homePlayListTextTv"
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="38dp"
                         android:fontFamily="@font/roboto"
                         android:gravity="center_horizontal|bottom"
                         android:paddingEnd="8dp"
@@ -215,8 +211,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginTop="80dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

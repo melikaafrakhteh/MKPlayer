@@ -8,7 +8,8 @@ import com.afrakhteh.musicplayer.views.fragments.LikedFragment
 import com.afrakhteh.musicplayer.views.fragments.PlayListFragment
 import com.afrakhteh.musicplayer.views.fragments.RecentlyFragment
 
-class ViewPagerAdapter(activity: AppCompatActivity, val fragmentNumber: Int) : FragmentStateAdapter(activity) {
+class ViewPagerAdapter(activity: AppCompatActivity, val fragmentNumber: Int) :
+    FragmentStateAdapter(activity) {
 
 
     override fun getItemCount(): Int {
