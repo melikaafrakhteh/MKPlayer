@@ -51,6 +51,7 @@
                     app:riv_corner_radius_bottom_right="48dp"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
+
             <include
                 android:id="@+id/homeCustomToolBar"
                 layout="@layout/activity_main_toolbar" />

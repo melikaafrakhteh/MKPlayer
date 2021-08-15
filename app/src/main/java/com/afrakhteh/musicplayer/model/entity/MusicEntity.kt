@@ -1,9 +1,8 @@
 package com.afrakhteh.musicplayer.model.entity
 
 data class MusicEntity(
-        var musicName: String? = null,
-        var musicPath: String = "",
-        var musicSinger: String? = null,
-        var musicIndex: Int = 0
-) {
-}
+        var name: String? = null,
+        var path: String = "",
+        var artist: String? = null,
+        var index: Int = 0
+)
