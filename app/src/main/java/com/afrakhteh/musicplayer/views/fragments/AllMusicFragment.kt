@@ -34,13 +34,13 @@ class AllMusicFragment : Fragment() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        renderState(MusicState())
+        viewModel.state.observe(this,this::renderState)
+        viewModel.fetchAllMusic()
     }
     private fun renderState(state: MusicState){
-        viewModel.state.observe(this) { state ->
+       state.message?.ifNotHandled {
+           Toast.makeText(context,it,Toast.LENGTH_LONG).show()
+       }
 
-            Toast.makeText(context, state.musicItems.toString(), Toast.LENGTH_LONG).show()
-        }
-        viewModel.fetchAllMusic()
     }
 }
