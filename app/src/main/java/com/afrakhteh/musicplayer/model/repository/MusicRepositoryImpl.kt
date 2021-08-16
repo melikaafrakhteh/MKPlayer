@@ -5,11 +5,12 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@RepoScope
 class MusicRepositoryImpl @Inject constructor(
         val context: Context
 ) : MusicRepository {

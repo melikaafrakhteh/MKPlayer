@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.afrakhteh.musicplayer.App
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
+import com.afrakhteh.musicplayer.di.builders.RepositoryComponentBuilder
 import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
 import com.afrakhteh.musicplayer.views.state.MusicState
 import javax.inject.Inject
@@ -29,7 +30,7 @@ class AllMusicFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
-        (context.applicationContext as App).component.inject(this)
+        RepositoryComponentBuilder.getInstance().inject(this)
         super.onAttach(context)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
