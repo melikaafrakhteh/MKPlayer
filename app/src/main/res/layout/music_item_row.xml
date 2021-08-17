@@ -3,8 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/musicItemRowLinear"
     android:layout_width="match_parent"
     android:layout_height="90dp"
+    android:padding="2dp"
     android:orientation="horizontal">
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -12,49 +14,52 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
         android:scaleType="fitXY"
-        android:src="@drawable/error"
-        app:riv_corner_radius="20dp"
+        android:src="@drawable/music"
+        app:riv_corner_radius="8dp"
         tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/musicItemRowNameTv"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:fontFamily="@font/roboto"
             android:text="spring"
             android:textColor="@color/darkNavyBlue"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:padding="2dp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
         <TextView
             android:id="@+id/musicItemRowSingerTv"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|bottom"
             android:fontFamily="@font/roboto"
             android:text="Rammestein"
             android:textColor="@color/gray"
-            android:textSize="18sp" />
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:padding="2dp"/>
     </LinearLayout>
 
     <ImageView
         android:id="@+id/musicItemRowImageMenuIv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_item_menu"
+        android:src="@drawable/ic_menu"
         tools:ignore="ContentDescription" />
 
 </LinearLayout>

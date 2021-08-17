@@ -14,6 +14,7 @@ import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.databinding.ActivityMainBinding
 import com.afrakhteh.musicplayer.views.adapter.ViewPagerAdapter
 import com.afrakhteh.musicplayer.views.base.BaseActivity
+import com.afrakhteh.musicplayer.views.fragments.AllMusicFragment
 import com.google.android.material.appbar.AppBarLayout
 
 
@@ -58,7 +59,7 @@ class MainActivity : BaseActivity() {
 
         //viewPager
         binding.homeViewPager.adapter = ViewPagerAdapter(this, Numerals.FRAGMENTS_NUMBER)
-        binding.homeScrollView.isFillViewport = true
+     //   binding.homeScrollView.isFillViewport = true
 
         buttonClick()
     }
@@ -96,7 +97,7 @@ class MainActivity : BaseActivity() {
         if (requestCode == Numerals.REQUEST_READ_STORAGE_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //permission granted
-                permissionGranted()
+                permissionGranted(true)
             } else {
                 Toast.makeText(context, "deny", Toast.LENGTH_LONG).show()
             }
@@ -104,8 +105,11 @@ class MainActivity : BaseActivity() {
 
     }
 
-    private fun permissionGranted() {
-
+    private fun permissionGranted(isGranted: Boolean) {
+        val activeFragment = supportFragmentManager.primaryNavigationFragment
+        if (activeFragment is AllMusicFragment) {
+            activeFragment.onPermissionGranted(isGranted)
+        }
     }
 
     private fun buttonClick() {
@@ -147,18 +151,22 @@ class MainActivity : BaseActivity() {
         when (item) {
             ALL_MUSIC_FRAGMENT -> {
                 binding.homeAllMusicTextTv.setTextColor(getColor(R.color.white))
+                binding.homeAllMusicTextTv.height = 34
                 binding.homeAllMusicCircleIv.visibility = View.VISIBLE
             }
             LIKED_FRAGMENT -> {
                 binding.homeLikedTextTv.setTextColor(getColor(R.color.white))
+                binding.homeLikedTextTv.height = 34
                 binding.homeLikedCircleIv.visibility = View.VISIBLE
             }
             RECENTLY_FRAGMENT -> {
                 binding.homeRecentlyTextTv.setTextColor(getColor(R.color.white))
+                binding.homeRecentlyTextTv.height = 34
                 binding.homeRecentlycCircleIv.visibility = View.VISIBLE
             }
             PLAY_LIST_FRAGMENT -> {
                 binding.homePlayListTextTv.setTextColor(getColor(R.color.white))
+                binding.homePlayListTextTv.height = 34
                 binding.homePlayListCircleIv.visibility = View.VISIBLE
             }
         }
@@ -168,18 +176,22 @@ class MainActivity : BaseActivity() {
         when (item) {
             ALL_MUSIC_FRAGMENT -> {
                 binding.homeAllMusicTextTv.setTextColor(getColor(R.color.white_disable))
+                binding.homeAllMusicTextTv.height = 44
                 binding.homeAllMusicCircleIv.visibility = View.GONE
             }
             LIKED_FRAGMENT -> {
                 binding.homeLikedTextTv.setTextColor(getColor(R.color.white_disable))
+                binding.homeLikedTextTv.height = 44
                 binding.homeLikedCircleIv.visibility = View.GONE
             }
             RECENTLY_FRAGMENT -> {
                 binding.homeRecentlyTextTv.setTextColor(getColor(R.color.white_disable))
+                binding.homeRecentlyTextTv.height = 44
                 binding.homeRecentlycCircleIv.visibility = View.GONE
             }
             PLAY_LIST_FRAGMENT -> {
                 binding.homePlayListTextTv.setTextColor(getColor(R.color.white_disable))
+                binding.homePlayListTextTv.height = 44
                 binding.homePlayListCircleIv.visibility = View.GONE
             }
         }
