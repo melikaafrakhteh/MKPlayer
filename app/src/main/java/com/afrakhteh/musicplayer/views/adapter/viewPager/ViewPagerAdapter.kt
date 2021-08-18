@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.adapter
+package com.afrakhteh.musicplayer.views.adapter.viewPager
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment

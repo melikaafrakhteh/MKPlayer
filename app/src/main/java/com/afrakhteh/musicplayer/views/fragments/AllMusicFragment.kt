@@ -13,7 +13,7 @@ import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.RepositoryComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
-import com.afrakhteh.musicplayer.views.adapter.AllMusicAdapter
+import com.afrakhteh.musicplayer.views.adapter.AllMusic.AllMusicAdapter
 import com.afrakhteh.musicplayer.views.state.MusicState
 import javax.inject.Inject
 

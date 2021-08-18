@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.databinding.ActivityMainBinding
-import com.afrakhteh.musicplayer.views.adapter.ViewPagerAdapter
+import com.afrakhteh.musicplayer.views.adapter.viewPager.ViewPagerAdapter
 import com.afrakhteh.musicplayer.views.base.BaseActivity
 import com.afrakhteh.musicplayer.views.fragments.AllMusicFragment
 import com.google.android.material.appbar.AppBarLayout
