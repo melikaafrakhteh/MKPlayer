@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/musicItemRowLinear"
     android:layout_width="match_parent"
     android:layout_height="90dp"
-    android:padding="2dp"
-    android:orientation="horizontal">
+    android:background="@drawable/home_select_item_ripple"
+    android:orientation="horizontal"
+    android:padding="2dp">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/musicItemRowImageIv"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_gravity="center_vertical"
+        android:paddingStart="3dp"
         android:scaleType="fitXY"
         android:src="@drawable/music"
         app:riv_corner_radius="8dp"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription,RtlSymmetry" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -32,26 +33,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:ellipsize="end"
             android:fontFamily="@font/roboto"
+            android:maxLines="1"
+            android:padding="2dp"
             android:text="spring"
             android:textColor="@color/darkNavyBlue"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:padding="2dp"
-            android:maxLines="1"
-            android:ellipsize="end"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/musicItemRowSingerTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
+            android:layout_marginTop="4dp"
             android:fontFamily="@font/roboto"
+            android:padding="2dp"
             android:text="Rammestein"
             android:textColor="@color/gray"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"
-            android:padding="2dp"/>
+            android:textSize="14sp" />
     </LinearLayout>
 
     <ImageView

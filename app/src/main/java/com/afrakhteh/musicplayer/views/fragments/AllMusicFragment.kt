@@ -1,6 +1,7 @@
 package com.afrakhteh.musicplayer.views.fragments
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -56,15 +57,14 @@ class AllMusicFragment : Fragment() {
         Toast.makeText(requireContext(), data.name, Toast.LENGTH_LONG).show()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderState(state: MusicState) {
         state.message?.ifNotHandled {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         }
-        musicAdapter.submitList(state.musicItems)
-        var number = state.musicItems.size
+        musicAdapter.submitList(ArrayList(state.musicItems))
+        val number = state.musicItems.size
         binding.allFragmentNumberTv.text = "$number songs"
-
-
     }
 
     fun onPermissionGranted(permission: Boolean){

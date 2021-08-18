@@ -4,7 +4,6 @@
     <color name="secondaryColor">@color/white</color>
     <color name="darkPrimaryColor">@color/nearBlack</color>
 
-
     <color name="darkGray">#5C5B5B</color>
     <color name="gray">#B6A2AB</color>
 
@@ -16,4 +15,10 @@
 
     <color name="black">#FF000000</color>
     <color name="nearBlack">#0E0E0E</color>
+
+    <color name="rippleApplied">#A7000000</color>
+    <color name="ripple">#E114191F</color>
+    
+    <color name="startShadow">#33000000</color>
+    <color name="middleShadow">#00000000</color>
 </resources>

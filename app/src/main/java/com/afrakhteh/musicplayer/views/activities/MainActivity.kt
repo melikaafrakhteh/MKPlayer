@@ -6,16 +6,18 @@ import android.content.pm.PackageManager
 import android.graphics.Point
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.viewpager2.widget.ViewPager2
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.databinding.ActivityMainBinding
 import com.afrakhteh.musicplayer.views.adapter.viewPager.ViewPagerAdapter
 import com.afrakhteh.musicplayer.views.base.BaseActivity
 import com.afrakhteh.musicplayer.views.fragments.AllMusicFragment
-import com.google.android.material.appbar.AppBarLayout
 
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
@@ -44,7 +46,6 @@ class MainActivity : BaseActivity() {
         selectChooseLinearFragmentItem(currentFragment)
         setUpUI()
         requestStoragePermission()
-
     }
 
     private fun setUpUI() {
@@ -55,20 +56,13 @@ class MainActivity : BaseActivity() {
 
         fixHomeCoverHeightSize()
 
-        binding.homeAppBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener(::setToolBarCollapsingAlpha))
-
         //viewPager
         binding.homeViewPager.adapter = ViewPagerAdapter(this, Numerals.FRAGMENTS_NUMBER)
-     //   binding.homeScrollView.isFillViewport = true
+        binding.homeViewPager.registerOnPageChangeCallback(ViewPagerCallBack())
 
         buttonClick()
     }
 
-    private fun setToolBarCollapsingAlpha(appBarLayout: AppBarLayout, verticalOffSet: Int) {
-        val offsetAlpha: Float = -(appBarLayout.y / appBarLayout.totalScrollRange)
-        binding.homeCustomToolBar.toolbar.alpha = 0 + offsetAlpha * +1
-        binding.homeCustomToolBar.homeToolbarTv.alpha = 0 + offsetAlpha * +1
-    }
 
     //already granted
     private fun hasReadStoragePermission() = ContextCompat
@@ -108,7 +102,7 @@ class MainActivity : BaseActivity() {
     private fun permissionGranted(isGranted: Boolean) {
         val activeFragment = supportFragmentManager.primaryNavigationFragment
         if (activeFragment is AllMusicFragment) {
-            activeFragment.onPermissionGranted(isGranted)
+            activeFragment.run { onPermissionGranted(isGranted) }
         }
     }
 
@@ -122,93 +116,85 @@ class MainActivity : BaseActivity() {
     private fun allMusicViews(view: View) {
         binding.homeViewPager.currentItem = 0
         deSelectChooseLinearFragmentItem(currentFragment)
-        currentFragment = ALL_MUSIC_FRAGMENT
         selectChooseLinearFragmentItem(currentFragment)
     }
 
     private fun likedViews(view: View) {
         binding.homeViewPager.currentItem = 1
         deSelectChooseLinearFragmentItem(currentFragment)
-        currentFragment = LIKED_FRAGMENT
         selectChooseLinearFragmentItem(currentFragment)
     }
 
     private fun recentlyViews(view: View) {
         binding.homeViewPager.currentItem = 2
         deSelectChooseLinearFragmentItem(currentFragment)
-        currentFragment = RECENTLY_FRAGMENT
         selectChooseLinearFragmentItem(currentFragment)
     }
 
     private fun playListViews(view: View) {
         binding.homeViewPager.currentItem = 3
         deSelectChooseLinearFragmentItem(currentFragment)
-        currentFragment = PLAY_LIST_FRAGMENT
         selectChooseLinearFragmentItem(currentFragment)
     }
 
     private fun selectChooseLinearFragmentItem(item: Int) {
-        when (item) {
-            ALL_MUSIC_FRAGMENT -> {
-                binding.homeAllMusicTextTv.setTextColor(getColor(R.color.white))
-                binding.homeAllMusicTextTv.height = 34
-                binding.homeAllMusicCircleIv.visibility = View.VISIBLE
-            }
-            LIKED_FRAGMENT -> {
-                binding.homeLikedTextTv.setTextColor(getColor(R.color.white))
-                binding.homeLikedTextTv.height = 34
-                binding.homeLikedCircleIv.visibility = View.VISIBLE
-            }
-            RECENTLY_FRAGMENT -> {
-                binding.homeRecentlyTextTv.setTextColor(getColor(R.color.white))
-                binding.homeRecentlyTextTv.height = 34
-                binding.homeRecentlycCircleIv.visibility = View.VISIBLE
-            }
-            PLAY_LIST_FRAGMENT -> {
-                binding.homePlayListTextTv.setTextColor(getColor(R.color.white))
-                binding.homePlayListTextTv.height = 34
-                binding.homePlayListCircleIv.visibility = View.VISIBLE
-            }
-        }
+        selectTab(getTabTextView(item), getTabCircle(item))
     }
 
     private fun deSelectChooseLinearFragmentItem(item: Int) {
-        when (item) {
-            ALL_MUSIC_FRAGMENT -> {
-                binding.homeAllMusicTextTv.setTextColor(getColor(R.color.white_disable))
-                binding.homeAllMusicTextTv.height = 44
-                binding.homeAllMusicCircleIv.visibility = View.GONE
-            }
-            LIKED_FRAGMENT -> {
-                binding.homeLikedTextTv.setTextColor(getColor(R.color.white_disable))
-                binding.homeLikedTextTv.height = 44
-                binding.homeLikedCircleIv.visibility = View.GONE
-            }
-            RECENTLY_FRAGMENT -> {
-                binding.homeRecentlyTextTv.setTextColor(getColor(R.color.white_disable))
-                binding.homeRecentlyTextTv.height = 44
-                binding.homeRecentlycCircleIv.visibility = View.GONE
-            }
-            PLAY_LIST_FRAGMENT -> {
-                binding.homePlayListTextTv.setTextColor(getColor(R.color.white_disable))
-                binding.homePlayListTextTv.height = 44
-                binding.homePlayListCircleIv.visibility = View.GONE
-            }
+        deSelectTab(getTabTextView(item), getTabCircle(item))
+    }
+
+    private fun selectTab(tv: TextView, circle: ImageView) {
+        tv.setTextColor(getColor(R.color.white))
+        circle.visibility = View.VISIBLE
+    }
+
+    private fun deSelectTab(tv: TextView, circle: ImageView) {
+        tv.setTextColor(getColor(R.color.white_disable))
+        circle.visibility = View.GONE
+    }
+
+    private fun getTabTextView(position: Int): TextView {
+        return when (position) {
+            ALL_MUSIC_FRAGMENT -> binding.homeAllMusicTextTv
+            LIKED_FRAGMENT -> binding.homeLikedTextTv
+            RECENTLY_FRAGMENT -> binding.homeRecentlyTextTv
+            else -> binding.homePlayListTextTv
+        }
+    }
+
+    private fun getTabCircle(position: Int): ImageView {
+        return when (position) {
+            ALL_MUSIC_FRAGMENT -> binding.homeAllMusicCircleIv
+            LIKED_FRAGMENT -> binding.homeLikedCircleIv
+            RECENTLY_FRAGMENT -> binding.homeRecentlyCircleIv
+            else -> binding.homePlayListCircleIv
         }
     }
 
     private fun fixHomeCoverHeightSize() {
-
         val display = windowManager.defaultDisplay
         val size = Point()
         display.getSize(size)
-        var width: Int = size.x
-        val height: Int = size.y
+        val width: Int = size.x
 
         binding.homeCoverImageIv.layoutParams.height = width
         binding.homeCoverImageIv.layoutParams.width = width
 
     }
 
+
+    private inner class ViewPagerCallBack : ViewPager2.OnPageChangeCallback() {
+
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+
+            deSelectTab(getTabTextView(currentFragment), getTabCircle(currentFragment))
+            currentFragment = position
+            selectTab(getTabTextView(currentFragment), getTabCircle(currentFragment))
+        }
+    }
 }
+
 

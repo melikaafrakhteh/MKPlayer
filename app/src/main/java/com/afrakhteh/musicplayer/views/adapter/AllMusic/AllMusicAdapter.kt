@@ -12,8 +12,8 @@ class AllMusicAdapter(
 ) : ListAdapter<MusicEntity, AllMusicViewHolder>(AllMusicDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllMusicViewHolder {
-        val inflate = LayoutInflater.from(parent.context)
-        val binding = MusicItemRowBinding.inflate(inflate, parent, false)
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = MusicItemRowBinding.inflate(inflater, parent, false)
         return AllMusicViewHolder(binding)
     }
 

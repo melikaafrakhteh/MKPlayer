@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="top"
+    android:paddingBottom="60dp"
     tools:context=".views.fragments.AllMusicFragment">
 
     <TextView
@@ -13,15 +13,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:paddingStart="2dp"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/roboto_bold"
+        android:paddingStart="2dp"
         android:text="@string/all_title_tv"
         android:textColor="@color/darkNavyBlue"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
 
     <TextView
         android:id="@+id/allFragmentNumberTv"
@@ -30,30 +31,31 @@
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto"
         android:paddingBottom="3dp"
-        tools:text="123 songs"
         android:textColor="@color/gray"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/allFragmentTitleTv"
-        app:layout_constraintStart_toEndOf="@+id/allFragmentTitleTv" />
+        app:layout_constraintStart_toEndOf="@+id/allFragmentTitleTv"
+        tools:text="123 songs" />
 
-    <ScrollView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/title_separator_shadow"
+        app:layout_constraintTop_toBottomOf="@id/allFragmentTitleTv" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allFragmentRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="90dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="16dp"
+        android:nestedScrollingEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allFragmentTitleTv">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/allFragmentRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            tools:itemCount="1"
-            tools:listitem="@layout/music_item_row" />
-    </ScrollView>
-
-
+        app:layout_constraintTop_toBottomOf="@+id/allFragmentTitleTv"
+        tools:itemCount="1"
+        tools:listitem="@layout/music_item_row" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

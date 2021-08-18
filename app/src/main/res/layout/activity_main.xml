@@ -51,50 +51,48 @@
                     app:riv_corner_radius_bottom_right="24dp"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
-
-            <include
-                android:id="@+id/homeCustomToolBar"
-                layout="@layout/activity_main_toolbar" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/homeScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            android:paddingTop="2dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/homeScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="2dp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-            <LinearLayout
-                android:id="@+id/homeChooseFragLinear"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/home_tab_shape"
-                android:orientation="horizontal"
-                android:padding="2dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:id="@+id/homeChooseFragLinear"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/home_tab_shape"
+            android:orientation="horizontal"
+            android:padding="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="DisableBaselineAlignment">
+
+            <RelativeLayout
+                android:id="@+id/homeAllMusicLinear"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <LinearLayout
-                    android:id="@+id/homeAllMusicLinear"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:weightSum="3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/homeAllMusicTextTv"
-                        android:layout_width="match_parent"
-                        android:layout_height="34dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto"
-                        android:gravity="center_horizontal|bottom"
-                        android:paddingStart="8dp"
-                        android:paddingBottom="2dp"
                         android:text="@string/all_title_tv"
                         android:textColor="@color/white_disable"
                         android:textSize="14sp" />
@@ -103,29 +101,32 @@
                         android:id="@+id/homeAllMusicCircleIv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
                         android:src="@drawable/ic_circle"
                         android:visibility="gone"
                         app:tint="@color/white"
                         tools:ignore="ContentDescription" />
                 </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/homeLikedLinear"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <LinearLayout
-                    android:id="@+id/homeLikedLinear"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/homeLikedTextTv"
-                        android:layout_width="match_parent"
-                        android:layout_height="34dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto"
-                        android:gravity="center_horizontal|bottom"
-                        android:paddingBottom="2dp"
                         android:text="@string/like_title_tv"
                         android:textColor="@color/white_disable"
                         android:textSize="14sp" />
@@ -134,61 +135,66 @@
                         android:id="@+id/homeLikedCircleIv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
                         android:src="@drawable/ic_circle"
                         android:visibility="gone"
                         app:tint="@color/white"
                         tools:ignore="ContentDescription" />
                 </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/homeRecentlyLinear"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <LinearLayout
-                    android:id="@+id/homeRecentlyLinear"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/homeRecentlyTextTv"
-                        android:layout_width="match_parent"
-                        android:layout_height="34dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto"
-                        android:gravity="center_horizontal|bottom"
-                        android:paddingBottom="2dp"
                         android:text="@string/recently_title_tv"
                         android:textColor="@color/white_disable"
                         android:textSize="14sp" />
 
                     <ImageView
-                        android:id="@+id/homeRecentlycCircleIv"
+                        android:id="@+id/homeRecentlyCircleIv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
                         android:src="@drawable/ic_circle"
                         android:visibility="gone"
                         app:tint="@color/white"
                         tools:ignore="ContentDescription" />
                 </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/homePlayListLinear"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <LinearLayout
-                    android:id="@+id/homePlayListLinear"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/homePlayListTextTv"
-                        android:layout_width="match_parent"
-                        android:layout_height="34dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto"
-                        android:gravity="center_horizontal|bottom"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="2dp"
                         android:text="@string/playlist_title_tv"
                         android:textColor="@color/white_disable"
                         android:textSize="14sp" />
@@ -197,25 +203,26 @@
                         android:id="@+id/homePlayListCircleIv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
                         android:src="@drawable/ic_circle"
                         android:visibility="gone"
                         app:tint="@color/white"
                         tools:ignore="ContentDescription" />
                 </LinearLayout>
-            </LinearLayout>
+            </RelativeLayout>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/homeViewPager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/homeChooseFragLinear" />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/homeViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/homeChooseFragLinear" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
