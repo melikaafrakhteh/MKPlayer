@@ -9,9 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.RepositoryComponentBuilder
+import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
 import com.afrakhteh.musicplayer.views.adapter.AllMusic.AllMusicAdapter
@@ -21,11 +26,14 @@ import javax.inject.Inject
 class AllMusicFragment : Fragment() {
 
     private lateinit var binding: FragmentAllMusicBinding
+
     @Inject
-    lateinit var viewModel: MainActivityViewModel
+    lateinit var providerFactory: ViewModelProvider.Factory
+
+    private val viewModel: MainActivityViewModel by viewModels{ providerFactory}
 
     private lateinit var musicAdapter: AllMusicAdapter
-    private var musicList: List<MusicEntity> = listOf()
+
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -36,25 +44,32 @@ class AllMusicFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
-        RepositoryComponentBuilder.getInstance().inject(this)
+        ViewModelComponentBuilder.getInstance().inject(this)
         super.onAttach(context)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initialiseView()
+        initialiseViewModel()
+    }
+
+    private fun initialiseView() {
         musicAdapter = AllMusicAdapter(this::onMusicItemClicked)
         binding.allFragmentRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = musicAdapter
         }
-        viewModel.state.observe(requireActivity(), this::renderState)
-        viewModel.fetchAllMusic()
     }
 
     private fun onMusicItemClicked(data: MusicEntity) {
         Toast.makeText(requireContext(), data.name, Toast.LENGTH_LONG).show()
+    }
+
+    private fun initialiseViewModel() {
+        viewModel.state.observe(requireActivity(), this::renderState)
+        viewModel.fetchAllMusic()
     }
 
     @SuppressLint("SetTextI18n")
@@ -67,8 +82,8 @@ class AllMusicFragment : Fragment() {
         binding.allFragmentNumberTv.text = "$number songs"
     }
 
-    fun onPermissionGranted(permission: Boolean){
-        if (permission){
+    fun onPermissionGranted(permission: Boolean) {
+        if (permission) {
             viewModel.state.observe(requireActivity(), this::renderState)
             viewModel.fetchAllMusic()
         }
