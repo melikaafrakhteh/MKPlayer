@@ -2,12 +2,8 @@ package com.afrakhteh.musicplayer.di.components
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import com.afrakhteh.musicplayer.App
 import com.afrakhteh.musicplayer.di.modules.ApplicationModule
-import com.afrakhteh.musicplayer.di.modules.MainViewModelModule
-import com.afrakhteh.musicplayer.di.modules.ViewModelFactoryModule
-import com.afrakhteh.musicplayer.viewModel.ViewModelProviderFactory
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -15,7 +11,6 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [ApplicationModule::class])
-
 interface ApplicationComponent : AndroidInjector<App> {
 
     fun exposeContext(): Context

@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.adapter.viewPager
+package com.afrakhteh.musicplayer.views.adapters.viewPager
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -9,7 +9,7 @@ import com.afrakhteh.musicplayer.views.fragments.PlayListFragment
 import com.afrakhteh.musicplayer.views.fragments.RecentlyFragment
 
 class ViewPagerAdapter(activity: AppCompatActivity, private val fragmentNumber: Int) :
-        FragmentStateAdapter(activity) {
+    FragmentStateAdapter(activity) {
 
 
     override fun getItemCount(): Int {

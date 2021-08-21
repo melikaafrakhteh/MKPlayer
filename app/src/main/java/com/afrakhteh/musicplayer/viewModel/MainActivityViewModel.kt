@@ -1,7 +1,5 @@
 package com.afrakhteh.musicplayer.viewModel
 
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +10,7 @@ import com.afrakhteh.musicplayer.views.state.MusicState
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject constructor(
-        private var repository: MusicRepository
+    private var repository: MusicRepository
 ) : ViewModel() {
     private val pState = MutableLiveData(MusicState())
     val state: LiveData<MusicState> get() = pState
@@ -21,9 +19,9 @@ class MainActivityViewModel @Inject constructor(
         try {
             val resultList: List<MusicEntity> = repository.getAllMusic()
             pState.value = state.value?.copy(musicItems = resultList)
-        }catch (e: Exception){
-            pState.value = state.value?.copy(message = SingleEvent("There was an error while receiving the musics"))
+        } catch (e: Exception) {
+            pState.value =
+                state.value?.copy(message = SingleEvent("There was an error while receiving the musics"))
         }
     }
-
 }

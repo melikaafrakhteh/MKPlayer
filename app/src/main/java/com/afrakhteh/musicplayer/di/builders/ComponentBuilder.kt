@@ -6,9 +6,9 @@ abstract class ComponentBuilder<C> {
 
     fun getInstance(): C {
         if (instance == null) {
-           instance = provideInstance()
+            instance = provideInstance()
         }
-     return requireNotNull(instance)
+        return requireNotNull(instance)
     }
 
     abstract fun provideInstance(): C

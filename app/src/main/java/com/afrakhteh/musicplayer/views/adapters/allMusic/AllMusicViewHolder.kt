@@ -1,11 +1,11 @@
-package com.afrakhteh.musicplayer.views.adapter.AllMusic
+package com.afrakhteh.musicplayer.views.adapters.allMusic
 
 import androidx.recyclerview.widget.RecyclerView
 import com.afrakhteh.musicplayer.databinding.MusicItemRowBinding
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 
 class AllMusicViewHolder(private val binding: MusicItemRowBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(data: MusicEntity, click: (MusicEntity) -> Unit) {
         with(binding) {

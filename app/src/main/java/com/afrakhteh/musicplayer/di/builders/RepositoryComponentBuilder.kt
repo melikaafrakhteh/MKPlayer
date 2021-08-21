@@ -1,7 +1,5 @@
 package com.afrakhteh.musicplayer.di.builders
 
-
-
 import com.afrakhteh.musicplayer.di.components.DaggerRepositoryComponent
 import com.afrakhteh.musicplayer.di.components.RepositoryComponent
 
@@ -10,7 +8,7 @@ object RepositoryComponentBuilder :
 
     override fun provideInstance(): RepositoryComponent {
         return DaggerRepositoryComponent.builder()
-                .applicationComponent(ApplicationComponentBuilder.getInstance())
-                .build()
+            .applicationComponent(ApplicationComponentBuilder.getInstance())
+            .build()
     }
 }

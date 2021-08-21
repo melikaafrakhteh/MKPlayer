@@ -18,7 +18,9 @@
 
     <color name="rippleApplied">#A7000000</color>
     <color name="ripple">#E114191F</color>
-    
+
     <color name="startShadow">#33000000</color>
     <color name="middleShadow">#00000000</color>
+
+    <color name="red">#B60102</color>
 </resources>

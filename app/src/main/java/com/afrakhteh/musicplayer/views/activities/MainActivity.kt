@@ -9,22 +9,24 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.databinding.ActivityMainBinding
-import com.afrakhteh.musicplayer.views.adapter.viewPager.ViewPagerAdapter
-import com.afrakhteh.musicplayer.views.base.BaseActivity
-import com.afrakhteh.musicplayer.views.fragments.AllMusicFragment
+import com.afrakhteh.musicplayer.views.adapters.viewPager.ViewPagerAdapter
+import com.afrakhteh.musicplayer.views.interfaces.PermissionController
 
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
-class MainActivity : BaseActivity() {
+class MainActivity : AppCompatActivity(), PermissionController {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var context: Context
+
+    private var permissionRequestCallBack: (Boolean) -> Unit = {}
 
     private var currentFragment: Int = 10
 
@@ -45,7 +47,6 @@ class MainActivity : BaseActivity() {
         currentFragment = ALL_MUSIC_FRAGMENT
         selectChooseLinearFragmentItem(currentFragment)
         setUpUI()
-        requestStoragePermission()
     }
 
     private fun setUpUI() {
@@ -63,47 +64,48 @@ class MainActivity : BaseActivity() {
         buttonClick()
     }
 
-
     //already granted
     private fun hasReadStoragePermission() = ContextCompat
-            .checkSelfPermission(
-                    this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
+        .checkSelfPermission(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
 
     private fun requestStoragePermission() {
         if (!hasReadStoragePermission()) {
             ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    Numerals.REQUEST_READ_STORAGE_CODE
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                Numerals.REQUEST_READ_STORAGE_CODE
             )
         }
     }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == Numerals.REQUEST_READ_STORAGE_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //permission granted
-                permissionGranted(true)
+                permissionRequestCallBack.invoke(true)
             } else {
                 Toast.makeText(context, "deny", Toast.LENGTH_LONG).show()
+                permissionRequestCallBack.invoke(false)
             }
         }
 
     }
 
-    private fun permissionGranted(isGranted: Boolean) {
-        val activeFragment = supportFragmentManager.primaryNavigationFragment
-        if (activeFragment is AllMusicFragment) {
-            activeFragment.run { onPermissionGranted(isGranted) }
-        }
+    override fun requestPermission() {
+        requestStoragePermission()
+    }
+
+    override fun setOnPermissionRequestCallBack(callBack: (Boolean) -> Unit) {
+        permissionRequestCallBack = callBack
     }
 
     private fun buttonClick() {
@@ -184,7 +186,6 @@ class MainActivity : BaseActivity() {
 
     }
 
-
     private inner class ViewPagerCallBack : ViewPager2.OnPageChangeCallback() {
 
         override fun onPageSelected(position: Int) {
@@ -195,6 +196,7 @@ class MainActivity : BaseActivity() {
             selectTab(getTabTextView(currentFragment), getTabCircle(currentFragment))
         }
     }
+
 }
 
 

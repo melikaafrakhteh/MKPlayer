@@ -8,7 +8,6 @@ import android.provider.MediaStore
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @RepoScope
 class MusicRepositoryImpl @Inject constructor(
@@ -58,7 +57,7 @@ class MusicRepositoryImpl @Inject constructor(
     }
 
     private fun checkValidMusicPath(path: String): Boolean {
-        return path != null && (path.endsWith(".aac")
+        return (path.endsWith(".aac")
                 || path.endsWith(".mp3")
                 || path.endsWith(".wav")
                 || path.endsWith(".ogg")

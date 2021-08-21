@@ -9,5 +9,5 @@ import dagger.Module
 interface RepositoryModule {
 
     @Binds
-    fun bindRepository(repo: MusicRepositoryImpl):MusicRepository
+    fun bindRepository(repo: MusicRepositoryImpl): MusicRepository
 }

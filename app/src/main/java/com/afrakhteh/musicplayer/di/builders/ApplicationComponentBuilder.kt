@@ -7,13 +7,11 @@ import com.afrakhteh.musicplayer.di.components.DaggerApplicationComponent
 object ApplicationComponentBuilder :
     ComponentBuilder<ApplicationComponent>() {
 
-     lateinit var app: Application
+    lateinit var app: Application
 
     override fun provideInstance(): ApplicationComponent {
         return DaggerApplicationComponent.builder()
             .bindApplication(app)
             .build()
     }
-
-
 }
