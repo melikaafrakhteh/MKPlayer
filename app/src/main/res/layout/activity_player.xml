@@ -1,8 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.activities.PlayerActivity">
+    android:background="@color/primaryColor"
+    android:orientation="horizontal"
+    android:weightSum="4"
+    tools:context=".views.activities.PlayerActivity"
+    tools:ignore="DisableBaselineAlignment">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/playBackIv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="24dp"
+                android:src="@drawable/ic_back"
+                tools:ignore="ContentDescription" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/playMusicCoverIv"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="24dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/error"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:riv_corner_radius="50dp" />
+
+        <TextView
+            android:id="@+id/playMusicArtistTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/roboto"
+            android:gravity="start"
+            android:text="Trees of Eternity"
+            android:textColor="@color/gray"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/playMusicCoverIv"
+            app:layout_constraintTop_toTopOf="@+id/playMusicCoverIv" />
+
+        <TextView
+            android:id="@+id/playMusicNameTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Broken Mirror"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/playMusicCoverIv"
+            app:layout_constraintStart_toEndOf="@+id/playMusicCoverIv"
+            app:layout_constraintTop_toBottomOf="@+id/playMusicArtistTv" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/play_shadow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/playMusicNameTv" />
+
+        <TextView
+            android:id="@+id/playMusicDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="4:08"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <ProgressBar
+            android:id="@+id/playProgressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="8dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="140dp"
+            android:max="90"
+            android:progress="30"
+            android:progressDrawable="@drawable/custom_seekbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/playVolume"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_below="@id/playProgressBar"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:paddingStart="4dp"
+            android:src="@drawable/ic_volume_down"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playProgressBar"
+            tools:ignore="ContentDescription,RtlSymmetry" />
+
+        <ImageView
+            android:id="@+id/playRewindBtnIv"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignTop="@id/playToggleBtn"
+            android:layout_marginBottom="24dp"
+            android:src="@drawable/ic_rewind_button"
+            app:layout_constraintBottom_toTopOf="@+id/playForwardBtnIv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/playForwardBtnIv"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignTop="@id/playToggleBtn"
+            android:layout_marginBottom="24dp"
+            android:src="@drawable/ic_forward_button"
+            app:layout_constraintBottom_toTopOf="@+id/playToggleBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <ToggleButton
+            android:id="@+id/playToggleBtn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/play_button_selector"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
