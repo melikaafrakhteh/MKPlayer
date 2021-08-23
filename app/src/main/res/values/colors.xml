@@ -8,7 +8,7 @@
     <color name="gray">#CDCACA</color>
 
     <color name="darkNavyBlue">#14191F</color>
-    <color name="shadowNavyBlue">#B214191F</color>
+    <color name="shadowNavyBlue">#252B30</color>
 
     <color name="nearWhite">#FEFDFE</color>
     <color name="white">#FFFFFFFF</color>
@@ -24,4 +24,6 @@
     <color name="middleShadow">#00000000</color>
 
     <color name="red">#B60102</color>
+
+    <color name="disableBlue">#191F26</color>
 </resources>
