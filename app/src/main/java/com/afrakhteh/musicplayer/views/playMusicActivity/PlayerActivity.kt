@@ -1,9 +1,13 @@
-package com.afrakhteh.musicplayer.views.activities
+package com.afrakhteh.musicplayer.views.playMusicActivity
+
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
+import com.afrakhteh.musicplayer.model.dataSource.AudioWaveDataSource
+import com.afrakhteh.musicplayer.util.getScreenSize
+import java.io.File
 
 
 class PlayerActivity : AppCompatActivity() {
@@ -20,9 +24,9 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //test
-        val list: ArrayList<Int> = arrayListOf(1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 42, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-                42, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 42, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
-        binding.playWave.showWaves(list)
+        val file = File("android.resource://com.afrakhteh.musicplayer/raw/sample")
+        val list: ArrayList<Int> = AudioWaveDataSource().audioSampleRate(file)
+        binding.playWave.showWaves(list, getScreenSize().y)
 
         buttonClicks()
     }
@@ -54,6 +58,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun backButton(view: View?) {
         //back to main activity
     }
+
 
 }
 

@@ -7,7 +7,7 @@
     android:background="@color/nearWhite"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".views.activities.MainActivity">
+    tools:context=".views.mainActivity.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/homeAppBarLayout"

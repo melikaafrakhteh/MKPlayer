@@ -7,7 +7,7 @@
     android:background="@color/primaryColor"
     android:orientation="horizontal"
     android:weightSum="4"
-    tools:context=".views.activities.PlayerActivity"
+    tools:context=".views.playMusicActivity.PlayerActivity"
     tools:ignore="DisableBaselineAlignment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="56dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -70,16 +70,6 @@
             app:layout_constraintStart_toEndOf="@+id/playMusicCoverIv"
             app:layout_constraintTop_toBottomOf="@+id/playMusicArtistTv" />
 
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/play_shadow"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/playMusicNameTv" />
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -89,12 +79,33 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/playMusicNameTv">
 
-            <com.afrakhteh.musicplayer.views.customs.WaveView
+            <com.afrakhteh.musicplayer.views.playMusicActivity.customs.WaveView
                 android:id="@+id/playWave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
         </ScrollView>
+
+        <View
+            android:id="@+id/playTopShadow"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/play_shadow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/playMusicNameTv" />
+
+        <View
+            android:id="@+id/playBottomShadow"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/play_shadow"
+            android:rotationX="180"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/playMusicDuration"

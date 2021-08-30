@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.customs
+package com.afrakhteh.musicplayer.views.playMusicActivity.customs
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,29 +6,29 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.util.toPx
 
 @SuppressLint("ViewConstructor")
-@Suppress("DEPRECATION")
 class WaveItem(
         context: Context,
         private val height: Float,
-        private val activePercents: Int,
+        private val activePercentsRect: Int,
         private val isActive: Boolean
 ) : View(context) {
 
     private val baseColor = Paint().apply {
         isAntiAlias = true
-        color = resources.getColor(R.color.disableBlue)
+        color = ContextCompat.getColor(context, R.color.disableBlue)
     }
     private val activeColor = Paint().apply {
         isAntiAlias = true
-        color = resources.getColor(R.color.red)
+        color = ContextCompat.getColor(context, R.color.red)
     }
     private val notActiveColor = Paint().apply {
         isAntiAlias = true
-        color = resources.getColor(R.color.shadowNavyBlue)
+        color = ContextCompat.getColor(context, R.color.shadowNavyBlue)
     }
 
     init {
@@ -43,9 +43,10 @@ class WaveItem(
         canvas?.drawRect(rect!!, baseColor)
         rect = null
 
-        var activePercent: RectF? = RectF(0f, 0f, (width * activePercents) / 100f, height.toPx)
-        isActiveWave(activePercent, canvas)
-        activePercent = null
+        var activePercentRect: RectF? = RectF(0f, 0f,
+                (width * activePercentsRect) / 100f, height.toPx)
+        isActiveWave(activePercentRect, canvas)
+        activePercentRect = null
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -57,16 +58,12 @@ class WaveItem(
 
     }
 
-    private fun isActiveWave(activePercent: RectF?, canvas: Canvas?): Boolean {
+    private fun isActiveWave(activePercent: RectF?, canvas: Canvas?) {
+        // true -> show Color red otherwise disable wave
         if (isActive) {
-            // true -> show Color red
             canvas?.drawRect(activePercent!!, activeColor)
-            return true
-
-        } else {
-            //false -> disable wave
-            canvas?.drawRect(activePercent!!, notActiveColor)
-            return false
+            return
         }
+        canvas?.drawRect(activePercent!!, notActiveColor)
     }
 }
