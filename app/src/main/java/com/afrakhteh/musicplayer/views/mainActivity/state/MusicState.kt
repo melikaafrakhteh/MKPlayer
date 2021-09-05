@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.state
+package com.afrakhteh.musicplayer.views.mainActivity.state
 
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import com.afrakhteh.musicplayer.util.SingleEvent

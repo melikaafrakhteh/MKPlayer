@@ -1,11 +1,11 @@
 package com.afrakhteh.musicplayer.model.dataSource
 
-import android.content.Context
 import android.media.MediaCodec
 import android.media.MediaExtractor
 import android.media.MediaFormat
-import com.afrakhteh.musicplayer.util.getScreenWidth
+import android.util.Log
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.lang.Math.sqrt
@@ -19,7 +19,7 @@ class AudioWaveDataSource {
 
     companion object {
         val SUPPORTED_EXT =
-                arrayOf("mp3", "wav", "3gpp", "3gp", "amr", "aac", "m4a", "ogg")
+                listOf("mp3", "wav", "3gpp", "3gp", "amr", "aac", "m4a", "ogg")
 
         private const val SHORT_RECORD_DP_PER_SECOND = 25f
         private const val QUEUE_INPUT_BUFFER_EFFECTIVE = 1
@@ -29,35 +29,38 @@ class AudioWaveDataSource {
     }
 
     private lateinit var extractor: MediaExtractor
-    lateinit var format: MediaFormat
+
+    //  lateinit var format: MediaFormat
+    var format: MediaFormat? = null
     private lateinit var decoder: MediaCodec
     private lateinit var gains: ArrayList<Int>
-    private var dpPerSec: Float = SHORT_RECORD_DP_PER_SECOND
     private var sampleRate = 0
     private var channelCount = 0
     private lateinit var oneFrameAmps: IntArray
     private var frameIndex = 0
     private var duration: Long = 0
 
-    fun readAudio(context: Context, path: String, decodingListener: AudioDecodingListener) {
+    fun readAudio(path: String, decodingListener: AudioDecodingListener) {
         try {
             val file = File(path)
             if (!file.exists()) {
-                throw FileNotFoundException(path)
+                throw FileNotFoundException("error in readAudio $path")
             }
             val name: String = file.name.toLowerCase(Locale.ROOT)
             val components = name.split("\\.".toRegex()).toTypedArray()
+            val audioFormat = components[components.size - 1]
             if (components.size < 2) {
-                throw IOException()
+                throw IOException("error in readAudio: size < 2")
             }
-            if (!listOf(SUPPORTED_EXT).contains(components[components.size - 1])) {
-                throw IOException()
+            if (!SUPPORTED_EXT.contains(audioFormat)) {
+                throw IOException("error in readAudio: no format:$audioFormat")
             }
 
-            decodeFile(context, path, decodingListener, QUEUE_INPUT_BUFFER_EFFECTIVE)
+            decodeFile(path, decodingListener, QUEUE_INPUT_BUFFER_EFFECTIVE)
 
         } catch (e: Exception) {
             decodingListener.onError(e)
+            Log.e("audioTag", "error in readAudio catch $e")
         }
     }
 
@@ -69,7 +72,7 @@ class AudioWaveDataSource {
             }
 
             val extractor = MediaExtractor()
-            var format: MediaFormat? = null
+            // var format: MediaFormat? = null
 
             extractor.setDataSource(input.path)
             val numTracks = extractor.trackCount
@@ -79,7 +82,7 @@ class AudioWaveDataSource {
             while (i < numTracks) {
                 format = extractor.getTrackFormat(i)
                 try {
-                    if (format.getString(MediaFormat.KEY_MIME)!!.startsWith("audio/")) {
+                    if (format!!.getString(MediaFormat.KEY_MIME)!!.startsWith("audio/")) {
                         extractor.selectTrack(i)
                         break
                     }
@@ -93,17 +96,19 @@ class AudioWaveDataSource {
             }
 
             try {
-                format.getInteger(MediaFormat.KEY_SAMPLE_RATE)
+                format!!.getInteger(MediaFormat.KEY_SAMPLE_RATE)
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }
             try {
-                format.getLong(MediaFormat.KEY_DURATION)
+                format!!.getLong(MediaFormat.KEY_DURATION)
             } catch (e: Exception) {
                 e.printStackTrace()
+                Log.e("All Music", "format is null")
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.e("All Music", "rate is null")
         }
 
         for (i in 0..duration) {
@@ -113,56 +118,48 @@ class AudioWaveDataSource {
         return temp!!
     }
 
-    private fun getDpPerSecond(durationSec: Float, context: Context): Float {
-        return if (durationSec > LONG_RECORD_THRESHOLD_SECONDS) {
-            WAVEFORM_WIDTH * getScreenWidth(context) / durationSec
-        } else {
-            SHORT_RECORD_DP_PER_SECOND
-        }
-    }
-
     fun calculateSamplesPerFrame(): Int {
-        return (sampleRate / dpPerSec).toInt()
+        return (sampleRate / 4f).toInt()
     }
 
-    private fun decodeFile(
-            context: Context,
-            path: String,
-            decodeListener: AudioDecodingListener,
-            queueType: Int
-    ) {
+    private fun decodeFile(path: String, decodeListener: AudioDecodingListener, queueType: Int) {
         gains = ArrayList()
         extractor = MediaExtractor()
-
-        // val i = 0
-
+        //ToDo fix  failed to instantiate extractor
+        val file = File(path)
+        var fis: FileInputStream
         try {
-            extractor.setDataSource(path)
-        } catch (e: IOException) {
+            fis = FileInputStream(file)
+            val fd = fis.fd
+            extractor.setDataSource(fd)
+        } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
+
         val numTracks = extractor.trackCount
         // find and select the first audio track present in the file.
-        for (i in 0 until numTracks) {
+        var i = 0
+        while (i < numTracks) {
             format = extractor.getTrackFormat(i)
-            if (format.getString(MediaFormat.KEY_MIME)!!.startsWith("audio/")) {
+            if (format!!.getString(MediaFormat.KEY_MIME)!!.startsWith("audio/")) {
                 extractor.selectTrack(i)
                 break
             }
+            i++
         }
-        /*   if (i == numTracks || format == null) {
-               throw IOException("No audio track found in $path")
-           }*/
+        if (i == numTracks || format == null) {
+            throw IOException("decodeFile:  No audio track found in $path")
+        }
 
-        channelCount = format.getInteger(MediaFormat.KEY_CHANNEL_COUNT)
-        sampleRate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE)
-        duration = format.getLong(MediaFormat.KEY_DURATION)
+        channelCount = format!!.getInteger(MediaFormat.KEY_CHANNEL_COUNT)
+        sampleRate = format!!.getInteger(MediaFormat.KEY_SAMPLE_RATE)
+        duration = format!!.getLong(MediaFormat.KEY_DURATION)
 
         // Make waveform independent from dpPerSec!!!
-        dpPerSec = getDpPerSecond(duration.toFloat() / 1000000f, context)
+        // dpPerSec = getDpPerSecond(duration.toFloat() / 1000000f, context)
         oneFrameAmps = IntArray(calculateSamplesPerFrame() * channelCount)
 
-        val mimeType = format.getString(MediaFormat.KEY_MIME)
+        val mimeType = format!!.getString(MediaFormat.KEY_MIME)
 
         //Start decoding
         decoder = MediaCodec.createDecoderByType(mimeType!!)
@@ -297,6 +294,8 @@ class AudioWaveDataSource {
 
             override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
                 decodeListener.onError(e)
+                Log.e("All Music", "onError")
+
             }
 
             override fun onOutputFormatChanged(codec: MediaCodec, format: MediaFormat) {}

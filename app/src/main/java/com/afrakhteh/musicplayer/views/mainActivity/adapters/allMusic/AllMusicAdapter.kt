@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.adapters.allMusic
+package com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic
 
 
 import android.view.LayoutInflater

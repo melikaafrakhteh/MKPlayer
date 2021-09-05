@@ -1,9 +1,8 @@
-package com.afrakhteh.musicplayer.views.activities
+package com.afrakhteh.musicplayer.views.mainActivity
 
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Point
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -16,8 +15,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.databinding.ActivityMainBinding
-import com.afrakhteh.musicplayer.views.adapters.viewPager.ViewPagerAdapter
-import com.afrakhteh.musicplayer.views.interfaces.PermissionController
+import com.afrakhteh.musicplayer.util.getScreenSize
+import com.afrakhteh.musicplayer.views.mainActivity.adapters.viewPager.ViewPagerAdapter
+import com.afrakhteh.musicplayer.views.mainActivity.interfaces.PermissionController
 
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
@@ -55,7 +55,9 @@ class MainActivity : AppCompatActivity(), PermissionController {
         val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
         decorView.systemUiVisibility = uiOptions
 
-        fixHomeCoverHeightSize()
+        //cover
+        binding.homeCoverImageIv.layoutParams.height = this.getScreenSize().x
+        binding.homeCoverImageIv.layoutParams.width = this.getScreenSize().x
 
         //viewPager
         binding.homeViewPager.adapter = ViewPagerAdapter(this, Numerals.FRAGMENTS_NUMBER)
@@ -106,6 +108,10 @@ class MainActivity : AppCompatActivity(), PermissionController {
 
     override fun setOnPermissionRequestCallBack(callBack: (Boolean) -> Unit) {
         permissionRequestCallBack = callBack
+    }
+
+    override fun hasPermission(): Boolean {
+        return hasReadStoragePermission()
     }
 
     private fun buttonClick() {
@@ -173,17 +179,6 @@ class MainActivity : AppCompatActivity(), PermissionController {
             RECENTLY_FRAGMENT -> binding.homeRecentlyCircleIv
             else -> binding.homePlayListCircleIv
         }
-    }
-
-    private fun fixHomeCoverHeightSize() {
-        val display = windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        val width: Int = size.x
-
-        binding.homeCoverImageIv.layoutParams.height = width
-        binding.homeCoverImageIv.layoutParams.width = width
-
     }
 
     private inner class ViewPagerCallBack : ViewPager2.OnPageChangeCallback() {

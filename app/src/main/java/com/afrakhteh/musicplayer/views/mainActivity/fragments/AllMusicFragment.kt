@@ -1,9 +1,10 @@
-package com.afrakhteh.musicplayer.views.fragments
+package com.afrakhteh.musicplayer.views.mainActivity.fragments
 
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +16,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
+import com.afrakhteh.musicplayer.model.dataSource.AudioDecodingListener
+import com.afrakhteh.musicplayer.model.dataSource.AudioWaveDataSource
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
-import com.afrakhteh.musicplayer.views.adapters.allMusic.AllMusicAdapter
-import com.afrakhteh.musicplayer.views.interfaces.PermissionController
-import com.afrakhteh.musicplayer.views.state.MusicState
+import com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic.AllMusicAdapter
+import com.afrakhteh.musicplayer.views.mainActivity.interfaces.PermissionController
+import com.afrakhteh.musicplayer.views.mainActivity.state.MusicState
+
 import javax.inject.Inject
+
 
 class AllMusicFragment : Fragment() {
 
@@ -35,8 +40,8 @@ class AllMusicFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
         binding = FragmentAllMusicBinding.inflate(layoutInflater, container, false)
         return binding.root
@@ -54,8 +59,12 @@ class AllMusicFragment : Fragment() {
         initialiseViewModel()
 
         (requireActivity() as PermissionController).apply {
-            setOnPermissionRequestCallBack(this@AllMusicFragment::onPermissionGranted)
-            requestPermission()
+            if (hasPermission()) {
+                viewModel.fetchAllMusic()
+                setOnPermissionRequestCallBack(this@AllMusicFragment::onPermissionGranted)
+            } else {
+                requestPermission()
+            }
         }
     }
 
@@ -69,6 +78,36 @@ class AllMusicFragment : Fragment() {
 
     private fun onMusicItemClicked(data: MusicEntity) {
         Toast.makeText(requireContext(), data.name, Toast.LENGTH_LONG).show()
+
+        val dataSource = AudioWaveDataSource()
+        // val path = "android.resource://com.afrakhteh.musicplayer/raw/sample"
+        dataSource.readAudio(data.path, object : AudioDecodingListener {
+            override fun isCanceled(): Boolean {
+                Log.e("AllMusic", "isCanceled")
+                return false
+            }
+
+            override fun onStartProcessing(duration: Long, channelsCount: Int, sampleRate: Int) {
+                Log.e("AllMusic", "start")
+            }
+
+            override fun onProcessingProgress(percent: Int) {
+                Log.e("AllMusic", "onProcessingProgress")
+            }
+
+            override fun onProcessingCancel() {
+                Log.e("AllMusic", "onProcessingCancel")
+            }
+
+            override fun onFinishProcessing(data: ArrayList<Int>, duration: Long) {
+                Log.e("AllMusic", data.toString())
+            }
+
+            override fun onError(exception: Exception) {
+                Log.e("AllMusic", exception.toString() + "helllooooooo")
+            }
+
+        })
     }
 
     private fun initialiseViewModel() {
