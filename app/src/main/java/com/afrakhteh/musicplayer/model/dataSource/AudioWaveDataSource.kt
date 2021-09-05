@@ -4,10 +4,7 @@ import android.media.MediaCodec
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.util.Log
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.IOException
+import java.io.*
 import java.lang.Math.sqrt
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -127,10 +124,10 @@ class AudioWaveDataSource {
         extractor = MediaExtractor()
         //ToDo fix  failed to instantiate extractor
         val file = File(path)
-        var fis: FileInputStream
+        val fis: FileInputStream
         try {
             fis = FileInputStream(file)
-            val fd = fis.fd
+            val fd: FileDescriptor = fis.fd
             extractor.setDataSource(fd)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()

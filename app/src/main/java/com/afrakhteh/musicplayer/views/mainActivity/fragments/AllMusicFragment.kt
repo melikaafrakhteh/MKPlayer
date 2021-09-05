@@ -104,7 +104,7 @@ class AllMusicFragment : Fragment() {
             }
 
             override fun onError(exception: Exception) {
-                Log.e("AllMusic", exception.toString() + "helllooooooo")
+                Log.e("AllMusic", exception.toString())
             }
 
         })
