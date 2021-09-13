@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
-import com.afrakhteh.musicplayer.model.dataSource.AudioWaveDataSource
 import com.afrakhteh.musicplayer.util.getScreenSize
-import java.io.File
 
 
 class PlayerActivity : AppCompatActivity() {
@@ -23,10 +21,15 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //test
-        val file = File("android.resource://com.afrakhteh.musicplayer/raw/sample")
-        val list: ArrayList<Int> = AudioWaveDataSource().audioSampleRate(file)
-        binding.playWave.showWaves(list, getScreenSize().y)
+        var list: MutableList<Int> = ArrayList()
+        /*  requireNotNull(intent.extras).getIntArray("data")?.forEach {
+              list.add(it)
+          }
+          binding.playWave.showWaves(list, getScreenSize().y)*/
+
+        //test :To ensure the correct shape
+        list = arrayListOf(1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3)
+        binding.playWave.showWavesBeforeProcessing(list, getScreenSize().y)
 
         buttonClicks()
     }

@@ -91,4 +91,8 @@ dependencies {
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
+    def coroutineVersion = '1.5.2'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
+
 }

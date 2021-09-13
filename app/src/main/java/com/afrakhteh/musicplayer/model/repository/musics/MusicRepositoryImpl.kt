@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.model.repository
+package com.afrakhteh.musicplayer.model.repository.musics
 
 
 import android.content.Context
@@ -57,12 +57,12 @@ class MusicRepositoryImpl @Inject constructor(
     }
 
     private fun checkValidMusicPath(path: String): Boolean {
-        return (path.endsWith(".aac")
-                || path.endsWith(".mp3")
-                || path.endsWith(".wav")
-                || path.endsWith(".ogg")
-                || path.endsWith(".ac3")
-                || path.endsWith(".mid")
-                || path.endsWith(".m4a"))
+        return (path.endsWith(".aac", ignoreCase = true)
+                || path.endsWith(".mp3", ignoreCase = true)
+                || path.endsWith(".wav", ignoreCase = true)
+                || path.endsWith(".ogg", ignoreCase = true)
+                || path.endsWith(".ac3", ignoreCase = true)
+                || path.endsWith(".mid", ignoreCase = true)
+                || path.endsWith(".m4a", ignoreCase = true))
     }
 }

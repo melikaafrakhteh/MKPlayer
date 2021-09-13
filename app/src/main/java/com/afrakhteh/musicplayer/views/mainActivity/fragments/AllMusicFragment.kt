@@ -3,6 +3,7 @@ package com.afrakhteh.musicplayer.views.mainActivity.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,13 +17,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
-import com.afrakhteh.musicplayer.model.dataSource.AudioDecodingListener
 import com.afrakhteh.musicplayer.model.dataSource.AudioWaveDataSource
+import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioDecodingImpl
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
 import com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic.AllMusicAdapter
 import com.afrakhteh.musicplayer.views.mainActivity.interfaces.PermissionController
 import com.afrakhteh.musicplayer.views.mainActivity.state.MusicState
+import com.afrakhteh.musicplayer.views.playMusicActivity.PlayerActivity
 
 import javax.inject.Inject
 
@@ -59,9 +61,9 @@ class AllMusicFragment : Fragment() {
         initialiseViewModel()
 
         (requireActivity() as PermissionController).apply {
+            setOnPermissionRequestCallBack(this@AllMusicFragment::onPermissionGranted)
             if (hasPermission()) {
                 viewModel.fetchAllMusic()
-                setOnPermissionRequestCallBack(this@AllMusicFragment::onPermissionGranted)
             } else {
                 requestPermission()
             }
@@ -77,37 +79,27 @@ class AllMusicFragment : Fragment() {
     }
 
     private fun onMusicItemClicked(data: MusicEntity) {
-        Toast.makeText(requireContext(), data.name, Toast.LENGTH_LONG).show()
 
         val dataSource = AudioWaveDataSource()
-        // val path = "android.resource://com.afrakhteh.musicplayer/raw/sample"
-        dataSource.readAudio(data.path, object : AudioDecodingListener {
-            override fun isCanceled(): Boolean {
-                Log.e("AllMusic", "isCanceled")
-                return false
-            }
+        val impl = AudioDecodingImpl()
+        dataSource.decodedAudio(data.path, impl)
+        startActivity(Intent(requireActivity(), PlayerActivity::class.java))
 
-            override fun onStartProcessing(duration: Long, channelsCount: Int, sampleRate: Int) {
-                Log.e("AllMusic", "start")
-            }
+    }
 
-            override fun onProcessingProgress(percent: Int) {
-                Log.e("AllMusic", "onProcessingProgress")
-            }
+    private fun setMap(data: ArrayList<Int>) {
+        val minValue = requireNotNull(data.minOrNull())
+        val maxValue = requireNotNull(data.maxOrNull())
+        val diff = maxValue - minValue
+        val mappedData = data.map { items ->
+            (((items - minValue) * 100f) / diff).toInt()
+        }
 
-            override fun onProcessingCancel() {
-                Log.e("AllMusic", "onProcessingCancel")
-            }
-
-            override fun onFinishProcessing(data: ArrayList<Int>, duration: Long) {
-                Log.e("AllMusic", data.toString())
-            }
-
-            override fun onError(exception: Exception) {
-                Log.e("AllMusic", exception.toString())
-            }
-
+        startActivity(Intent(requireActivity(), PlayerActivity::class.java).apply {
+            putExtra("data", mappedData.toIntArray())
         })
+
+        Log.d("All", mappedData.toString())
     }
 
     private fun initialiseViewModel() {

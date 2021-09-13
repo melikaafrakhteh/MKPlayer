@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.model.repository
+package com.afrakhteh.musicplayer.model.repository.musics
 
 
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
