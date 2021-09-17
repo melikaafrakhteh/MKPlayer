@@ -18,7 +18,7 @@ import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.dataSource.AudioWaveDataSource
-import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioDecodingImpl
+import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioDecoderImpl
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
 import com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic.AllMusicAdapter
@@ -81,7 +81,7 @@ class AllMusicFragment : Fragment() {
     private fun onMusicItemClicked(data: MusicEntity) {
 
         val dataSource = AudioWaveDataSource()
-        val impl = AudioDecodingImpl()
+        val impl = AudioDecoderImpl()
         dataSource.decodedAudio(data.path, impl)
         startActivity(Intent(requireActivity(), PlayerActivity::class.java))
 
