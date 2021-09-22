@@ -10,13 +10,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import java.nio.ByteBuffer
 import kotlin.coroutines.CoroutineContext
-import kotlin.reflect.KProperty0
 
 class AllMusicCodecCallBack(
         private var impl: AudioDecoderImpl,
-        private val isCanceled: KProperty0<() -> Boolean>,
-        private val onProcessingCancel: KProperty0<() -> Unit>,
-        private val onProcessingProgress: KProperty0<(Int) -> Unit>
+        private val isCanceled: () -> Boolean,
+        private val onProcessingCancel: () -> Unit,
+        private val onProcessingProgress: (Int) -> Unit
 ) : MediaCodec.Callback(), CoroutineScope {
 
     private var job: Job = Job()
@@ -36,7 +35,7 @@ class AllMusicCodecCallBack(
 
     override fun onInputBufferAvailable(codec: MediaCodec, index: Int) {
         if (mOutputEOS or mInputEOS) return
-        if (isCanceled().invoke()) {
+        if (isCanceled.invoke()) {
             endOfStream(codec, index)
             return
         }
@@ -52,7 +51,7 @@ class AllMusicCodecCallBack(
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
-        onProcessingProgress().invoke(percent)
+        onProcessingProgress.invoke(percent)
         Log.d("All", "percents    $percent")
     }
 
@@ -110,10 +109,10 @@ class AllMusicCodecCallBack(
                 mOutputEOS or (info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0)
         codec.releaseOutputBuffer(index, false)
         if (mOutputEOS) {
-            if (isCanceled().invoke()) {
+            if (isCanceled.invoke()) {
                 onProcessingCancel.invoke()
             } else {
-                onProcessingProgress().invoke(100)
+                onProcessingProgress.invoke(100)
             }
             // impl.onFinishProcessing(gains,duration, index)
         }

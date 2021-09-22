@@ -32,10 +32,14 @@ class AudioDecoderImpl(
         val audioDetails = extractAudioDetails(format)
         decoder = MediaCodec.createDecoderByType(requireNotNull(audioDetails.mimeType))
 
-        decoder.setCallback(AllMusicCodecCallBack(this,
-                this::isCanceled,
-                this::onProcessingCancel,
-                this::onProcessingProgress))
+        decoder.setCallback(
+            AllMusicCodecCallBack(
+                this,
+                isCanceled,
+                onProcessingCancel,
+                onProcessingProgress
+            )
+        )
         decoder.configure(format, null, null, 0)
         decoder.start()
     }
