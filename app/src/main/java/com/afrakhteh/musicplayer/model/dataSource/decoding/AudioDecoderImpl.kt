@@ -12,7 +12,7 @@ import java.io.FileDescriptor
 import java.io.FileInputStream
 
 class AudioDecoderImpl(
-        private val extractor: MediaExtractor,
+        private val extractor: MediaExtractor
 ) : AudioDecodingListener {
 
     private val TAG: String = "decoderImp"
