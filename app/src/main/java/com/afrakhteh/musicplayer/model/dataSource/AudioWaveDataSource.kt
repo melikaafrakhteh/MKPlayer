@@ -8,20 +8,32 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 
-
 class AudioWaveDataSource(private val impl: AudioDecoderImpl) {
 
-    fun decodedAudio(path: String) {
+    suspend fun decodeAudio(path: String) {
         try {
             val checkedFile = checkAudioFile(path)
             checkAudioFormat(checkedFile)
 
             impl.setAudioDataSource(path)
             impl.decodeFile()
+
+        } catch (e: Exception) {
+            Log.e("audioTag", "error in decodeAudio catch $e")
+        }
+    }
+/*    suspend fun decodeAudio(path: String, data: (ArrayList<Int>) -> Unit) {
+        try {
+            val checkedFile = checkAudioFile(path)
+            checkAudioFormat(checkedFile)
+
+            impl.setAudioDataSource(path)
+            impl.decodeFile()
+
         } catch (e: Exception) {
             Log.e("audioTag", "error in readAudio catch $e")
         }
-    }
+    }*/
 
     private fun checkAudioFile(path: String): File {
         val file = File(path)

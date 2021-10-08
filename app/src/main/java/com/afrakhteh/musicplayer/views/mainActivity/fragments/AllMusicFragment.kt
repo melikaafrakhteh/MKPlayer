@@ -4,8 +4,8 @@ package com.afrakhteh.musicplayer.views.mainActivity.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.media.MediaExtractor
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afrakhteh.musicplayer.R
+import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.dataSource.AudioWaveDataSource
@@ -25,7 +26,9 @@ import com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic.AllMusicAd
 import com.afrakhteh.musicplayer.views.mainActivity.interfaces.PermissionController
 import com.afrakhteh.musicplayer.views.mainActivity.state.MusicState
 import com.afrakhteh.musicplayer.views.playMusicActivity.PlayerActivity
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -79,28 +82,31 @@ class AllMusicFragment : Fragment() {
     }
 
     private fun onMusicItemClicked(data: MusicEntity) {
-
-        val dataSource = AudioWaveDataSource()
-        val impl = AudioDecoderImpl()
-        dataSource.decodedAudio(data.path, impl)
-        startActivity(Intent(requireActivity(), PlayerActivity::class.java))
-
-    }
-
-    private fun setMap(data: ArrayList<Int>) {
-        val minValue = requireNotNull(data.minOrNull())
-        val maxValue = requireNotNull(data.maxOrNull())
-        val diff = maxValue - minValue
-        val mappedData = data.map { items ->
-            (((items - minValue) * 100f) / diff).toInt()
+        val impl = AudioDecoderImpl(MediaExtractor(), data.path)
+        val dataSource = AudioWaveDataSource(impl)
+        CoroutineScope(Dispatchers.IO).launch {
+            dataSource.decodeAudio(data.path)
         }
-
-        startActivity(Intent(requireActivity(), PlayerActivity::class.java).apply {
-            putExtra("data", mappedData.toIntArray())
-        })
-
-        Log.d("All", mappedData.toString())
+        val intent = Intent(requireActivity(), PlayerActivity::class.java).apply {
+            putExtra(Strings.AUDIO_PATH_KEY, data.path)
+        }
+        startActivity(intent)
     }
+
+    /* private fun setMap(data: ArrayList<Int>) {
+         val minValue = requireNotNull(data.minOrNull())
+         val maxValue = requireNotNull(data.maxOrNull())
+         val diff = maxValue - minValue
+         val mappedData = data.map { items ->
+             (((items - minValue) * 100f) / diff).toInt()
+         }
+
+         startActivity(Intent(requireActivity(), PlayerActivity::class.java).apply {
+             putExtra("data", mappedData.toIntArray())
+         })
+
+         Log.d("All", mappedData.toString())
+     }*/
 
     private fun initialiseViewModel() {
         viewModel.state.observe(requireActivity(), this::renderState)

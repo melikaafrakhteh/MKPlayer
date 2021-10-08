@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.playMusicActivity.customs
+package com.afrakhteh.musicplayer.views.playMusicActivity.customs.line
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,9 +11,10 @@ import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.util.toPx
 
 @SuppressLint("ViewConstructor")
-class WaveItemBeforeProcessing(context: Context,
-                               private val width: Float,
-                               private val height: Float) : View(context) {
+class VerticalLine(
+        context: Context,
+        private val width: Float
+) : View(context) {
 
     init {
         invalidate()
@@ -28,16 +29,17 @@ class WaveItemBeforeProcessing(context: Context,
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
         val widthMeasure = width.toPx.toInt()
-        val heightMeasure = height.toPx.toInt()
-        setMeasuredDimension(widthMeasure, heightMeasure)
-
+        setMeasuredDimension(
+                widthMeasure,
+                MeasureSpec.getSize(heightMeasureSpec)
+        )
     }
 
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        var recF: RectF? = RectF(0f, 0f, width.toPx, height.toPx)
+        var recF: RectF? = RectF(0f, 0f, width.toPx, height.toFloat())
         canvas?.drawRect(requireNotNull(recF), baseColor)
         recF = null
     }

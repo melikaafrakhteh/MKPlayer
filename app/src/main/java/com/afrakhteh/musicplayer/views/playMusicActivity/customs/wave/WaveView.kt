@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.playMusicActivity.customs
+package com.afrakhteh.musicplayer.views.playMusicActivity.customs.wave
 
 import android.content.Context
 import android.util.AttributeSet
@@ -37,25 +37,5 @@ class WaveView : LinearLayout {
         addView(View(context).apply {
             minimumHeight = halfHeight
         })
-    }
-
-    fun showWavesBeforeProcessing(percents: List<Int>, screenHeight: Int) {
-        this.percents.apply {
-            clear()
-            addAll(percents)
-        }
-
-        val halfHeight = (screenHeight - 116.toPx) / 2
-
-        addView(View(context).apply {
-            minimumHeight = halfHeight
-        })
-        repeat(percents.size) { index ->
-            addView(WaveItemBeforeProcessing(context, 4f, 4f))
-            addView(View(context).apply {
-                minimumHeight = 4.toPx
-            })
-        }
-
     }
 }

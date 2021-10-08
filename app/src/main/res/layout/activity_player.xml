@@ -79,7 +79,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/playMusicNameTv">
 
-            <com.afrakhteh.musicplayer.views.playMusicActivity.customs.WaveView
+            <com.afrakhteh.musicplayer.views.playMusicActivity.customs.wave.WaveView
                 android:id="@+id/playWave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

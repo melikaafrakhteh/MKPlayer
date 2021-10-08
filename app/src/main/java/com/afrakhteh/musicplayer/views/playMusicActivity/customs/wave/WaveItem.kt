@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.playMusicActivity.customs
+package com.afrakhteh.musicplayer.views.playMusicActivity.customs.wave
 
 import android.annotation.SuppressLint
 import android.content.Context

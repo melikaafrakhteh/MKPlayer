@@ -4,6 +4,6 @@ data class AudioDetails(
         val channelCount: Int,
         val sampleRate: Int,
         val duration: Long,
-        val oneFrameAmps: ArrayList<Int>,
+        val oneFrameAmps: IntArray,
         val mimeType: String?
 )
