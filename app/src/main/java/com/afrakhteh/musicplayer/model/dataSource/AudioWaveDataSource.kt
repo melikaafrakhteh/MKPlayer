@@ -10,30 +10,23 @@ import java.util.*
 
 class AudioWaveDataSource(private val impl: AudioDecoderImpl) {
 
-    suspend fun decodeAudio(path: String) {
+    suspend fun decodeAudio(path: String, data: (ArrayList<Int>) -> Unit) {
         try {
             val checkedFile = checkAudioFile(path)
             checkAudioFormat(checkedFile)
 
             impl.setAudioDataSource(path)
-            impl.decodeFile()
+            impl.startDecoding()
+
+            val dataResult = impl.decodingResult()
+            Log.d("audioTag", "data source:  $dataResult")
+            data(dataResult)
 
         } catch (e: Exception) {
-            Log.e("audioTag", "error in decodeAudio catch $e")
-        }
-    }
-/*    suspend fun decodeAudio(path: String, data: (ArrayList<Int>) -> Unit) {
-        try {
-            val checkedFile = checkAudioFile(path)
-            checkAudioFormat(checkedFile)
-
-            impl.setAudioDataSource(path)
-            impl.decodeFile()
-
-        } catch (e: Exception) {
+            e.printStackTrace()
             Log.e("audioTag", "error in readAudio catch $e")
         }
-    }*/
+    }
 
     private fun checkAudioFile(path: String): File {
         val file = File(path)
@@ -58,7 +51,6 @@ class AudioWaveDataSource(private val impl: AudioDecoderImpl) {
             throw IOException("error in readAudio: no format:${separateAudioFormat(file)}")
         }
     }
-
 }
 
 

@@ -52,7 +52,7 @@
             android:gravity="start"
             android:text="Trees of Eternity"
             android:textColor="@color/gray"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/playMusicCoverIv"
             app:layout_constraintTop_toTopOf="@+id/playMusicCoverIv" />
 
@@ -65,7 +65,7 @@
             android:fontFamily="@font/roboto_bold"
             android:text="Broken Mirror"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/playMusicCoverIv"
             app:layout_constraintStart_toEndOf="@+id/playMusicCoverIv"
             app:layout_constraintTop_toBottomOf="@+id/playMusicArtistTv" />
@@ -91,6 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/play_shadow"
+            android:layout_marginTop="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/playMusicNameTv" />

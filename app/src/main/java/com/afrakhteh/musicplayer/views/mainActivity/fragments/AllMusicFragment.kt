@@ -4,7 +4,6 @@ package com.afrakhteh.musicplayer.views.mainActivity.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.media.MediaExtractor
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,17 +17,12 @@ import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
-import com.afrakhteh.musicplayer.model.dataSource.AudioWaveDataSource
-import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioDecoderImpl
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
 import com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic.AllMusicAdapter
 import com.afrakhteh.musicplayer.views.mainActivity.interfaces.PermissionController
 import com.afrakhteh.musicplayer.views.mainActivity.state.MusicState
 import com.afrakhteh.musicplayer.views.playMusicActivity.PlayerActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -82,31 +76,13 @@ class AllMusicFragment : Fragment() {
     }
 
     private fun onMusicItemClicked(data: MusicEntity) {
-        val impl = AudioDecoderImpl(MediaExtractor(), data.path)
-        val dataSource = AudioWaveDataSource(impl)
-        CoroutineScope(Dispatchers.IO).launch {
-            dataSource.decodeAudio(data.path)
-        }
         val intent = Intent(requireActivity(), PlayerActivity::class.java).apply {
             putExtra(Strings.AUDIO_PATH_KEY, data.path)
+            putExtra(Strings.AUDIO_NAME_KEY, data.name)
+            putExtra(Strings.AUDIO_ARTIST_KEY, data.artist)
         }
         startActivity(intent)
     }
-
-    /* private fun setMap(data: ArrayList<Int>) {
-         val minValue = requireNotNull(data.minOrNull())
-         val maxValue = requireNotNull(data.maxOrNull())
-         val diff = maxValue - minValue
-         val mappedData = data.map { items ->
-             (((items - minValue) * 100f) / diff).toInt()
-         }
-
-         startActivity(Intent(requireActivity(), PlayerActivity::class.java).apply {
-             putExtra("data", mappedData.toIntArray())
-         })
-
-         Log.d("All", mappedData.toString())
-     }*/
 
     private fun initialiseViewModel() {
         viewModel.state.observe(requireActivity(), this::renderState)
@@ -127,7 +103,7 @@ class AllMusicFragment : Fragment() {
             viewModel.fetchAllMusic()
         } else {
             Toast.makeText(requireContext(), getString(R.string.deny_message), Toast.LENGTH_LONG)
-                .show()
+                    .show()
         }
     }
 }

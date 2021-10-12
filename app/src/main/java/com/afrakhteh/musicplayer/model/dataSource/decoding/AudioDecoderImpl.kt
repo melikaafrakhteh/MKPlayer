@@ -6,6 +6,7 @@ import android.media.MediaFormat
 import android.util.Log
 import com.afrakhteh.musicplayer.util.AudioUtils.extractAudioDetails
 import com.afrakhteh.musicplayer.util.AudioUtils.findFileFirstAudio
+import kotlinx.coroutines.delay
 import java.io.File
 import java.io.FileDescriptor
 import java.io.FileInputStream
@@ -13,25 +14,24 @@ import java.io.FileInputStream
 class AudioDecoderImpl(
         private val extractor: MediaExtractor,
         private val path: String
-) : AudioDecodingListener {
+) : AudioDecoder {
 
     private val TAG: String = "decoderImp"
     private lateinit var decoder: MediaCodec
     private lateinit var callBack: MediaCodecCallBack
 
-    val isCanceled: () -> Boolean = { false }
-    val onProcessingCancel: () -> Unit = {}
-    val onProcessingProgress: (Int) -> Unit = {}
-    val onFinishProcessing: (ArrayList<Int>, Long) -> Unit =
-            { data: ArrayList<Int>, duration: Long -> }
+    val result: ArrayList<Int> = ArrayList()
 
+    private val isCanceled: () -> Boolean = { false }
+    private val onProcessingCancel: (decoder: MediaCodec) -> Unit = {}
+    private val onProcessingProgress: (Int) -> Unit = {}
+    private val onFinishProcessing: () -> ArrayList<Int> = { ArrayList() }
 
-    suspend fun decodeFile() {
+    override suspend fun startDecoding() {
         var format: MediaFormat? = null
         val numTracks = extractor.trackCount
         format = findFileFirstAudio(extractor, numTracks)
         val audioDetails = extractAudioDetails(format)
-        //       decoder = MediaCodec.createDecoderByType(extractMimeType(format))
 
         decoder = MediaCodec.createDecoderByType(requireNotNull(audioDetails.mimeType))
 
@@ -45,12 +45,19 @@ class AudioDecoderImpl(
                 path)
         decoder.setCallback(callBack)
 
-        //   format.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 655360)
         decoder.configure(format, null, null, 0)
         decoder.start()
     }
 
-    fun setAudioDataSource(path: String) {
+    override suspend fun decodingResult(): ArrayList<Int> {
+        delay(callBack.processTime)
+        Log.d(TAG, "process time:  ${callBack.processTime}")
+        result.addAll(callBack.gains)
+        Log.d(TAG, result.toString())
+        return result
+    }
+
+    override fun setAudioDataSource(path: String) {
         val file = File(path)
         val fis: FileInputStream
         try {
@@ -62,13 +69,17 @@ class AudioDecoderImpl(
         }
     }
 
-    override fun onStartProcessing(duration: Long, channelsCount: Int, sampleRate: Int) {
-
-    }
-
     override fun onError(exception: Exception) {
         Log.e(TAG, exception.toString())
     }
 
+    fun mappedData(gains: ArrayList<Int>): List<Int> {
+        val minValue = requireNotNull(gains.minOrNull())
+        val maxValue = requireNotNull(gains.maxOrNull())
+        val diff = maxValue - minValue
+        return gains.map { items ->
+            (((items - minValue) * 100f) / diff).toInt()
+        }
+    }
 }
 

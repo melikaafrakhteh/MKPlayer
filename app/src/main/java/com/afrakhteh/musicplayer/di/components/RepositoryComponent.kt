@@ -4,6 +4,7 @@ package com.afrakhteh.musicplayer.di.components
 import com.afrakhteh.musicplayer.di.modules.RepositoryModule
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
+import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepository
 import dagger.Component
 
 @RepoScope
@@ -13,4 +14,5 @@ import dagger.Component
 )
 interface RepositoryComponent {
     fun exposeRepository(): MusicRepository
+    fun exposeAudioDetailRepository(): AudioDetailsRepository
 }

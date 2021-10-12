@@ -6,7 +6,6 @@ import android.media.MediaFormat
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.util.AudioUtils
 import com.afrakhteh.musicplayer.util.AudioUtils.extractAudioDetails
 import java.nio.ByteBuffer
@@ -14,10 +13,10 @@ import java.nio.ByteOrder
 import kotlin.math.sqrt
 
 class MediaCodecCallBack(
-        private val isCanceled: () -> Boolean,
-        private val onProcessingCancel: () -> Unit,
-        private val onProcessingProgress: (Int) -> Unit,
-        private val onFinishProcessing: (ArrayList<Int>, Long) -> Unit,
+        private var isCanceled: () -> Boolean,
+        private var onProcessingCancel: (decoder: MediaCodec) -> Unit,
+        private var onProcessingProgress: (Int) -> Unit,
+        private var onFinishProcessing: () -> ArrayList<Int>,
         private val format: MediaFormat,
         private val extractor: MediaExtractor,
         private val path: String
@@ -33,39 +32,106 @@ class MediaCodecCallBack(
     private var total = 0
     private var advanced = false
     private var maxresult = 0
+    private var frameIndex = 0
+    private var isCancel = false
+    private var startTime = 0L
+    private var endTime = 0L
 
-    private lateinit var gains: ArrayList<Int>
+    var processTime = 0L
+
+    val gains: ArrayList<Int> = ArrayList()
 
     private val TAG: String = "callBack"
+
+    init {
+        isCanceled = ::checkCancellation
+        onProcessingProgress = ::checkProcessing
+        onProcessingCancel = ::checkCancelingProcess
+        onFinishProcessing = ::endOfProcessResult
+    }
+
+    private fun endOfProcessResult(): ArrayList<Int> = gains
+
+    private fun checkCancelingProcess(decoder: MediaCodec) {
+        Log.d(TAG, "progress canceled")
+        stopCodec(decoder)
+    }
+
+    fun checkProcessing(percent: Int) {
+        startTime = System.nanoTime()
+        Log.d(TAG, " progress: $percent")
+        if (percent == 100) {
+            endTime = System.nanoTime()
+            Log.d(TAG, "end")
+            processTime = endTime - startTime
+            Log.d(TAG, "process duration: $processTime")
+        }
+    }
+
+    private fun checkCancellation(): Boolean = isCancel
+
+    override fun onError(
+            codec: MediaCodec,
+            e: MediaCodec.CodecException
+    ) {
+        Log.d(TAG, e.toString())
+    }
+
+    override fun onOutputFormatChanged(codec: MediaCodec, format: MediaFormat) {}
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onInputBufferAvailable(codec: MediaCodec, index: Int) {
         if (mOutputEOS or mInputEOS) return
         if (isCanceled.invoke()) {
             endOfStream(codec, index)
+            isCancel = true
             return
         }
+        isCancel = false
         try {
             val inputBuffer: ByteBuffer = codec.getInputBuffer(index) ?: return
-
-            val queueType: Int = 1
-            if (queueType == Numerals.QUEUE_INPUT_BUFFER_EFFECTIVE) {
-                successfulInputBuffer(codec, index, inputBuffer)
-            } else {
-                failedInputBuffer(codec, index, inputBuffer)
-            }
-
+            processInputBuffer(codec, index, inputBuffer)
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
         onProcessingProgress.invoke(onProcessingProgress(percent))
     }
 
-    private fun successfulInputBuffer(
+    override fun onOutputBufferAvailable(
+            codec: MediaCodec,
+            index: Int,
+            info: MediaCodec.BufferInfo
+    ) {
+        isCancel = false
+        try {
+            val outputBuffer: ByteBuffer? = codec.getOutputBuffer(index)
+            gains.addAll(outPutResult(outputBuffer))
+
+            mOutputEOS =
+                    mOutputEOS or (isEndOfStream(info))
+            codec.releaseOutputBuffer(index, false)
+
+            if (mOutputEOS) {
+                if (isCanceled.invoke()) {
+                    onProcessingCancel.invoke(codec)
+                } else {
+                    onProcessingProgress.invoke(100)
+                    gains.addAll(onFinishProcessing.invoke())
+                }
+                stopCodec(codec)
+            }
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun processInputBuffer(
             codec: MediaCodec,
             index: Int,
             inputBuffer: ByteBuffer) {
-
+        total = 0
+        advanced = false
+        maxresult = 0
         do {
             resultOfEncoding = extractor.readSampleData(inputBuffer, total)
             if (resultOfEncoding >= 0) {
@@ -90,29 +156,6 @@ class MediaCodecCallBack(
         }
     }
 
-    private fun failedInputBuffer(
-            codec: MediaCodec,
-            index: Int,
-            inputBuffer: ByteBuffer) {
-
-        resultOfEncoding = extractor.readSampleData(inputBuffer, 0)
-        decoded += resultOfEncoding
-        if (resultOfEncoding >= 0) {
-            sampleTime = extractor.sampleTime
-            codec.queueInputBuffer(index, 0, resultOfEncoding, sampleTime, 0)
-            extractor.advance()
-        } else {
-            codec.queueInputBuffer(
-                    index,
-                    0,
-                    0,
-                    -1,
-                    MediaCodec.BUFFER_FLAG_END_OF_STREAM
-            )
-            mInputEOS = true
-        }
-    }
-
     private fun endOfStream(codec: MediaCodec, index: Int) {
         codec.queueInputBuffer(index, 0, 0, -1, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
         mInputEOS = true
@@ -123,35 +166,6 @@ class MediaCodecCallBack(
                 && total < maxresult * 5
                 && advanced
                 && inputBuffer.capacity() - inputBuffer.limit() > maxresult * 3)
-    }
-
-    override fun onOutputBufferAvailable(
-            codec: MediaCodec,
-            index: Int,
-            info: MediaCodec.BufferInfo
-    ) {
-        gains = ArrayList()
-        try {
-            val outputBuffer: ByteBuffer? = codec.getOutputBuffer(index)
-            gains = outPutResult(outputBuffer)
-            //       mappedData(gains)
-
-            mOutputEOS =
-                    mOutputEOS or (isEndOfStream(info))
-            codec.releaseOutputBuffer(index, false)
-
-            if (mOutputEOS) {
-                if (isCanceled.invoke()) {
-                    onProcessingCancel.invoke()
-                } else {
-                    onProcessingProgress.invoke(100)
-                    onFinishProcessing.invoke(gains, extractAudioDetails(format).duration)
-                }
-                stopCodec(codec)
-            }
-        } catch (e: IllegalStateException) {
-            e.message
-        }
     }
 
     private fun isEndOfStream(info: MediaCodec.BufferInfo): Boolean {
@@ -167,7 +181,6 @@ class MediaCodecCallBack(
     @RequiresApi(Build.VERSION_CODES.P)
     fun onProcessingProgress(percent: Int): Int {
         var processingPercent = percent
-        // val curProgress = (100 * decoded / AudioUtils.findTotalSize(extractor).toFloat()).toInt()
         val curProgress = (100 * decoded / AudioUtils.findTotalSize(path).toFloat()).toInt()
         if (curProgress != processingPercent)
             processingPercent = curProgress
@@ -176,7 +189,7 @@ class MediaCodecCallBack(
     }
 
     private fun outPutResult(outputBuffer: ByteBuffer?): ArrayList<Int> {
-        var frameIndex = 0
+
         val oneFrameAmps = extractAudioDetails(format).oneFrameAmps
         val channelCount = extractAudioDetails(format).channelCount
         val data: ArrayList<Int> = ArrayList()
@@ -205,25 +218,7 @@ class MediaCodecCallBack(
                 }
             }
         }
-        Log.d(TAG, "gains: $data")
         return data
-
     }
 
-    override fun onError(codec: MediaCodec, e: MediaCodec.CodecException) {
-        Log.d(TAG, e.toString())
-    }
-
-    override fun onOutputFormatChanged(codec: MediaCodec, format: MediaFormat) {}
-}
-
-
-private fun mappedData(data: ArrayList<Int>) {
-    val minValue = requireNotNull(data.minOrNull())
-    val maxValue = requireNotNull(data.maxOrNull())
-    val diff = maxValue - minValue
-    val mappedData = data.map { items ->
-        (((items - minValue) * 100f) / diff).toInt()
-    }
-    Log.d("TAG", "mapped $mappedData")
 }

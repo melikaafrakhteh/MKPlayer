@@ -1,32 +1,46 @@
 package com.afrakhteh.musicplayer.views.playMusicActivity
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
+import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.util.getScreenSize
 import com.afrakhteh.musicplayer.util.toPx
+import com.afrakhteh.musicplayer.viewModel.PlayerViewModel
+import com.afrakhteh.musicplayer.views.mainActivity.MainActivity
 import com.afrakhteh.musicplayer.views.playMusicActivity.customs.line.VerticalLine
+import javax.inject.Inject
 
 
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
-    //  private val viewModel: PlayerViewModel by viewModels()
+
+    @Inject
+    lateinit var providerFactory: ViewModelProvider.Factory
+
+    private val viewModel: PlayerViewModel by viewModels { providerFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ViewModelComponentBuilder.getInstance().injectPlayer(this)
         initialiseView()
-        //    initialiseViewModel()
+        initialiseViewModel()
 
         val path = requireNotNull(intent.extras).getString(Strings.AUDIO_PATH_KEY, "")
-        //  viewModel.getAllAudioWaveData(path)
+        viewModel.getAllAudioWaveData(path)
+
     }
 
     private fun initialiseViewModel() {
-        //   viewModel.waveList.observe(this, ::renderList)
+        viewModel.waveList.observe(this, ::renderList)
     }
 
     private fun renderList(arrayList: ArrayList<Int>?) {
@@ -43,10 +57,11 @@ class PlayerActivity : AppCompatActivity() {
 
         drawShapeBeforeProcessing()
 
-        /*  requireNotNull(intent.extras).getIntArray("data")?.forEach {
-              list.add(it)
-          }
-          binding.playWave.showWaves(list, getScreenSize().y)*/
+        val musicName = requireNotNull(intent.extras).getString(Strings.AUDIO_NAME_KEY, "")
+        val musicArtistName = requireNotNull(intent.extras).getString(Strings.AUDIO_ARTIST_KEY, "")
+
+        binding.playMusicNameTv.text = musicName
+        binding.playMusicArtistTv.text = musicArtistName
 
         buttonClicks()
     }
@@ -76,7 +91,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun backButton(view: View?) {
-        //back to main activity
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     private fun drawShapeBeforeProcessing() {
@@ -86,7 +101,6 @@ class PlayerActivity : AppCompatActivity() {
         })
         binding.playWave.addView(draw)
     }
-
 
 }
 
