@@ -20,6 +20,7 @@ class AudioWaveDataSource(private val impl: AudioDecoderImpl) {
 
             val dataResult = impl.decodingResult()
             Log.d("audioTag", "data source:  $dataResult")
+            Log.d("audioTag", "data source:  ${dataResult.size}")
             data(dataResult)
 
         } catch (e: Exception) {

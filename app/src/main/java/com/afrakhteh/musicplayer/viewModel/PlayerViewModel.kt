@@ -27,18 +27,54 @@ class PlayerViewModel @Inject constructor(
     val waveList: LiveData<ArrayList<Int>> get() = pWaveList
 
     fun getAllAudioWaveData(path: String) {
-        job = CoroutineScope(Dispatchers.IO).launch {
-            repository.fetchAudioWaveData(path).subscribeBy(
+        job = CoroutineScope(Dispatchers.Main).launch {
+            repository.fetchAudioWaveData(path)
+                .subscribeBy(
                     onError = {
                         Log.e("playerViewModel", "player view model error in subscription: $it")
                     },
                     onNext = {
-                        pWaveList.value = it
+                        pWaveList.postValue(it)
                         disposable.clear()
+                        Log.d("player view model", "${it}")
                     }
-            ).addTo(disposable)
+                ).addTo(disposable)
         }
     }
+
+    fun mappedData(gains: ArrayList<Int>): List<Int> {
+        val minValue = requireNotNull(gains.minOrNull())
+        val maxValue = requireNotNull(gains.maxOrNull())
+        val diff = maxValue - minValue
+        return gains.map { items ->
+            (((items - minValue) * 100f) / diff).toInt()
+        }
+    }
+    /* fun getAllAudioWaveData(path: String) {
+         job = CoroutineScope(Dispatchers.Main).launch {
+             disposable.add(
+                     repository.fetchAudioWaveData(path)
+                             .subscribeOn(Schedulers.newThread())
+                             .observeOn(AndroidSchedulers.mainThread())
+                             .subscribeWith(object : DisposableObserver<ArrayList<Int>>() {
+                                 override fun onNext(t: ArrayList<Int>) {
+                                     pWaveList.postValue(t)
+                                     Log.d("viewModel","$t")
+                                 //    disposable.clear()
+                                 }
+
+                                 override fun onError(e: Throwable) {
+                                     e.printStackTrace()
+                                     Log.e("playerViewModel", "player view model error in subscription: $e")
+                                 }
+
+                                 override fun onComplete() {}
+
+
+                             })
+             )
+         }
+     }*/
 
     override fun onCleared() {
         super.onCleared()

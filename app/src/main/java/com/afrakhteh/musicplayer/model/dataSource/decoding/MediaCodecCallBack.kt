@@ -37,8 +37,6 @@ class MediaCodecCallBack(
     private var startTime = 0L
     private var endTime = 0L
 
-    var processTime = 0L
-
     val gains: ArrayList<Int> = ArrayList()
 
     private val TAG: String = "callBack"
@@ -57,14 +55,10 @@ class MediaCodecCallBack(
         stopCodec(decoder)
     }
 
-    fun checkProcessing(percent: Int) {
-        startTime = System.nanoTime()
+    private fun checkProcessing(percent: Int) {
         Log.d(TAG, " progress: $percent")
         if (percent == 100) {
-            endTime = System.nanoTime()
             Log.d(TAG, "end")
-            processTime = endTime - startTime
-            Log.d(TAG, "process duration: $processTime")
         }
     }
 
@@ -95,6 +89,7 @@ class MediaCodecCallBack(
             e.printStackTrace()
         }
         onProcessingProgress.invoke(onProcessingProgress(percent))
+        findProcessingTime(percent)
     }
 
     override fun onOutputBufferAvailable(
@@ -117,6 +112,8 @@ class MediaCodecCallBack(
                 } else {
                     onProcessingProgress.invoke(100)
                     gains.addAll(onFinishProcessing.invoke())
+                    Log.d("callback", "gains: $gains")
+                    Log.d("callback", "gains: ${gains.size}")
                 }
                 stopCodec(codec)
             }
@@ -221,4 +218,13 @@ class MediaCodecCallBack(
         return data
     }
 
+    fun findProcessingTime(percent: Int): Long {
+        var processTimeResult = 0L
+        startTime = System.nanoTime()
+        if (percent == 100) {
+            endTime = System.nanoTime()
+            processTimeResult = endTime - startTime
+        }
+        return processTimeResult
+    }
 }

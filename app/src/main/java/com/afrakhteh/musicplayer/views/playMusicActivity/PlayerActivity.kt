@@ -31,11 +31,12 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         ViewModelComponentBuilder.getInstance().injectPlayer(this)
-        initialiseView()
-        initialiseViewModel()
 
         val path = requireNotNull(intent.extras).getString(Strings.AUDIO_PATH_KEY, "")
         viewModel.getAllAudioWaveData(path)
+
+        initialiseView()
+        initialiseViewModel()
 
     }
 

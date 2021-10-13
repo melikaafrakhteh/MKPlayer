@@ -22,6 +22,7 @@ class AudioDecoderImpl(
 
     val result: ArrayList<Int> = ArrayList()
 
+
     private val isCanceled: () -> Boolean = { false }
     private val onProcessingCancel: (decoder: MediaCodec) -> Unit = {}
     private val onProcessingProgress: (Int) -> Unit = {}
@@ -36,24 +37,27 @@ class AudioDecoderImpl(
         decoder = MediaCodec.createDecoderByType(requireNotNull(audioDetails.mimeType))
 
         callBack = MediaCodecCallBack(
-                isCanceled,
-                onProcessingCancel,
-                onProcessingProgress,
-                onFinishProcessing,
-                format,
-                extractor,
-                path)
+            isCanceled,
+            onProcessingCancel,
+            onProcessingProgress,
+            onFinishProcessing,
+            format,
+            extractor,
+            path
+        )
         decoder.setCallback(callBack)
 
         decoder.configure(format, null, null, 0)
         decoder.start()
     }
 
+    private fun processTime(): Long {
+        return callBack.findProcessingTime(100)
+    }
+
     override suspend fun decodingResult(): ArrayList<Int> {
-        delay(callBack.processTime)
-        Log.d(TAG, "process time:  ${callBack.processTime}")
+        delay(processTime())
         result.addAll(callBack.gains)
-        Log.d(TAG, result.toString())
         return result
     }
 
@@ -73,13 +77,5 @@ class AudioDecoderImpl(
         Log.e(TAG, exception.toString())
     }
 
-    fun mappedData(gains: ArrayList<Int>): List<Int> {
-        val minValue = requireNotNull(gains.minOrNull())
-        val maxValue = requireNotNull(gains.maxOrNull())
-        val diff = maxValue - minValue
-        return gains.map { items ->
-            (((items - minValue) * 100f) / diff).toInt()
-        }
-    }
 }
 
