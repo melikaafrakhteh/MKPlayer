@@ -36,18 +36,8 @@ class PlayerViewModel @Inject constructor(
                             onNext = {
                                 pWaveList.postValue(it)
                                 disposable.clear()
-                                Log.d("player view model", "$it")
                             }
                     ).addTo(disposable)
-        }
-    }
-
-    fun mappedData(gains: ArrayList<Int>): List<Int> {
-        val minValue = requireNotNull(gains.minOrNull())
-        val maxValue = requireNotNull(gains.maxOrNull())
-        val diff = maxValue - minValue
-        return gains.map { items ->
-            (((items - minValue) * 100f) / diff).toInt()
         }
     }
 
