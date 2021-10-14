@@ -12,15 +12,15 @@ import javax.inject.Inject
 class AudioDetailsRepositoryImpl
 @Inject constructor() : AudioDetailsRepository {
 
-    private val audioDataSource: PublishSubject<ArrayList<Int>> = PublishSubject.create()
+    private val audioWaveDataObservable: PublishSubject<ArrayList<Int>> = PublishSubject.create()
 
     override suspend fun fetchAudioWaveData(
             path: String
     ): Observable<ArrayList<Int>> {
         val data = AudioWaveDataSource(AudioDecoderImpl(MediaExtractor()))
         data.decodeAudio(path) { list ->
-            audioDataSource.onNext(list)
+            audioWaveDataObservable.onNext(list)
         }
-        return audioDataSource
+        return audioWaveDataObservable
     }
 }

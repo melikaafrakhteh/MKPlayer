@@ -19,8 +19,10 @@ class WaveView : LinearLayout {
 
     fun showWaves(percents: List<Int>, screenHeight: Int) {
         this.percents.apply {
-            clear()
-            addAll(percents)
+            if (size != percents.size) {
+                clear()
+                addAll(percents)
+            }
         }
 
         val halfHeight = (screenHeight - 116.toPx) / 2

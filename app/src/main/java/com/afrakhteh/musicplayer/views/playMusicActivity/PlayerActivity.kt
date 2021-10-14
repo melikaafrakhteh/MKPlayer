@@ -11,10 +11,8 @@ import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.util.getScreenSize
-import com.afrakhteh.musicplayer.util.toPx
 import com.afrakhteh.musicplayer.viewModel.PlayerViewModel
 import com.afrakhteh.musicplayer.views.mainActivity.MainActivity
-import com.afrakhteh.musicplayer.views.playMusicActivity.customs.line.VerticalLine
 import javax.inject.Inject
 
 
@@ -36,19 +34,13 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.getAllAudioWaveData(path)
 
         initialiseView()
-        initialiseViewModel()
 
-    }
-
-    private fun initialiseViewModel() {
         viewModel.waveList.observe(this, ::renderList)
     }
 
     private fun renderList(arrayList: ArrayList<Int>?) {
         if (requireNotNull(arrayList).size != 0) {
             binding.playWave.showWaves(arrayList, getScreenSize().y)
-        } else {
-            drawShapeBeforeProcessing()
         }
     }
 
@@ -91,14 +83,6 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun backButton(view: View?) {
         startActivity(Intent(this, MainActivity::class.java))
-    }
-
-    private fun drawShapeBeforeProcessing() {
-        val draw = VerticalLine(this, 4f)
-        binding.playWave.addView(View(this).apply {
-            minimumHeight = (getScreenSize().y - 116.toPx) / 2
-        })
-        binding.playWave.addView(draw)
     }
 
 }

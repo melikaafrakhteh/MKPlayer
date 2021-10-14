@@ -1,6 +1,5 @@
 package com.afrakhteh.musicplayer.model.dataSource
 
-import android.util.Log
 import com.afrakhteh.musicplayer.constant.Lists.SUPPORTED_EXT
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioDecoderImpl
 import java.io.File
@@ -18,7 +17,6 @@ class AudioWaveDataSource(private val audioDecoder: AudioDecoderImpl) {
             audioDecoder.setAudioDataSource(path)
 
             audioDecoder.setOnFinishDecoding { preparedData ->
-                Log.d("dataSource", "raw: $preparedData")
                 onDataPrepared(mappedData(preparedData))
             }
 
@@ -36,7 +34,6 @@ class AudioWaveDataSource(private val audioDecoder: AudioDecoderImpl) {
         val mapped = gains.map { items ->
             (((items - minValue) * 100f) / diff).toInt()
         }
-        Log.d("dataSource", "after mapped: $mapped")
         return mapped as ArrayList<Int>
     }
 
