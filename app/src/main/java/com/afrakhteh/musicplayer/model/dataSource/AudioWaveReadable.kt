@@ -1,23 +1,27 @@
 package com.afrakhteh.musicplayer.model.dataSource
 
 import com.afrakhteh.musicplayer.constant.Lists.SUPPORTED_EXT
+import com.afrakhteh.musicplayer.dataSources.Readable
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioDecoderImpl
+import com.afrakhteh.musicplayer.model.entity.AudioWaveDataRequest
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 
-class AudioWaveDataSource(private val audioDecoder: AudioDecoderImpl) {
+class AudioWaveReadable(
+        private val audioDecoder: AudioDecoderImpl
+) : Readable.Void.Suspendable.IO<AudioWaveDataRequest> {
 
-    suspend fun decodeAudio(path: String, onDataPrepared: (ArrayList<Int>) -> Unit) {
+    override suspend fun read(input: AudioWaveDataRequest) {
         try {
-            val checkedFile = fetchAudioFile(path)
+            val checkedFile = fetchAudioFile(input.path)
             checkAudioFormat(checkedFile)
 
-            audioDecoder.setAudioDataSource(path)
+            audioDecoder.setAudioDataSource(input.path)
 
             audioDecoder.setOnFinishDecoding { preparedData ->
-                onDataPrepared(mappedData(preparedData))
+                input.onDataPrepared(mappedData(preparedData))
             }
 
             audioDecoder.startDecoding()
