@@ -16,10 +16,9 @@ class MediaCodecCallBack(
         private var isCanceled: () -> Boolean,
         private var onProcessingCancel: (decoder: MediaCodec) -> Unit,
         private var onProcessingProgress: (Int) -> Unit,
-        private var onFinishProcessing: () -> ArrayList<Int>,
+        private var onFinishProcessing: (ArrayList<Int>) -> Unit,
         private val format: MediaFormat,
-        private val extractor: MediaExtractor,
-        private val path: String
+        private val extractor: MediaExtractor
 ) : MediaCodec.Callback() {
 
     private var mOutputEOS = false
@@ -34,8 +33,6 @@ class MediaCodecCallBack(
     private var maxresult = 0
     private var frameIndex = 0
     private var isCancel = false
-    private var startTime = 0L
-    private var endTime = 0L
 
     val gains: ArrayList<Int> = ArrayList()
 
@@ -45,10 +42,7 @@ class MediaCodecCallBack(
         isCanceled = ::checkCancellation
         onProcessingProgress = ::checkProcessing
         onProcessingCancel = ::checkCancelingProcess
-        onFinishProcessing = ::endOfProcessResult
     }
-
-    private fun endOfProcessResult(): ArrayList<Int> = gains
 
     private fun checkCancelingProcess(decoder: MediaCodec) {
         Log.d(TAG, "progress canceled")
@@ -89,7 +83,6 @@ class MediaCodecCallBack(
             e.printStackTrace()
         }
         onProcessingProgress.invoke(onProcessingProgress(percent))
-        findProcessingTime(percent)
     }
 
     override fun onOutputBufferAvailable(
@@ -111,14 +104,13 @@ class MediaCodecCallBack(
                     onProcessingCancel.invoke(codec)
                 } else {
                     onProcessingProgress.invoke(100)
-                    gains.addAll(onFinishProcessing.invoke())
-                    Log.d("callback", "gains: $gains")
-                    Log.d("callback", "gains: ${gains.size}")
+                    onFinishProcessing.invoke(gains)
                 }
                 stopCodec(codec)
             }
         } catch (e: IllegalStateException) {
             e.printStackTrace()
+            throw e
         }
     }
 
@@ -178,7 +170,7 @@ class MediaCodecCallBack(
     @RequiresApi(Build.VERSION_CODES.P)
     fun onProcessingProgress(percent: Int): Int {
         var processingPercent = percent
-        val curProgress = (100 * decoded / AudioUtils.findTotalSize(path).toFloat()).toInt()
+        val curProgress = (100 * decoded / AudioUtils.findTotalSize("").toFloat()).toInt()
         if (curProgress != processingPercent)
             processingPercent = curProgress
 
@@ -216,15 +208,5 @@ class MediaCodecCallBack(
             }
         }
         return data
-    }
-
-    fun findProcessingTime(percent: Int): Long {
-        var processTimeResult = 0L
-        startTime = System.nanoTime()
-        if (percent == 100) {
-            endTime = System.nanoTime()
-            processTimeResult = endTime - startTime
-        }
-        return processTimeResult
     }
 }

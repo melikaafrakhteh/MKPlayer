@@ -1,6 +1,5 @@
 package com.afrakhteh.musicplayer.model.dataSource
 
-import android.util.Log
 import com.afrakhteh.musicplayer.constant.Lists.SUPPORTED_EXT
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioDecoderImpl
 import java.io.File
@@ -8,28 +7,27 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 
-class AudioWaveDataSource(private val impl: AudioDecoderImpl) {
+class AudioWaveDataSource(private val audioDecoder: AudioDecoderImpl) {
 
-    suspend fun decodeAudio(path: String, data: (ArrayList<Int>) -> Unit) {
+    suspend fun decodeAudio(path: String, onDataPrepared: (ArrayList<Int>) -> Unit) {
         try {
-            val checkedFile = checkAudioFile(path)
+            val checkedFile = fetchAudioFile(path)
             checkAudioFormat(checkedFile)
 
-            impl.setAudioDataSource(path)
-            impl.startDecoding()
+            audioDecoder.setAudioDataSource(path)
 
-            val dataResult = impl.decodingResult()
-            Log.d("audioTag", "data source:  $dataResult")
-            Log.d("audioTag", "data source:  ${dataResult.size}")
-            data(dataResult)
+            audioDecoder.setOnFinishDecoding { preparedData ->
+                onDataPrepared(preparedData)
+            }
 
+            audioDecoder.startDecoding()
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.e("audioTag", "error in readAudio catch $e")
+            throw e
         }
     }
 
-    private fun checkAudioFile(path: String): File {
+    private fun fetchAudioFile(path: String): File {
         val file = File(path)
         if (!file.exists()) {
             throw FileNotFoundException("error in readAudio $path")

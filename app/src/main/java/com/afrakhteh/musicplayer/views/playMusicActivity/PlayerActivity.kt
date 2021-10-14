@@ -56,8 +56,6 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        drawShapeBeforeProcessing()
-
         val musicName = requireNotNull(intent.extras).getString(Strings.AUDIO_NAME_KEY, "")
         val musicArtistName = requireNotNull(intent.extras).getString(Strings.AUDIO_ARTIST_KEY, "")
 

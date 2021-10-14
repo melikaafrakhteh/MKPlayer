@@ -1,7 +1,6 @@
 package com.afrakhteh.musicplayer.model.repository.player
 
 import android.media.MediaExtractor
-import android.util.Log
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.dataSource.AudioWaveDataSource
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioDecoderImpl
@@ -18,12 +17,10 @@ class AudioDetailsRepositoryImpl
     override suspend fun fetchAudioWaveData(
             path: String
     ): Observable<ArrayList<Int>> {
-        val data = AudioWaveDataSource(AudioDecoderImpl(MediaExtractor(), path))
+        val data = AudioWaveDataSource(AudioDecoderImpl(MediaExtractor()))
         data.decodeAudio(path) { list ->
             audioDataSource.onNext(list)
-            Log.d("repository", "in decode:  $list")
         }
-        Log.d("repository", "$audioDataSource")
         return audioDataSource
     }
 }
