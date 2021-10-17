@@ -41,6 +41,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun drawInitialFrame(frameSize: Int) {
+        binding.playWave.removeAllViews()
         val frameList = ArrayList<Int>()
         for (i in 0..frameSize) {
             frameList.add(1)
@@ -51,7 +52,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun renderList(arrayList: ArrayList<Int>) {
-
+        binding.playWave.removeAllViews()
         Log.d("activity", "$arrayList")
         binding.playWave.showWaves(arrayList, getScreenSize().y)
     }
