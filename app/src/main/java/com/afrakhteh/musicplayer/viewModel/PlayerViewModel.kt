@@ -24,22 +24,33 @@ class PlayerViewModel @Inject constructor(
     private val disposable = CompositeDisposable()
 
     private val pWaveList = MutableLiveData<ArrayList<Int>>()
-    val waveList: LiveData<ArrayList<Int>> get() = pWaveList
+    val waveListLiveData: LiveData<ArrayList<Int>> get() = pWaveList
+
+    private val pFrameSize = MutableLiveData<Int>()
+    val frameSizeLiveData: LiveData<Int> get() = pFrameSize
 
     fun getAllAudioWaveData(path: String) {
-        job = CoroutineScope(Dispatchers.Main).launch {
-            repository.fetchAudioWaveData(path)
-                    .subscribeBy(
-                            onError = {
-                                Log.e("playerViewModel", "player view model error in subscription: $it")
-                            },
-                            onNext = {
-                                pWaveList.postValue(it)
-                                disposable.clear()
-                            }
-                    ).addTo(disposable)
+        job = CoroutineScope(Dispatchers.IO).launch {
+            val audioWaveData = repository.fetchAudioWaveData(path)
+            audioWaveData.frameCountObservable.subscribe {
+                pFrameSize.postValue(it)
+                Log.d("viewModel", "$it")
+                disposable.clear()
+            }.addTo(disposable)
+
+            audioWaveData.waveDataObservable.subscribeBy(
+                    onError = {
+                        Log.e("playerViewModel", "player view model error in subscription: $it")
+                    },
+                    onNext = {
+                        pWaveList.postValue(it)
+                        Log.d("viewModel list", "$it")
+                        disposable.clear()
+                    }
+            ).addTo(disposable)
         }
     }
+
 
     override fun onCleared() {
         super.onCleared()

@@ -24,6 +24,10 @@ class AudioWaveReadable(
                 input.onDataPrepared(mappedData(preparedData))
             }
 
+            audioDecoder.setOnFrameAmpsCounted { size ->
+                input.onFrameCounted(size)
+            }
+
             audioDecoder.startDecoding()
         } catch (e: Exception) {
             e.printStackTrace()

@@ -22,12 +22,16 @@ class AudioDecoderImpl(
     private val onProcessingCancel: (decoder: MediaCodec) -> Unit = {}
     private val onProcessingProgress: (Int) -> Unit = {}
     private var onFinishProcessing: (ArrayList<Int>) -> Unit = { }
+    private var onFrameAmpsCounted: (Int) -> Unit = {}
+
 
     override suspend fun startDecoding() {
         var format: MediaFormat? = null
         val numTracks = extractor.trackCount
         format = findFileFirstAudio(extractor, numTracks)
         val audioDetails = extractAudioDetails(format)
+
+        onFrameAmpsCounted.invoke(audioDetails.oneFrameAmps.size)
 
         decoder = MediaCodec.createDecoderByType(requireNotNull(audioDetails.mimeType))
 
@@ -60,6 +64,10 @@ class AudioDecoderImpl(
 
     override fun setOnFinishDecoding(onFinishDecoding: (ArrayList<Int>) -> Unit) {
         onFinishProcessing = onFinishDecoding
+    }
+
+    override fun setOnFrameAmpsCounted(onFrameAmpsCounted: (Int) -> Unit) {
+        this.onFrameAmpsCounted = onFrameAmpsCounted
     }
 
     override fun onError(exception: Exception) {
