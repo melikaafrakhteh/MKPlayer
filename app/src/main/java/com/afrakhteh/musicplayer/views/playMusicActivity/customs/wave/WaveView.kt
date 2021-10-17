@@ -19,7 +19,7 @@ class WaveView : LinearLayout {
 
     fun showWaves(percents: List<Int>, screenHeight: Int) {
         this.percents.apply {
-            if (size == percents.size) {
+            if (size != percents.size) {
                 clear()
                 addAll(percents)
             }

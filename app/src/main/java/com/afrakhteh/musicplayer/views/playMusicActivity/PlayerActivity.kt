@@ -3,7 +3,6 @@ package com.afrakhteh.musicplayer.views.playMusicActivity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -37,7 +36,6 @@ class PlayerActivity : AppCompatActivity() {
         initialiseView()
         viewModel.waveListLiveData.observe(this, ::renderList)
         viewModel.frameSizeLiveData.observe(this, ::drawInitialFrame)
-
     }
 
     private fun drawInitialFrame(frameSize: Int) {
@@ -46,14 +44,11 @@ class PlayerActivity : AppCompatActivity() {
         for (i in 0..frameSize) {
             frameList.add(1)
         }
-        Log.d("activity draw", "${frameList.size}")
-        Log.d("activity draw", "$frameList")
         binding.playWave.showWaves(frameList, getScreenSize().y)
     }
 
     private fun renderList(arrayList: ArrayList<Int>) {
         binding.playWave.removeAllViews()
-        Log.d("activity", "$arrayList")
         binding.playWave.showWaves(arrayList, getScreenSize().y)
     }
 

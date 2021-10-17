@@ -10,6 +10,7 @@ import com.afrakhteh.musicplayer.util.AudioUtils
 import com.afrakhteh.musicplayer.util.AudioUtils.extractAudioDetails
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import kotlin.math.max
 import kotlin.math.sqrt
 
 class MediaCodecCallBack(
@@ -23,7 +24,7 @@ class MediaCodecCallBack(
 
     private var mOutputEOS = false
     private var mInputEOS = false
-    var decoded: Long = 0
+    private var decoded: Long = 0
     private var percent = 0
 
     private var sampleTime = 0L
@@ -34,7 +35,7 @@ class MediaCodecCallBack(
     private var frameIndex = 0
     private var isCancel = false
 
-    val gains: ArrayList<Int> = ArrayList()
+    private val gains: ArrayList<Int> = ArrayList()
 
     private val TAG: String = "callBack"
 
@@ -50,7 +51,6 @@ class MediaCodecCallBack(
     }
 
     private fun checkProcessing(percent: Int) {
-        Log.d(TAG, " progress: $percent")
         if (percent == 100) {
             Log.d(TAG, "end")
         }
@@ -127,7 +127,7 @@ class MediaCodecCallBack(
                 total += resultOfEncoding
                 sampleTime = extractor.sampleTime
                 advanced = extractor.advance()
-                maxresult = Math.max(maxresult, resultOfEncoding)
+                maxresult = max(maxresult, resultOfEncoding)
             }
         } while (checkEncodingResult(inputBuffer))
         decoded += total

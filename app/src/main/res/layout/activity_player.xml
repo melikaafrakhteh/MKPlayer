@@ -40,6 +40,7 @@
             android:src="@drawable/error"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintBottom_toTopOf="@id/playScrollView"
             app:riv_corner_radius="50dp" />
 
         <TextView
@@ -50,7 +51,7 @@
             android:layout_marginTop="4dp"
             android:fontFamily="@font/roboto"
             android:gravity="start"
-            android:text="Trees of Eternity"
+            tools:text="Trees of Eternity"
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/playMusicCoverIv"
@@ -62,8 +63,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:fontFamily="@font/roboto_bold"
-            android:text="Broken Mirror"
+            tools:text="Broken Mirror"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/playMusicCoverIv"
@@ -71,13 +73,14 @@
             app:layout_constraintTop_toBottomOf="@+id/playMusicArtistTv" />
 
         <ScrollView
+            android:id="@+id/playScrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/playMusicNameTv">
+            app:layout_constraintTop_toBottomOf="@id/playMusicCoverIv">
 
             <com.afrakhteh.musicplayer.views.playMusicActivity.customs.wave.WaveView
                 android:id="@+id/playWave"
@@ -91,10 +94,9 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/play_shadow"
-            android:layout_marginTop="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/playMusicNameTv" />
+            app:layout_constraintTop_toTopOf="@id/playScrollView" />
 
         <View
             android:id="@+id/playBottomShadow"
@@ -113,7 +115,7 @@
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="16dp"
             android:fontFamily="@font/roboto_bold"
-            android:text="4:08"
+            tools:text="4:08"
             android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

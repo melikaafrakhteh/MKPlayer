@@ -34,7 +34,6 @@ class PlayerViewModel @Inject constructor(
             val audioWaveData = repository.fetchAudioWaveData(path)
             audioWaveData.frameCountObservable.subscribe {
                 pFrameSize.postValue(it)
-                Log.d("viewModel", "$it")
                 disposable.clear()
             }.addTo(disposable)
 
@@ -44,7 +43,6 @@ class PlayerViewModel @Inject constructor(
                     },
                     onNext = {
                         pWaveList.postValue(it)
-                        Log.d("viewModel list", "$it")
                         disposable.clear()
                     }
             ).addTo(disposable)

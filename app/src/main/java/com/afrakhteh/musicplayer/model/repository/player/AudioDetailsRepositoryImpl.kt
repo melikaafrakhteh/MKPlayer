@@ -1,7 +1,6 @@
 package com.afrakhteh.musicplayer.model.repository.player
 
 import android.media.MediaExtractor
-import android.util.Log
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.dataSource.AudioWaveReadable
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioDecoderImpl
@@ -27,11 +26,9 @@ class AudioDetailsRepositoryImpl
                         path,
                         { list ->
                             audioWaveDataObservable.onNext(list)
-                            Log.d("repository", "list")
                         },
                         { frameAmpsSize ->
                             audioFrameCountedObservable.onNext(frameAmpsSize)
-                            Log.d("repository", "size")
                         }
                 )
         )
