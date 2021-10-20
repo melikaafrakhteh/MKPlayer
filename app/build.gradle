@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -95,11 +96,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
 
-    def exoPlayerVersion = 'r2.15.1'
-    implementation "com.google.android.exoplayer:exoplayer:$exoPlayerVersion"
-    implementation "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
-    implementation "com.google.android.exoplayer:exoplayer-dash:$exoPlayerVersion"
-    implementation "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
+    implementation 'com.google.android.exoplayer:exoplayer:2.15.1'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
 
 
 }
