@@ -5,6 +5,5 @@ data class AudioPrePareToPlay(
         val path: String,
         val album: String,
         val musicName: String,
-        val musicArtist: String,
-        val image: String
+        val musicArtist: String
 )

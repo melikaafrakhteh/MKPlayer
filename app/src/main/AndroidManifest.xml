@@ -3,6 +3,9 @@
     package="com.afrakhteh.musicplayer">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <permission android:name="my.app.PERMISSION" />
 
     <application
         android:name=".App"
@@ -26,6 +29,18 @@
             android:name=".views.services.AudioPlayerService"
             android:enabled="true"
             android:exported="false" />
+
+        <receiver
+            android:name=".views.receiver.MusicNotificationActionReceiver"
+            android:enabled="true"
+            android:permission="my.app.PERMISSION">
+            <intent-filter>
+                <action android:name="play" />
+                <action android:name="next" />
+                <action android:name="previous" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
