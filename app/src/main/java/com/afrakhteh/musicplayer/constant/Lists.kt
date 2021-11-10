@@ -9,6 +9,7 @@ object Lists {
             "amr",
             "aac",
             "m4a",
+            "mid",
             "ogg"
     )
 }
