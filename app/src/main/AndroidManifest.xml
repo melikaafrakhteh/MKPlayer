@@ -30,17 +30,6 @@
             android:enabled="true"
             android:exported="false" />
 
-        <receiver
-            android:name=".views.receiver.MusicNotificationActionReceiver"
-            android:enabled="true"
-            android:permission="my.app.PERMISSION">
-            <intent-filter>
-                <action android:name="play" />
-                <action android:name="next" />
-                <action android:name="previous" />
-            </intent-filter>
-        </receiver>
-
     </application>
 
 </manifest>

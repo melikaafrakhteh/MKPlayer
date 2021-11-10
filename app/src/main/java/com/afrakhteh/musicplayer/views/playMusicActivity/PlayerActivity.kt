@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -34,16 +33,21 @@ class PlayerActivity : AppCompatActivity() {
 
     private val connectToService = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+
             audioPlayerService = (service as AudioPlayerService.AudioBinder).getService()
-            Log.d("playerActivity", "service: $audioPlayerService is connected")
-            audioPlayerService?.play()
+            requireNotNull(audioPlayerService)
+                    .onPlayerChangedLiveData.observe(this@PlayerActivity, ::onPlayedChanged)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
             audioPlayerService = null
-            Log.d("playerActivity", "service: $audioPlayerService is disconnected")
         }
+    }
 
+    private fun onPlayedChanged(isPlaying: Boolean?) {
+        if (isPlaying != null) {
+            binding.playToggleBtn.isChecked = isPlaying
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +55,7 @@ class PlayerActivity : AppCompatActivity() {
 
         ViewModelComponentBuilder.getInstance().injectPlayer(this)
 
-        val path = requireNotNull(intent.extras).getString(Strings.AUDIO_PATH_KEY, "")
+        val path = requireNotNull(intent.extras).getString(Strings.AUDIO_PATH_KEY, "")!!
         viewModel.getAllAudioWaveData(path)
 
         initialiseView()
@@ -59,8 +63,8 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.waveListLiveData.observe(this, ::renderList)
         viewModel.frameSizeLiveData.observe(this, ::drawInitialFrame)
 
-        bindService(Intent(this, AudioPlayerService::class.java), connectToService, BIND_AUTO_CREATE)
-        Log.d("player", "bind")
+        bindService(Intent(this,
+                AudioPlayerService::class.java), connectToService, BIND_AUTO_CREATE)
     }
 
     private fun drawInitialFrame(frameSize: Int) {
@@ -99,12 +103,10 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun handlePlayOrPause(view: View?) {
-        if (binding.playToggleBtn.isChecked) {
+        if (requireNotNull(audioPlayerService).isPlaying()) {
             audioPlayerService?.pause()
-            binding.playToggleBtn.isChecked = true
         } else {
             audioPlayerService?.play()
-            binding.playToggleBtn.isChecked = false
         }
     }
 
@@ -113,20 +115,20 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun forwardButton(view: View?) {
-        audioPlayerService?.playNextMusicOfList()
+        audioPlayerService?.playNext()
     }
 
     private fun rewindButton(view: View?) {
-        audioPlayerService?.playPreviousMusicOfList()
+        audioPlayerService?.playPrevious()
     }
 
     private fun backButton(view: View?) {
         startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     override fun onDestroy() {
         unbindService(connectToService)
-        Log.d("player", "unbind")
         super.onDestroy()
     }
 }

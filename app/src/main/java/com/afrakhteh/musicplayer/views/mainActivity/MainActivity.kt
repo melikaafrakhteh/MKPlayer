@@ -2,7 +2,9 @@ package com.afrakhteh.musicplayer.views.mainActivity
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -14,14 +16,20 @@ import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Numerals
+import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.ActivityMainBinding
+import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.MusicEntity
+import com.afrakhteh.musicplayer.util.ListUtil
 import com.afrakhteh.musicplayer.util.getScreenSize
 import com.afrakhteh.musicplayer.views.mainActivity.adapters.viewPager.ViewPagerAdapter
+import com.afrakhteh.musicplayer.views.mainActivity.interfaces.MusicPlayer
 import com.afrakhteh.musicplayer.views.mainActivity.interfaces.PermissionController
+import com.afrakhteh.musicplayer.views.services.AudioPlayerService
 
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
-class MainActivity : AppCompatActivity(), PermissionController {
+class MainActivity : AppCompatActivity(), PermissionController, MusicPlayer {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var context: Context
@@ -68,25 +76,25 @@ class MainActivity : AppCompatActivity(), PermissionController {
 
     //already granted
     private fun hasReadStoragePermission() = ContextCompat
-        .checkSelfPermission(
-            this,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
+            .checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
 
     private fun requestStoragePermission() {
         if (!hasReadStoragePermission()) {
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                Numerals.REQUEST_READ_STORAGE_CODE
+                    this,
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    Numerals.REQUEST_READ_STORAGE_CODE
             )
         }
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
@@ -192,6 +200,25 @@ class MainActivity : AppCompatActivity(), PermissionController {
         }
     }
 
+    override fun play(data: MusicEntity, list: List<AudioPrePareToPlay>) {
+        startPlayerService(data)
+        ListUtil.setList(list)
+    }
+
+    override fun pause() {}
+
+    override fun stop() {}
+
+    private fun startPlayerService(data: MusicEntity) {
+        val serviceIntent = Intent(this, AudioPlayerService::class.java)
+                .putExtra(Strings.AUDIO_ID_KEY, data.index)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
+    }
 }
 
 

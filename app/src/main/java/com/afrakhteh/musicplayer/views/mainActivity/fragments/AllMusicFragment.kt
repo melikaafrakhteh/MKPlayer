@@ -4,7 +4,6 @@ package com.afrakhteh.musicplayer.views.mainActivity.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,13 +17,14 @@ import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
+import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
 import com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic.AllMusicAdapter
+import com.afrakhteh.musicplayer.views.mainActivity.interfaces.MusicPlayer
 import com.afrakhteh.musicplayer.views.mainActivity.interfaces.PermissionController
 import com.afrakhteh.musicplayer.views.mainActivity.state.MusicState
 import com.afrakhteh.musicplayer.views.playMusicActivity.PlayerActivity
-import com.afrakhteh.musicplayer.views.services.AudioPlayerService
 import javax.inject.Inject
 
 
@@ -78,21 +78,22 @@ class AllMusicFragment : Fragment() {
     }
 
     private fun onMusicItemClicked(data: MusicEntity) {
-        startPlayerService()
         val intent = Intent(requireActivity(), PlayerActivity::class.java).apply {
             putExtra(Strings.AUDIO_PATH_KEY, data.path)
             putExtra(Strings.AUDIO_NAME_KEY, data.name)
             putExtra(Strings.AUDIO_ARTIST_KEY, data.artist)
         }
         startActivity(intent)
-    }
 
-    private fun startPlayerService() {
-        val serviceIntent = Intent(requireActivity(), AudioPlayerService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            requireNotNull(context).startForegroundService(serviceIntent)
-        } else {
-            requireNotNull(context).startService(serviceIntent)
+        val prepare = AudioPrePareToPlay(
+                0,
+                data.path,
+                "",
+                requireNotNull(data.name),
+                requireNotNull(data.artist))
+
+        (requireActivity() as MusicPlayer).apply {
+            play(data, listOf(prepare))
         }
     }
 
@@ -108,8 +109,6 @@ class AllMusicFragment : Fragment() {
         musicAdapter.submitList(ArrayList(state.musicItems))
         val number = state.musicItems.size
         binding.allFragmentNumberTv.text = "$number songs"
-
-
     }
 
     private fun onPermissionGranted(permission: Boolean) {
