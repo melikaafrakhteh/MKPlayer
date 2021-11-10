@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.uiUtils
+package com.afrakhteh.musicplayer.views.util
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -23,7 +23,6 @@ import com.afrakhteh.musicplayer.views.services.AudioPlayerService
 class PlayerNotificationHelper(
         private val notificationManager: NotificationManager
 ) {
-
     fun showNotification(
             context: Context,
             audio: AudioPrePareToPlay,

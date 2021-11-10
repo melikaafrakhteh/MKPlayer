@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,7 +16,7 @@ import com.afrakhteh.musicplayer.di.builders.PlayerComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.entity.AudioRepeatType
 import com.afrakhteh.musicplayer.util.ListUtil.getList
-import com.afrakhteh.musicplayer.views.uiUtils.PlayerNotificationHelper
+import com.afrakhteh.musicplayer.views.util.PlayerNotificationHelper
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -35,7 +34,7 @@ class AudioPlayerService : Service(), Player.Listener {
     private var currentPosition: Int? = null
     private val audioRepeatType: AudioRepeatType = AudioRepeatType.RepeatAllMusicList
 
-    private lateinit var notification: PlayerNotificationHelper
+    private lateinit var notificationHelper: PlayerNotificationHelper
 
     private var isForegroundServiceStarted: Boolean = false
 
@@ -54,7 +53,6 @@ class AudioPlayerService : Service(), Player.Listener {
         super.onStartCommand(intent, flags, startId)
 
         audioListToPlay = requireNotNull(getList())
-        //  currentPosition = intent?.getIntExtra(Strings.AUDIO_ID_KEY,0)
         currentPosition = 0
         startForeGroundIfNeeded()
         handleIntent(intent)
@@ -65,7 +63,7 @@ class AudioPlayerService : Service(), Player.Listener {
         super.onCreate()
 
         PlayerComponentBuilder.getInstance().inject(this)
-        notification = PlayerNotificationHelper(
+        notificationHelper = PlayerNotificationHelper(
                 getSystemService(NOTIFICATION_SERVICE)
                         as NotificationManager)
         player.addListener(this)
@@ -93,7 +91,6 @@ class AudioPlayerService : Service(), Player.Listener {
         setAudioItemToPlayer(findMusicToPlay(requireNotNull(currentPosition)))
         player.prepare()
         player.play()
-        Toast.makeText(this, "playing ", Toast.LENGTH_LONG).show()
     }
 
     private fun findMusicToPlay(currentPosition: Int): AudioPrePareToPlay {
@@ -120,8 +117,8 @@ class AudioPlayerService : Service(), Player.Listener {
     }
 
     private fun findNextPositionToPlay(): Int {
-        return if (currentPosition == audioListToPlay.size.minus(1)) 0
-        else requireNotNull(currentPosition).plus(1)
+        return if (currentPosition == audioListToPlay.size - 1) 0
+        else requireNotNull(currentPosition) + 1
     }
 
     fun playPrevious() {
@@ -131,9 +128,9 @@ class AudioPlayerService : Service(), Player.Listener {
 
     private fun findPreviousPositionToPlay(): Int {
 
-        return if (currentPosition != 0) requireNotNull(currentPosition).minus(1)
+        return if (currentPosition != 0) requireNotNull(currentPosition) - 1
         else {
-            audioListToPlay.size.minus(1)
+            audioListToPlay.size - 1
         }
     }
 
@@ -163,7 +160,7 @@ class AudioPlayerService : Service(), Player.Listener {
     private fun startForeGroundIfNeeded() {
         if (isForegroundServiceStarted) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notification = notification.showNotification(this,
+            val notification = notificationHelper.showNotification(this,
                     findMusicToPlay(requireNotNull(currentPosition)),
                     player.isPlaying)
             startForeground(Numerals.NOTIFICATION_ID, notification)
@@ -178,7 +175,7 @@ class AudioPlayerService : Service(), Player.Listener {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
         super.onPlayWhenReadyChanged(playWhenReady, reason)
-        notification.showNotification(this,
+        notificationHelper.showNotification(this,
                 findMusicToPlay(requireNotNull(currentPosition)),
                 playWhenReady)
 

@@ -21,7 +21,6 @@ import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
 import com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic.AllMusicAdapter
-import com.afrakhteh.musicplayer.views.mainActivity.interfaces.MusicPlayer
 import com.afrakhteh.musicplayer.views.mainActivity.interfaces.PermissionController
 import com.afrakhteh.musicplayer.views.mainActivity.state.MusicState
 import com.afrakhteh.musicplayer.views.playMusicActivity.PlayerActivity
@@ -92,9 +91,6 @@ class AllMusicFragment : Fragment() {
                 requireNotNull(data.name),
                 requireNotNull(data.artist))
 
-        (requireActivity() as MusicPlayer).apply {
-            play(data, listOf(prepare))
-        }
     }
 
     private fun initialiseViewModel() {
