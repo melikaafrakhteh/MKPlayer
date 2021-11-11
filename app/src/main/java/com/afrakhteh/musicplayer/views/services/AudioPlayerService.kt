@@ -136,10 +136,6 @@ class AudioPlayerService : Service(), Player.Listener {
         else audioListToPlay.size - 1
     }
 
-    fun setAudioPosition(audioPosition: Int) {
-        currentPosition = audioPosition
-    }
-
     fun setAudioList(audioList: List<AudioPrePareToPlay>) {
         audioListToPlay = audioList
     }
@@ -148,12 +144,12 @@ class AudioPlayerService : Service(), Player.Listener {
         if (intent == null) return
         when (intent.action) {
             AudioActions.ACTION_PLAY -> {
-                if (player.isPlaying) {
-                    Log.d("handle if is play", "${isPlaying()}")
+                if (isPlaying()) {
+                    Log.d("handle if is play", "is playing: ${isPlaying()}")
                     pause()
                 } else {
                     resume()
-                    Log.d("handle if is pause", "${isPlaying()}")
+                    Log.d("handle if is pause", "is pause: ${isPlaying()}")
                 }
             }
             AudioActions.ACTION_NEXT -> playNext()
@@ -161,7 +157,7 @@ class AudioPlayerService : Service(), Player.Listener {
         }
         if (audioListToPlay.isEmpty()) return
         notificationHelper.showNotification(applicationContext,
-                audioListToPlay[requireNotNull(currentPosition)], player.isPlaying)
+                audioListToPlay[requireNotNull(currentPosition)], isPlaying())
         Log.d("update notification", "${currentPosition}")
     }
 
@@ -170,7 +166,7 @@ class AudioPlayerService : Service(), Player.Listener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notification = notificationHelper.showNotification(this,
                     findMusicToPlay(requireNotNull(currentPosition)),
-                    player.isPlaying)
+                    isPlaying())
             Log.d("start foreground", "isplaying: ${isPlaying()}")
             startForeground(Numerals.NOTIFICATION_ID, notification)
         }
@@ -178,7 +174,7 @@ class AudioPlayerService : Service(), Player.Listener {
     }
 
     fun isPlaying(): Boolean {
-        return player.isPlaying
+        return player.playWhenReady
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

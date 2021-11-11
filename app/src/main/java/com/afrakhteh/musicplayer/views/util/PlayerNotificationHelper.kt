@@ -107,7 +107,7 @@ class PlayerNotificationHelper(
     private fun getNotificationAction(
             context: Context,
             action: String,
-            isPlaying: Boolean = true
+            isPlaying: Boolean = false
     ): NotificationCompat.Action {
         val icon = when (action) {
             AudioActions.ACTION_NEXT -> R.drawable.ic_skip_next
