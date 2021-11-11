@@ -8,7 +8,7 @@ import com.afrakhteh.musicplayer.databinding.MusicItemRowBinding
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
 
 class AllMusicAdapter(
-    private val click: (MusicEntity) -> Unit
+        private val click: (Int) -> Unit
 ) : ListAdapter<MusicEntity, AllMusicViewHolder>(AllMusicDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllMusicViewHolder {

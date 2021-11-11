@@ -7,9 +7,9 @@ import com.afrakhteh.musicplayer.model.entity.MusicEntity
 class AllMusicViewHolder(private val binding: MusicItemRowBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(data: MusicEntity, click: (MusicEntity) -> Unit) {
+    fun bind(data: MusicEntity, click: (Int) -> Unit) {
         with(binding) {
-            musicItemRowLinear.setOnClickListener { click.invoke(data) }
+            musicItemRowLinear.setOnClickListener { click.invoke(absoluteAdapterPosition) }
             musicItemRowNameTv.text = data.name
             musicItemRowSingerTv.text = data.artist
         }

@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.os.Build
 import android.support.v4.media.session.MediaSessionCompat
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.media.app.NotificationCompat.MediaStyle
 import com.afrakhteh.musicplayer.R
@@ -106,13 +107,14 @@ class PlayerNotificationHelper(
     private fun getNotificationAction(
             context: Context,
             action: String,
-            isPlaying: Boolean = false
+            isPlaying: Boolean = true
     ): NotificationCompat.Action {
         val icon = when (action) {
             AudioActions.ACTION_NEXT -> R.drawable.ic_skip_next
             AudioActions.ACTION_PREVIOUS -> R.drawable.ic_skip_previous
             else -> if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
         }
+        Log.d("notification icon", "$isPlaying")
         return NotificationCompat.Action.Builder(
                 icon, "", getMusicPlayerActionIntent(context, action)).build()
     }

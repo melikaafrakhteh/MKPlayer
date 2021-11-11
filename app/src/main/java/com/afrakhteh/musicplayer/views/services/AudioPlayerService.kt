@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,7 +16,6 @@ import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.di.builders.PlayerComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.entity.AudioRepeatType
-import com.afrakhteh.musicplayer.util.ListUtil.getList
 import com.afrakhteh.musicplayer.views.util.PlayerNotificationHelper
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -37,6 +37,7 @@ class AudioPlayerService : Service(), Player.Listener {
     private lateinit var notificationHelper: PlayerNotificationHelper
 
     private var isForegroundServiceStarted: Boolean = false
+    private var rememberedPosition = 0L
 
     private val pOnPlayerChangedLiveData = MutableLiveData<Boolean>()
     val onPlayerChangedLiveData: LiveData<Boolean> get() = pOnPlayerChangedLiveData
@@ -51,10 +52,6 @@ class AudioPlayerService : Service(), Player.Listener {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-
-        audioListToPlay = requireNotNull(getList())
-        currentPosition = 0
-        startForeGroundIfNeeded()
         handleIntent(intent)
         return START_STICKY
     }
@@ -75,22 +72,20 @@ class AudioPlayerService : Service(), Player.Listener {
             release()
             removeListener(this@AudioPlayerService)
         }
+        notificationHelper.cancelNotification()
         super.onDestroy()
     }
 
     fun play(position: Int = 0) {
-        // if (currentPosition == position) return
-        if (currentPosition == position) {
-            setAudioItemToPlayer(findMusicToPlay(requireNotNull(currentPosition)))
-            player.prepare()
-            player.play()
-        }
+        if (currentPosition == position) return
         currentPosition = position
         player.stop()
         player.seekTo(0)
         setAudioItemToPlayer(findMusicToPlay(requireNotNull(currentPosition)))
+        Log.d("service , play", "$currentPosition")
         player.prepare()
         player.play()
+        startForeGroundIfNeeded()
     }
 
     private fun findMusicToPlay(currentPosition: Int): AudioPrePareToPlay {
@@ -108,7 +103,17 @@ class AudioPlayerService : Service(), Player.Listener {
     }
 
     fun pause() {
+        rememberedPosition = player.currentPosition
         player.pause()
+    }
+
+    fun resume() {
+        if (rememberedPosition == 0L) {
+            play(currentPosition ?: 0)
+            return
+        }
+        player.seekTo(rememberedPosition)
+        player.play()
     }
 
     fun playNext() {
@@ -127,34 +132,37 @@ class AudioPlayerService : Service(), Player.Listener {
     }
 
     private fun findPreviousPositionToPlay(): Int {
-
         return if (currentPosition != 0) requireNotNull(currentPosition) - 1
-        else {
-            audioListToPlay.size - 1
-        }
+        else audioListToPlay.size - 1
     }
 
-    /*  fun setAudioPosition(audioPosition: Int){
-          currentPosition = audioPosition
-      }
+    fun setAudioPosition(audioPosition: Int) {
+        currentPosition = audioPosition
+    }
 
-      fun setAudioList(audioList: List<AudioPrePareToPlay>) {
-          audioListToPlay = audioList
-      }*/
+    fun setAudioList(audioList: List<AudioPrePareToPlay>) {
+        audioListToPlay = audioList
+    }
 
     private fun handleIntent(intent: Intent?) {
         if (intent == null) return
         when (intent.action) {
             AudioActions.ACTION_PLAY -> {
                 if (player.isPlaying) {
+                    Log.d("handle if is play", "${isPlaying()}")
                     pause()
                 } else {
-                    play()
+                    resume()
+                    Log.d("handle if is pause", "${isPlaying()}")
                 }
             }
             AudioActions.ACTION_NEXT -> playNext()
             AudioActions.ACTION_PREVIOUS -> playPrevious()
         }
+        if (audioListToPlay.isEmpty()) return
+        notificationHelper.showNotification(applicationContext,
+                audioListToPlay[requireNotNull(currentPosition)], player.isPlaying)
+        Log.d("update notification", "${currentPosition}")
     }
 
     private fun startForeGroundIfNeeded() {
@@ -163,6 +171,7 @@ class AudioPlayerService : Service(), Player.Listener {
             val notification = notificationHelper.showNotification(this,
                     findMusicToPlay(requireNotNull(currentPosition)),
                     player.isPlaying)
+            Log.d("start foreground", "isplaying: ${isPlaying()}")
             startForeground(Numerals.NOTIFICATION_ID, notification)
         }
         isForegroundServiceStarted = true

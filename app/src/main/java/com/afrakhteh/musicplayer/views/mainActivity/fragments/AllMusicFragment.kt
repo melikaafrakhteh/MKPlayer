@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,6 @@ import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
-import com.afrakhteh.musicplayer.model.entity.MusicEntity
 import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
 import com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic.AllMusicAdapter
 import com.afrakhteh.musicplayer.views.mainActivity.interfaces.PermissionController
@@ -76,21 +76,30 @@ class AllMusicFragment : Fragment() {
         }
     }
 
-    private fun onMusicItemClicked(data: MusicEntity) {
+    private fun onMusicItemClicked(position: Int) {
+        val data = musicAdapter.currentList[position]
+        Log.d("All music", "position $position")
         val intent = Intent(requireActivity(), PlayerActivity::class.java).apply {
             putExtra(Strings.AUDIO_PATH_KEY, data.path)
             putExtra(Strings.AUDIO_NAME_KEY, data.name)
             putExtra(Strings.AUDIO_ARTIST_KEY, data.artist)
+            putParcelableArrayListExtra(Strings.AUDIO_All_MUSIC_LIST_KEY, ArrayList(audioPrePareToPlayList()))
+            putExtra(Strings.AUDIO_ACTIVE_POSITION__KEY, position)
+            Log.d("All music", "position in extra $position")
         }
         startActivity(intent)
+    }
 
-        val prepare = AudioPrePareToPlay(
-                0,
-                data.path,
-                "",
-                requireNotNull(data.name),
-                requireNotNull(data.artist))
-
+    private fun audioPrePareToPlayList(): List<AudioPrePareToPlay>? {
+        return viewModel.state.value?.musicItems?.map { musicEntity ->
+            AudioPrePareToPlay(
+                    id = musicEntity.index,
+                    path = musicEntity.path,
+                    album = "",
+                    musicName = musicEntity.name ?: "",
+                    musicArtist = musicEntity.artist ?: ""
+            )
+        }
     }
 
     private fun initialiseViewModel() {

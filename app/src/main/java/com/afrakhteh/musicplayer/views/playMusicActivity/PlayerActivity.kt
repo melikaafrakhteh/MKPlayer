@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
+import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.util.getScreenSize
 import com.afrakhteh.musicplayer.viewModel.PlayerViewModel
 import com.afrakhteh.musicplayer.views.mainActivity.MainActivity
@@ -37,11 +38,24 @@ class PlayerActivity : AppCompatActivity() {
             audioPlayerService = (service as AudioPlayerService.AudioBinder).getService()
             requireNotNull(audioPlayerService)
                     .onPlayerChangedLiveData.observe(this@PlayerActivity, ::onPlayedChanged)
+
+            viewModel.getAllMusicList(intent)
+            viewModel.audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
+            viewModel.getMusicActivePosition(intent)
+            viewModel.activePosition.observe(this@PlayerActivity, ::getActiveAudioPosition)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
             audioPlayerService = null
         }
+    }
+
+    private fun getActiveAudioPosition(position: Int?) {
+        audioPlayerService?.play(position ?: 0)
+    }
+
+    private fun getListToPlay(list: List<AudioPrePareToPlay>?) {
+        audioPlayerService?.setAudioList(list ?: emptyList())
     }
 
     private fun onPlayedChanged(isPlaying: Boolean?) {
@@ -63,15 +77,16 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.waveListLiveData.observe(this, ::renderList)
         viewModel.frameSizeLiveData.observe(this, ::drawInitialFrame)
 
-        bindService(Intent(this,
-                AudioPlayerService::class.java), connectToService, BIND_AUTO_CREATE)
+        val startPlayingMusicIntent = Intent(this, AudioPlayerService::class.java)
+        startService(startPlayingMusicIntent)
+        bindService(startPlayingMusicIntent, connectToService, BIND_AUTO_CREATE)
     }
 
     private fun drawInitialFrame(frameSize: Int) {
         binding.playWave.removeAllViews()
         val frameList = ArrayList<Int>()
         for (i in 0..frameSize) {
-            frameList.add(2)
+            frameList.add(1)
         }
         binding.playWave.showWaves(frameList, getScreenSize().y)
     }
@@ -106,7 +121,7 @@ class PlayerActivity : AppCompatActivity() {
         if (requireNotNull(audioPlayerService).isPlaying()) {
             audioPlayerService?.pause()
         } else {
-            audioPlayerService?.play()
+            audioPlayerService?.resume()
         }
     }
 
