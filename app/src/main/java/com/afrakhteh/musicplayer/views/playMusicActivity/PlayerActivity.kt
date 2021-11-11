@@ -111,8 +111,8 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun buttonClicks() {
         binding.playBackIv.setOnClickListener(::backButton)
-        binding.playRewindBtnIv.setOnClickListener(::rewindButton)
-        binding.playForwardBtnIv.setOnClickListener(::forwardButton)
+        binding.playNextBtnIv.setOnClickListener(::previousButton)
+        binding.playPreviousBtnIv.setOnClickListener(::nextButton)
         binding.playVolume.setOnClickListener(::setVolume)
         binding.playToggleBtn.setOnClickListener(::handlePlayOrPause)
     }
@@ -129,11 +129,11 @@ class PlayerActivity : AppCompatActivity() {
         //set volume of music
     }
 
-    private fun forwardButton(view: View?) {
+    private fun nextButton(view: View?) {
         audioPlayerService?.playNext()
     }
 
-    private fun rewindButton(view: View?) {
+    private fun previousButton(view: View?) {
         audioPlayerService?.playPrevious()
     }
 

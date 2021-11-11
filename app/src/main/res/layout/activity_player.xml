@@ -156,28 +156,30 @@
             tools:ignore="ContentDescription,RtlSymmetry" />
 
         <ImageView
-            android:id="@+id/playRewindBtnIv"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:id="@+id/playPreviousBtnIv"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_alignTop="@id/playToggleBtn"
             android:layout_marginBottom="24dp"
-            android:src="@drawable/ic_rewind_button"
-            app:layout_constraintBottom_toTopOf="@+id/playForwardBtnIv"
+            android:src="@drawable/ic_skip_previous"
+            app:layout_constraintBottom_toTopOf="@+id/playNextBtnIv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            app:tint="@color/white" />
 
         <ImageView
-            android:id="@+id/playForwardBtnIv"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:id="@+id/playNextBtnIv"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_alignTop="@id/playToggleBtn"
             android:layout_marginBottom="24dp"
-            android:src="@drawable/ic_forward_button"
+            android:src="@drawable/ic_skip_next"
             app:layout_constraintBottom_toTopOf="@+id/playToggleBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            app:tint="@color/white" />
 
         <ToggleButton
             android:id="@+id/playToggleBtn"
