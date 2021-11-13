@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -42,6 +41,9 @@ class AudioPlayerService : Service(), Player.Listener {
     private val pOnPlayerChangedLiveData = MutableLiveData<Boolean>()
     val onPlayerChangedLiveData: LiveData<Boolean> get() = pOnPlayerChangedLiveData
 
+    private val pOnPlayerChangedDataLiveData = MutableLiveData<AudioPrePareToPlay>()
+    val onPlayerChangedDataLiveData: LiveData<AudioPrePareToPlay> get() = pOnPlayerChangedDataLiveData
+
     inner class AudioBinder : Binder() {
         fun getService(): AudioPlayerService = this@AudioPlayerService
     }
@@ -73,6 +75,7 @@ class AudioPlayerService : Service(), Player.Listener {
             removeListener(this@AudioPlayerService)
         }
         notificationHelper.cancelNotification()
+        stopSelf()
         super.onDestroy()
     }
 
@@ -82,7 +85,6 @@ class AudioPlayerService : Service(), Player.Listener {
         player.stop()
         player.seekTo(0)
         setAudioItemToPlayer(findMusicToPlay(requireNotNull(currentPosition)))
-        Log.d("service , play", "$currentPosition")
         player.prepare()
         player.play()
         startForeGroundIfNeeded()
@@ -119,6 +121,7 @@ class AudioPlayerService : Service(), Player.Listener {
     fun playNext() {
         val nextAudio: Int = findNextPositionToPlay()
         play(nextAudio)
+        pOnPlayerChangedDataLiveData.value = audioListToPlay[nextAudio]
     }
 
     private fun findNextPositionToPlay(): Int {
@@ -129,6 +132,7 @@ class AudioPlayerService : Service(), Player.Listener {
     fun playPrevious() {
         val previousAudio: Int = findPreviousPositionToPlay()
         play(previousAudio)
+        pOnPlayerChangedDataLiveData.value = audioListToPlay[previousAudio]
     }
 
     private fun findPreviousPositionToPlay(): Int {
@@ -145,20 +149,23 @@ class AudioPlayerService : Service(), Player.Listener {
         when (intent.action) {
             AudioActions.ACTION_PLAY -> {
                 if (isPlaying()) {
-                    Log.d("handle if is play", "is playing: ${isPlaying()}")
                     pause()
                 } else {
                     resume()
-                    Log.d("handle if is pause", "is pause: ${isPlaying()}")
                 }
             }
-            AudioActions.ACTION_NEXT -> playNext()
-            AudioActions.ACTION_PREVIOUS -> playPrevious()
+            AudioActions.ACTION_NEXT -> {
+                playNext()
+                pOnPlayerChangedDataLiveData.value = audioListToPlay[currentPosition!!]
+            }
+            AudioActions.ACTION_PREVIOUS -> {
+                playPrevious()
+                pOnPlayerChangedDataLiveData.value = audioListToPlay[currentPosition!!]
+            }
         }
         if (audioListToPlay.isEmpty()) return
         notificationHelper.showNotification(applicationContext,
                 audioListToPlay[requireNotNull(currentPosition)], isPlaying())
-        Log.d("update notification", "${currentPosition}")
     }
 
     private fun startForeGroundIfNeeded() {
@@ -167,7 +174,6 @@ class AudioPlayerService : Service(), Player.Listener {
             val notification = notificationHelper.showNotification(this,
                     findMusicToPlay(requireNotNull(currentPosition)),
                     isPlaying())
-            Log.d("start foreground", "isplaying: ${isPlaying()}")
             startForeground(Numerals.NOTIFICATION_ID, notification)
         }
         isForegroundServiceStarted = true
@@ -186,6 +192,7 @@ class AudioPlayerService : Service(), Player.Listener {
 
         pOnPlayerChangedLiveData.postValue(playWhenReady)
     }
+
 }
 
 

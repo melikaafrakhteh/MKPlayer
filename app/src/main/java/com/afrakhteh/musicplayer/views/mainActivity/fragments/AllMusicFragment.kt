@@ -78,7 +78,7 @@ class AllMusicFragment : Fragment() {
 
     private fun onMusicItemClicked(position: Int) {
         val data = musicAdapter.currentList[position]
-        Log.d("All music", "position $position")
+
         val intent = Intent(requireActivity(), PlayerActivity::class.java).apply {
             putExtra(Strings.AUDIO_PATH_KEY, data.path)
             putExtra(Strings.AUDIO_NAME_KEY, data.name)

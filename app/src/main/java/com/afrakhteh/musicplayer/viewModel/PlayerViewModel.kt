@@ -36,8 +36,7 @@ class PlayerViewModel @Inject constructor(
     val audioListLiveData: LiveData<List<AudioPrePareToPlay>> get() = pAudioList
 
     private val pActivePosition = MutableLiveData<Int>()
-    val activePosition: LiveData<Int> get() = pActivePosition
-
+    val activePositionLiveData: LiveData<Int> get() = pActivePosition
 
     fun getAllAudioWaveData(path: String) {
         job = CoroutineScope(Dispatchers.IO).launch {
@@ -60,15 +59,17 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun getAllMusicList(intent: Intent) {
-        pAudioList.value = intent.getParcelableArrayListExtra<AudioPrePareToPlay>(Strings.AUDIO_All_MUSIC_LIST_KEY)?.map {
-            it as AudioPrePareToPlay
-        }
+        pAudioList.value = intent
+                .getParcelableArrayListExtra<AudioPrePareToPlay>(Strings.AUDIO_All_MUSIC_LIST_KEY)
+                ?.map {
+                    it as AudioPrePareToPlay
+                }
     }
 
     fun getMusicActivePosition(intent: Intent) {
-        pActivePosition.value = requireNotNull(intent.extras).getInt(Strings.AUDIO_ACTIVE_POSITION__KEY, 0)
+        pActivePosition.value = requireNotNull(intent.extras)
+                .getInt(Strings.AUDIO_ACTIVE_POSITION__KEY, 0)
     }
-
 
     override fun onCleared() {
         super.onCleared()

@@ -42,7 +42,11 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.getAllMusicList(intent)
             viewModel.audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
             viewModel.getMusicActivePosition(intent)
-            viewModel.activePosition.observe(this@PlayerActivity, ::getActiveAudioPosition)
+            viewModel.activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
+
+
+            requireNotNull(audioPlayerService)
+                    .onPlayerChangedDataLiveData.observe(this@PlayerActivity, ::onChangedUiData)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -80,6 +84,13 @@ class PlayerActivity : AppCompatActivity() {
         val startPlayingMusicIntent = Intent(this, AudioPlayerService::class.java)
         startService(startPlayingMusicIntent)
         bindService(startPlayingMusicIntent, connectToService, BIND_AUTO_CREATE)
+
+    }
+
+    private fun onChangedUiData(audioPrePareToPlay: AudioPrePareToPlay?) {
+        binding.playMusicNameTv.text = requireNotNull(audioPrePareToPlay?.musicName)
+        binding.playMusicArtistTv.text = requireNotNull(audioPrePareToPlay?.musicArtist)
+        viewModel.getAllAudioWaveData(requireNotNull(audioPrePareToPlay?.path))
     }
 
     private fun drawInitialFrame(frameSize: Int) {
