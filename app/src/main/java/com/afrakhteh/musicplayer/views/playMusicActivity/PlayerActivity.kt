@@ -36,17 +36,14 @@ class PlayerActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
 
             audioPlayerService = (service as AudioPlayerService.AudioBinder).getService()
-            requireNotNull(audioPlayerService)
-                    .onPlayerChangedLiveData.observe(this@PlayerActivity, ::onPlayedChanged)
-
-            viewModel.getAllMusicList(intent)
-            viewModel.audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
-            viewModel.getMusicActivePosition(intent)
-            viewModel.activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
-
-
-            requireNotNull(audioPlayerService)
-                    .onPlayerChangedDataLiveData.observe(this@PlayerActivity, ::onChangedUiData)
+            requireNotNull(audioPlayerService).apply {
+                onPlayerChangedLiveData.observe(this@PlayerActivity, ::onPlayedChanged)
+                onPlayerChangedDataLiveData.observe(this@PlayerActivity, ::onChangedUiData)
+            }
+            viewModel.apply {
+                audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
+                activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
+            }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -74,22 +71,26 @@ class PlayerActivity : AppCompatActivity() {
         ViewModelComponentBuilder.getInstance().injectPlayer(this)
 
         val path = requireNotNull(intent.extras).getString(Strings.AUDIO_PATH_KEY, "")!!
-        viewModel.getAllAudioWaveData(path)
+
+        viewModel.apply {
+            getAllAudioWaveData(path)
+            getAllMusicList(intent)
+            getMusicActivePosition(intent)
+        }
 
         initialiseView()
-
-        viewModel.waveListLiveData.observe(this, ::renderList)
-        viewModel.frameSizeLiveData.observe(this, ::drawInitialFrame)
 
         val startPlayingMusicIntent = Intent(this, AudioPlayerService::class.java)
         startService(startPlayingMusicIntent)
         bindService(startPlayingMusicIntent, connectToService, BIND_AUTO_CREATE)
 
+        //  viewModel.waveListLiveData.observe(this@PlayerActivity, ::renderList)
+        //   viewModel.frameSizeLiveData.observe(this@PlayerActivity, ::drawInitialFrame)
     }
 
     private fun onChangedUiData(audioPrePareToPlay: AudioPrePareToPlay?) {
-        binding.playMusicNameTv.text = requireNotNull(audioPrePareToPlay?.musicName)
-        binding.playMusicArtistTv.text = requireNotNull(audioPrePareToPlay?.musicArtist)
+        binding.playMusicNameTv.text = audioPrePareToPlay?.musicName ?: ""
+        binding.playMusicArtistTv.text = audioPrePareToPlay?.musicArtist ?: ""
         viewModel.getAllAudioWaveData(requireNotNull(audioPrePareToPlay?.path))
     }
 

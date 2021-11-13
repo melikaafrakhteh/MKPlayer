@@ -88,6 +88,7 @@ class AudioPlayerService : Service(), Player.Listener {
         player.prepare()
         player.play()
         startForeGroundIfNeeded()
+        updateNotification()
     }
 
     private fun findMusicToPlay(currentPosition: Int): AudioPrePareToPlay {
@@ -107,6 +108,7 @@ class AudioPlayerService : Service(), Player.Listener {
     fun pause() {
         rememberedPosition = player.currentPosition
         player.pause()
+        updateNotification()
     }
 
     fun resume() {
@@ -116,12 +118,14 @@ class AudioPlayerService : Service(), Player.Listener {
         }
         player.seekTo(rememberedPosition)
         player.play()
+        updateNotification()
     }
 
     fun playNext() {
         val nextAudio: Int = findNextPositionToPlay()
         play(nextAudio)
         pOnPlayerChangedDataLiveData.value = audioListToPlay[nextAudio]
+        updateNotification()
     }
 
     private fun findNextPositionToPlay(): Int {
@@ -133,6 +137,7 @@ class AudioPlayerService : Service(), Player.Listener {
         val previousAudio: Int = findPreviousPositionToPlay()
         play(previousAudio)
         pOnPlayerChangedDataLiveData.value = audioListToPlay[previousAudio]
+        updateNotification()
     }
 
     private fun findPreviousPositionToPlay(): Int {
@@ -157,12 +162,16 @@ class AudioPlayerService : Service(), Player.Listener {
             AudioActions.ACTION_NEXT -> {
                 playNext()
                 pOnPlayerChangedDataLiveData.value = audioListToPlay[currentPosition!!]
+
             }
             AudioActions.ACTION_PREVIOUS -> {
                 playPrevious()
                 pOnPlayerChangedDataLiveData.value = audioListToPlay[currentPosition!!]
             }
         }
+    }
+
+    private fun updateNotification() {
         if (audioListToPlay.isEmpty()) return
         notificationHelper.showNotification(applicationContext,
                 audioListToPlay[requireNotNull(currentPosition)], isPlaying())
