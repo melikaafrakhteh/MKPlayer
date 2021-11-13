@@ -10,7 +10,7 @@ import com.afrakhteh.musicplayer.views.mainActivity.state.MusicState
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject constructor(
-    private var repository: MusicRepository
+        var repository: MusicRepository
 ) : ViewModel() {
     private val pState = MutableLiveData(MusicState())
     val state: LiveData<MusicState> get() = pState

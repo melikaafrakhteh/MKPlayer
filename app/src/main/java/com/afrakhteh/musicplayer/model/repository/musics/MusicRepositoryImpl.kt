@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioArtPictureReadable
 import com.afrakhteh.musicplayer.model.entity.MusicEntity
@@ -40,7 +39,6 @@ class MusicRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMusicArtPicture(path: String): ByteArray? {
-        Log.d("repository implement", "${AudioArtPictureReadable().read(path)}")
         return AudioArtPictureReadable().read(path)
     }
 

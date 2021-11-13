@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,7 +68,7 @@ class AllMusicFragment : Fragment() {
     }
 
     private fun initialiseView() {
-        musicAdapter = AllMusicAdapter(this::onMusicItemClicked)
+        musicAdapter = AllMusicAdapter(this::onMusicItemClicked, viewModel.repository)
         binding.allFragmentRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = musicAdapter
@@ -85,7 +84,6 @@ class AllMusicFragment : Fragment() {
             putExtra(Strings.AUDIO_ARTIST_KEY, data.artist)
             putParcelableArrayListExtra(Strings.AUDIO_All_MUSIC_LIST_KEY, ArrayList(audioPrePareToPlayList()))
             putExtra(Strings.AUDIO_ACTIVE_POSITION__KEY, position)
-            Log.d("All music", "position in extra $position")
         }
         startActivity(intent)
     }

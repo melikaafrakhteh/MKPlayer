@@ -7,7 +7,6 @@ import android.content.ServiceConnection
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -99,7 +98,6 @@ class PlayerActivity : AppCompatActivity() {
     private fun observeArtPicture(bytes: ByteArray?) {
         if (bytes == null) return
         binding.playMusicCoverIv.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.size))
-        Log.d("pActivity", "image")
     }
 
     private fun onChangedUiData(audioPrePareToPlay: AudioPrePareToPlay?) {

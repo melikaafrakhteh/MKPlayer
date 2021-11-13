@@ -16,7 +16,7 @@
         android:layout_gravity="center_vertical"
         android:paddingStart="3dp"
         android:scaleType="fitXY"
-        android:src="@drawable/music"
+        tools:src="@drawable/music"
         app:riv_corner_radius="8dp"
         tools:ignore="ContentDescription,RtlSymmetry" />
 

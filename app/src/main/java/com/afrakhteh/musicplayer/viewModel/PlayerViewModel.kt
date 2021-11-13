@@ -91,8 +91,6 @@ class PlayerViewModel @Inject constructor(
             if (activePositionLiveData.value == null) return@launch
             pAudioList.value?.get(activePositionLiveData.value!!).let {
                 pArtPicture.value = musicRepository.getMusicArtPicture(it!!.path)
-                Log.d("vm", it.path)
-                Log.d("vm", "${pArtPicture.value}")
             }
         }
     }
