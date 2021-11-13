@@ -75,7 +75,6 @@ class AudioPlayerService : Service(), Player.Listener {
             removeListener(this@AudioPlayerService)
         }
         notificationHelper.cancelNotification()
-        stopSelf()
         super.onDestroy()
     }
 
@@ -87,10 +86,11 @@ class AudioPlayerService : Service(), Player.Listener {
         setAudioItemToPlayer(findMusicToPlay(requireNotNull(currentPosition)))
         player.prepare()
         player.play()
-        startForeGroundIfNeeded()
-        updateNotification()
+        startForeGroundIfNeeded().let {
+            if (!it)
+                updateNotification()
+        }
     }
-
     private fun findMusicToPlay(currentPosition: Int): AudioPrePareToPlay {
         if (audioRepeatType == AudioRepeatType.ShuffleMusicList) {
             return shuffledList[currentPosition]
@@ -162,7 +162,6 @@ class AudioPlayerService : Service(), Player.Listener {
             AudioActions.ACTION_NEXT -> {
                 playNext()
                 pOnPlayerChangedDataLiveData.value = audioListToPlay[currentPosition!!]
-
             }
             AudioActions.ACTION_PREVIOUS -> {
                 playPrevious()
@@ -177,8 +176,8 @@ class AudioPlayerService : Service(), Player.Listener {
                 audioListToPlay[requireNotNull(currentPosition)], isPlaying())
     }
 
-    private fun startForeGroundIfNeeded() {
-        if (isForegroundServiceStarted) return
+    private fun startForeGroundIfNeeded(): Boolean {
+        if (isForegroundServiceStarted) return false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notification = notificationHelper.showNotification(this,
                     findMusicToPlay(requireNotNull(currentPosition)),
@@ -186,6 +185,7 @@ class AudioPlayerService : Service(), Player.Listener {
             startForeground(Numerals.NOTIFICATION_ID, notification)
         }
         isForegroundServiceStarted = true
+        return true
     }
 
     fun isPlaying(): Boolean {

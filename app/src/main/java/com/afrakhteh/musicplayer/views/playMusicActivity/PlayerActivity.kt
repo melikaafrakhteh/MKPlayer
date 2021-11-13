@@ -4,8 +4,10 @@ package com.afrakhteh.musicplayer.views.playMusicActivity
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -43,6 +45,7 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.apply {
                 audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
                 activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
+
             }
         }
 
@@ -67,6 +70,8 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         ViewModelComponentBuilder.getInstance().injectPlayer(this)
 
@@ -76,9 +81,12 @@ class PlayerActivity : AppCompatActivity() {
             getAllAudioWaveData(path)
             getAllMusicList(intent)
             getMusicActivePosition(intent)
+            getMusicArtPicture()
         }
 
         initialiseView()
+
+        viewModel.artPicture.observe(this@PlayerActivity, ::observeArtPicture)
 
         val startPlayingMusicIntent = Intent(this, AudioPlayerService::class.java)
         startService(startPlayingMusicIntent)
@@ -86,6 +94,12 @@ class PlayerActivity : AppCompatActivity() {
 
         //  viewModel.waveListLiveData.observe(this@PlayerActivity, ::renderList)
         //   viewModel.frameSizeLiveData.observe(this@PlayerActivity, ::drawInitialFrame)
+    }
+
+    private fun observeArtPicture(bytes: ByteArray?) {
+        if (bytes == null) return
+        binding.playMusicCoverIv.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.size))
+        Log.d("pActivity", "image")
     }
 
     private fun onChangedUiData(audioPrePareToPlay: AudioPrePareToPlay?) {
@@ -109,9 +123,6 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initialiseView() {
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         val musicName = requireNotNull(intent.extras).getString(Strings.AUDIO_NAME_KEY, "")
         val musicArtistName = requireNotNull(intent.extras).getString(Strings.AUDIO_ARTIST_KEY, "")
 
