@@ -3,6 +3,7 @@ package com.afrakhteh.musicplayer.model.repository.musics
 
 import android.content.Context
 import android.database.Cursor
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.MediaStore
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
@@ -39,7 +40,7 @@ class MusicRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMusicArtPicture(path: String): ByteArray? {
-        return AudioArtPictureReadable().read(path)
+        return AudioArtPictureReadable(MediaMetadataRetriever()).read(path)
     }
 
     private fun createQueryForAllMusic(context: Context): Cursor? {
