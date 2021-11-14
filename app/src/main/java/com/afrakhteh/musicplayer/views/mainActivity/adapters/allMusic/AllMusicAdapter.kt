@@ -16,7 +16,7 @@ class AllMusicAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllMusicViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = MusicItemRowBinding.inflate(inflater, parent, false)
-        return AllMusicViewHolder(binding, musicRepository)
+        return AllMusicViewHolder(binding, musicRepository, parent.context)
     }
 
     override fun onBindViewHolder(holder: AllMusicViewHolder, position: Int) {
