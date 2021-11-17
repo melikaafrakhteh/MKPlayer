@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class MediaMetadataRetrieverModule {
+class MediaMetadataModule {
 
     @Provides
     fun provideMediaMetaData(): MediaMetadataRetriever {

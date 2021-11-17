@@ -13,7 +13,8 @@ import javax.inject.Inject
 
 @RepoScope
 class MusicRepositoryImpl @Inject constructor(
-        val context: Context
+        private val context: Context,
+        private val metadataRetriever: MediaMetadataRetriever
 ) : MusicRepository {
 
     override fun getAllMusic(): List<MusicEntity> {
@@ -40,7 +41,7 @@ class MusicRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMusicArtPicture(path: String): ByteArray? {
-        return AudioArtPictureReadable(MediaMetadataRetriever()).read(path)
+        return AudioArtPictureReadable(metadataRetriever).read(path)
     }
 
     private fun createQueryForAllMusic(context: Context): Cursor? {
