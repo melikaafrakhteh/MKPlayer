@@ -7,9 +7,5 @@ object Numerals {
 
     const val NOTIFICATION_ID = 100
 
-    const val NONE_STATE_VALUE = 0
-    const val PLAY_STATE_VALUE = 1
-    const val PAUSE_STATE_VALUE = 2
-    const val BUFFERING_STATE_VALUE = 3
-    const val STOPPED_STATE_VALUE = 4
+    const val MAX_BITMAP_SIZE = 512
 }

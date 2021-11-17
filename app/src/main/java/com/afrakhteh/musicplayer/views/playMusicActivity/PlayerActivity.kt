@@ -4,7 +4,6 @@ package com.afrakhteh.musicplayer.views.playMusicActivity
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -17,6 +16,8 @@ import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.util.getScreenSize
+import com.afrakhteh.musicplayer.util.resize
+import com.afrakhteh.musicplayer.util.toBitmap
 import com.afrakhteh.musicplayer.viewModel.PlayerViewModel
 import com.afrakhteh.musicplayer.views.mainActivity.MainActivity
 import com.afrakhteh.musicplayer.views.services.AudioPlayerService
@@ -34,7 +35,6 @@ class PlayerActivity : AppCompatActivity() {
 
     private var audioPlayerService: AudioPlayerService? = null
 
-    private var artAlbumBytes: ByteArray? = null
 
     private val connectToService = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -110,21 +110,15 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun observeArtPicture(bytes: ByteArray?) {
-        if (artAlbumBytes == null) {
-            if (bytes == null) {
-                binding.playMusicCoverIv.setImageResource(R.drawable.minimusic)
-            } else {
-                artAlbumBytes = bytes
-                var image = BitmapFactory.decodeByteArray(artAlbumBytes, 0, artAlbumBytes!!.size)
-                binding.playMusicCoverIv.setImageBitmap(image)
-                image = null
-            }
-            artAlbumBytes = null
+        if (bytes == null) {
+            binding.playMusicCoverIv.setImageResource(R.drawable.minimusic)
+            return
         }
+        val image = bytes.toBitmap().resize()
+        binding.playMusicCoverIv.setImageBitmap(image)
     }
 
     private fun onChangedUiData(position: Int) {
-        artAlbumBytes = null
         viewModel.changeMusicActivePosition(position)
     }
 
