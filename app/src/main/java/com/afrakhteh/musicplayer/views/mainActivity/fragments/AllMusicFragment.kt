@@ -76,12 +76,7 @@ class AllMusicFragment : Fragment() {
     }
 
     private fun onMusicItemClicked(position: Int) {
-        val data = musicAdapter.currentList[position]
-
         val intent = Intent(requireActivity(), PlayerActivity::class.java).apply {
-            putExtra(Strings.AUDIO_PATH_KEY, data.path)
-            putExtra(Strings.AUDIO_NAME_KEY, data.name)
-            putExtra(Strings.AUDIO_ARTIST_KEY, data.artist)
             putParcelableArrayListExtra(Strings.AUDIO_All_MUSIC_LIST_KEY, ArrayList(audioPrePareToPlayList()))
             putExtra(Strings.AUDIO_ACTIVE_POSITION__KEY, position)
         }

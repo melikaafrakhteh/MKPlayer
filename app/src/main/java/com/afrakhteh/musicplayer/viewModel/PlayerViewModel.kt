@@ -45,9 +45,15 @@ class PlayerViewModel @Inject constructor(
     private val pArtPicture = MutableLiveData<ByteArray?>()
     val artPicture: LiveData<ByteArray?> get() = pArtPicture
 
-    fun getAllAudioWaveData(path: String) {
+    private val pPlayingPosition = MutableLiveData<Int>()
+    val playingPosition: LiveData<Int> get() = pPlayingPosition
+
+    fun getAllAudioWaveData() {
         job = CoroutineScope(Dispatchers.IO).launch {
-            val audioWaveData = repository.fetchAudioWaveData(path)
+            if (activePositionLiveData.value == null) return@launch
+            val audioWaveData = repository.fetchAudioWaveData(
+                    audioListLiveData.value!![activePositionLiveData.value!!].path
+            )
             audioWaveData.frameCountObservable
                     .subscribeOn(Schedulers.computation())
                     .subscribe {
@@ -81,23 +87,23 @@ class PlayerViewModel @Inject constructor(
     fun getMusicActivePosition(intent: Intent) {
         requireNotNull(intent.extras)
                 .getInt(Strings.AUDIO_ACTIVE_POSITION__KEY, -1).let {
-                    if (it != -1)
-                        pActivePosition.value = it
+                    if (it == -1) return@let
+                    pActivePosition.value = it
+                    pPlayingPosition.value = it
                 }
     }
 
-    /* fun getMusicArtPicture() {
-         job2 = CoroutineScope(Dispatchers.Main).launch {
-           if (activePositionLiveData.value == null) return@launch
-             pAudioList.value?.get(activePositionLiveData.value!!).let {
-                 pArtPicture.postValue(musicRepository.getMusicArtPicture(it!!.path))
-             }
-         }
-     }*/
+    fun changeMusicActivePosition(position: Int) {
+        pActivePosition.value = position
+        getMusicArtPicture()
+    }
 
-    fun getMusicArtPicture(path: String) {
+    fun getMusicArtPicture() {
         job2 = CoroutineScope(Dispatchers.Main).launch {
-            pArtPicture.postValue(musicRepository.getMusicArtPicture(path))
+            if (activePositionLiveData.value == null) return@launch
+            pAudioList.value?.get(activePositionLiveData.value!!).let {
+                pArtPicture.postValue(musicRepository.getMusicArtPicture(it!!.path))
+            }
         }
     }
 

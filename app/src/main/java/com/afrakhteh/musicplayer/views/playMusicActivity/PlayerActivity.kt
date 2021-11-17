@@ -9,12 +9,10 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.afrakhteh.musicplayer.R
-import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
@@ -49,6 +47,7 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.apply {
                 audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
                 activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
+                playingPosition.observe(this@PlayerActivity, ::observePlayingPosition)
             }
         }
 
@@ -57,8 +56,43 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        ViewModelComponentBuilder.getInstance().injectPlayer(this)
+
+        viewModel.apply {
+            getMusicArtPicture()
+            getAllAudioWaveData()
+            getAllMusicList(intent)
+            getMusicActivePosition(intent)
+        }
+
+        val startPlayingMusicIntent = Intent(this, AudioPlayerService::class.java)
+        startService(startPlayingMusicIntent)
+        bindService(startPlayingMusicIntent, connectToService, BIND_AUTO_CREATE)
+
+        viewModel.artPicture.observe(this@PlayerActivity, ::observeArtPicture)
+
+        /* viewModel.apply {
+             waveListLiveData.observe(this@PlayerActivity, ::renderList)
+             frameSizeLiveData.observe(this@PlayerActivity, ::drawInitialFrame)
+             audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
+             activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
+         }*/
+
+        buttonClicks()
+    }
+
     private fun getActiveAudioPosition(position: Int?) {
-        audioPlayerService?.play(position ?: 0)
+        if (position == null) return
+        val musicPrePareToPlay = requireNotNull(viewModel.audioListLiveData.value!![position])
+        binding.playMusicNameTv.text = musicPrePareToPlay.musicName
+        Log.d("player", "name: ${musicPrePareToPlay.musicName}")
+        binding.playMusicArtistTv.text = musicPrePareToPlay.musicArtist
+        Log.d("player", "artist: ${musicPrePareToPlay.musicArtist}")
     }
 
     private fun getListToPlay(list: List<AudioPrePareToPlay>?) {
@@ -71,35 +105,8 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        ViewModelComponentBuilder.getInstance().injectPlayer(this)
-
-        val path = requireNotNull(intent.extras).getString(Strings.AUDIO_PATH_KEY, "")!!
-
-        viewModel.apply {
-            getMusicArtPicture(path)
-            getAllAudioWaveData(path)
-            getAllMusicList(intent)
-            getMusicActivePosition(intent)
-        }
-
-        initialiseView()
-
-        val startPlayingMusicIntent = Intent(this, AudioPlayerService::class.java)
-        startService(startPlayingMusicIntent)
-        bindService(startPlayingMusicIntent, connectToService, BIND_AUTO_CREATE)
-
-        viewModel.artPicture.observe(this@PlayerActivity, ::observeArtPicture)
-        /* viewModel.apply {
-             waveListLiveData.observe(this@PlayerActivity, ::renderList)
-             frameSizeLiveData.observe(this@PlayerActivity, ::drawInitialFrame)
-             audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
-             activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
-         }*/
+    private fun observePlayingPosition(position: Int?) {
+        audioPlayerService?.play(position ?: 0)
     }
 
     private fun observeArtPicture(bytes: ByteArray?) {
@@ -116,16 +123,9 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun onChangedUiData(audioPrePareToPlay: AudioPrePareToPlay?) {
-        binding.playMusicCoverIv.setImageResource(R.drawable.minimusic)
+    private fun onChangedUiData(position: Int) {
         artAlbumBytes = null
-        viewModel.getMusicArtPicture(audioPrePareToPlay?.path ?: "")
-        Log.d("changed", "${audioPrePareToPlay?.path}")
-        Toast.makeText(this, "${audioPrePareToPlay?.path}", Toast.LENGTH_LONG).show()
-
-        binding.playMusicNameTv.text = audioPrePareToPlay?.musicName ?: ""
-        binding.playMusicArtistTv.text = audioPrePareToPlay?.musicArtist ?: ""
-        // viewModel.getAllAudioWaveData(requireNotNull(audioPrePareToPlay?.path))
+        viewModel.changeMusicActivePosition(position)
     }
 
     private fun drawInitialFrame(frameSize: Int) {
@@ -140,16 +140,6 @@ class PlayerActivity : AppCompatActivity() {
     private fun renderList(arrayList: ArrayList<Int>) {
         binding.playWave.removeAllViews()
         binding.playWave.showWaves(arrayList, getScreenSize().y)
-    }
-
-    private fun initialiseView() {
-        val musicName = requireNotNull(intent.extras).getString(Strings.AUDIO_NAME_KEY, "")
-        val musicArtistName = requireNotNull(intent.extras).getString(Strings.AUDIO_ARTIST_KEY, "")
-
-        binding.playMusicNameTv.text = musicName
-        binding.playMusicArtistTv.text = musicArtistName
-
-        buttonClicks()
     }
 
     private fun buttonClicks() {

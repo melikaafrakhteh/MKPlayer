@@ -17,8 +17,6 @@ import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.di.builders.PlayerComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.entity.AudioRepeatType
-import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
-import com.afrakhteh.musicplayer.model.repository.musics.MusicRepositoryImpl
 import com.afrakhteh.musicplayer.views.util.PlayerNotificationHelper
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -49,11 +47,10 @@ class AudioPlayerService : Service(), Player.Listener {
     private val pOnPlayerChangedLiveData = MutableLiveData<Boolean>()
     val onPlayerChangedLiveData: LiveData<Boolean> get() = pOnPlayerChangedLiveData
 
-    private val pOnPlayerChangedDataLiveData = MutableLiveData<AudioPrePareToPlay>()
-    val onPlayerChangedDataLiveData: LiveData<AudioPrePareToPlay> get() = pOnPlayerChangedDataLiveData
+    private val pOnPlayerChangedDataLiveData = MutableLiveData<Int>()
+    val onPlayerChangedDataLiveData: LiveData<Int> get() = pOnPlayerChangedDataLiveData
 
     private lateinit var job: Job
-    private lateinit var repository: MusicRepository
 
     inner class AudioBinder : Binder() {
         fun getService(): AudioPlayerService = this@AudioPlayerService
@@ -77,7 +74,7 @@ class AudioPlayerService : Service(), Player.Listener {
                 getSystemService(NOTIFICATION_SERVICE)
                         as NotificationManager)
         player.addListener(this)
-        repository = MusicRepositoryImpl(this)
+
     }
 
     override fun onDestroy() {
@@ -138,7 +135,7 @@ class AudioPlayerService : Service(), Player.Listener {
     fun playNext() {
         val nextAudio: Int = findNextPositionToPlay()
         play(nextAudio)
-        pOnPlayerChangedDataLiveData.value = audioListToPlay[nextAudio]
+        pOnPlayerChangedDataLiveData.value = nextAudio
         updateNotification()
     }
 
@@ -150,7 +147,7 @@ class AudioPlayerService : Service(), Player.Listener {
     fun playPrevious() {
         val previousAudio: Int = findPreviousPositionToPlay()
         play(previousAudio)
-        pOnPlayerChangedDataLiveData.value = audioListToPlay[previousAudio]
+        pOnPlayerChangedDataLiveData.value = previousAudio
         updateNotification()
     }
 
@@ -175,11 +172,11 @@ class AudioPlayerService : Service(), Player.Listener {
             }
             AudioActions.ACTION_NEXT -> {
                 playNext()
-                pOnPlayerChangedDataLiveData.value = audioListToPlay[currentPosition!!]
+                pOnPlayerChangedDataLiveData.value = currentPosition!!
             }
             AudioActions.ACTION_PREVIOUS -> {
                 playPrevious()
-                pOnPlayerChangedDataLiveData.value = audioListToPlay[currentPosition!!]
+                pOnPlayerChangedDataLiveData.value = currentPosition!!
             }
         }
     }
@@ -224,7 +221,7 @@ class AudioPlayerService : Service(), Player.Listener {
         var albumByte: ByteArray? = null
         job = CoroutineScope(Dispatchers.Main).launch {
             if (currentPosition == null) return@launch
-            else albumByte = repository.getMusicArtPicture(findMusicToPlay(currentPosition!!).path)
+            //   else albumByte = repository.getMusicArtPicture(findMusicToPlay(currentPosition!!).path)
         }
         return albumByte!!
     }
