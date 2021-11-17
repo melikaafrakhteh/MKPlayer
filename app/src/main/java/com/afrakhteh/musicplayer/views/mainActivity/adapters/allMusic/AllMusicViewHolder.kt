@@ -2,7 +2,6 @@ package com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.MusicItemRowBinding
@@ -28,9 +27,8 @@ class AllMusicViewHolder(
     }
 
     fun loadArtPicture(path: String) {
-        loadingArt = GlobalScope.launch(Dispatchers.IO) {
+        loadingArt = CoroutineScope(Dispatchers.IO).launch {
             repository.getMusicArtPicture(path).let { artMusicBytes ->
-                Log.d("music ViewHolder", "artMusicArray: $artMusicBytes")
                 withContext(Dispatchers.Main) {
                     if (artMusicBytes == null) {
                         Glide.with(context).load(R.drawable.minimusic).into(binding.musicItemRowImageIv)

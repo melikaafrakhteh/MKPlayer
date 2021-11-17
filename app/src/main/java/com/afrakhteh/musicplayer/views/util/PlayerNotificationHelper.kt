@@ -26,7 +26,8 @@ class PlayerNotificationHelper(
     fun showNotification(
             context: Context,
             audio: AudioPrePareToPlay,
-            isPlaying: Boolean
+            isPlaying: Boolean,
+            //  albumArt: Bitmap
     ): Notification {
         val builder = getBasePlayerNotificationBuilder(context, audio)
         builder.apply {
@@ -36,6 +37,7 @@ class PlayerNotificationHelper(
 
             setContentTitle(audio.musicName)
             setContentText(audio.musicArtist)
+            //  setLargeIcon(albumArt)
 
             setOngoing(isPlaying)
 

@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.di.scopes.ViewModelScope
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
@@ -28,6 +27,7 @@ class PlayerViewModel @Inject constructor(
 ) : ViewModel() {
 
     private lateinit var job: Job
+    private lateinit var job2: Job
     private val disposable = CompositeDisposable()
 
     private val pWaveList = MutableLiveData<ArrayList<Int>>()
@@ -86,18 +86,25 @@ class PlayerViewModel @Inject constructor(
                 }
     }
 
-    fun getMusicArtPicture() {
-        viewModelScope.launch {
-            if (activePositionLiveData.value == null) return@launch
-            pAudioList.value?.get(activePositionLiveData.value!!).let {
-                pArtPicture.value = musicRepository.getMusicArtPicture(it!!.path)
-            }
+    /* fun getMusicArtPicture() {
+         job2 = CoroutineScope(Dispatchers.Main).launch {
+           if (activePositionLiveData.value == null) return@launch
+             pAudioList.value?.get(activePositionLiveData.value!!).let {
+                 pArtPicture.postValue(musicRepository.getMusicArtPicture(it!!.path))
+             }
+         }
+     }*/
+
+    fun getMusicArtPicture(path: String) {
+        job2 = CoroutineScope(Dispatchers.Main).launch {
+            pArtPicture.postValue(musicRepository.getMusicArtPicture(path))
         }
     }
 
     override fun onCleared() {
         super.onCleared()
         job.cancel()
+        job2.cancel()
         disposable.clear()
     }
 }

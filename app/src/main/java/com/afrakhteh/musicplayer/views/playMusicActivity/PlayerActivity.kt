@@ -7,10 +7,13 @@ import android.content.ServiceConnection
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
@@ -33,6 +36,8 @@ class PlayerActivity : AppCompatActivity() {
 
     private var audioPlayerService: AudioPlayerService? = null
 
+    private var artAlbumBytes: ByteArray? = null
+
     private val connectToService = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
 
@@ -44,7 +49,6 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.apply {
                 audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
                 activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
-
             }
         }
 
@@ -77,33 +81,51 @@ class PlayerActivity : AppCompatActivity() {
         val path = requireNotNull(intent.extras).getString(Strings.AUDIO_PATH_KEY, "")!!
 
         viewModel.apply {
+            getMusicArtPicture(path)
             getAllAudioWaveData(path)
             getAllMusicList(intent)
             getMusicActivePosition(intent)
-            getMusicArtPicture()
         }
 
         initialiseView()
-
-        viewModel.artPicture.observe(this@PlayerActivity, ::observeArtPicture)
 
         val startPlayingMusicIntent = Intent(this, AudioPlayerService::class.java)
         startService(startPlayingMusicIntent)
         bindService(startPlayingMusicIntent, connectToService, BIND_AUTO_CREATE)
 
-        //  viewModel.waveListLiveData.observe(this@PlayerActivity, ::renderList)
-        //   viewModel.frameSizeLiveData.observe(this@PlayerActivity, ::drawInitialFrame)
+        viewModel.artPicture.observe(this@PlayerActivity, ::observeArtPicture)
+        /* viewModel.apply {
+             waveListLiveData.observe(this@PlayerActivity, ::renderList)
+             frameSizeLiveData.observe(this@PlayerActivity, ::drawInitialFrame)
+             audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
+             activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
+         }*/
     }
 
     private fun observeArtPicture(bytes: ByteArray?) {
-        if (bytes == null) return
-        binding.playMusicCoverIv.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.size))
+        if (artAlbumBytes == null) {
+            if (bytes == null) {
+                binding.playMusicCoverIv.setImageResource(R.drawable.minimusic)
+            } else {
+                artAlbumBytes = bytes
+                var image = BitmapFactory.decodeByteArray(artAlbumBytes, 0, artAlbumBytes!!.size)
+                binding.playMusicCoverIv.setImageBitmap(image)
+                image = null
+            }
+            artAlbumBytes = null
+        }
     }
 
     private fun onChangedUiData(audioPrePareToPlay: AudioPrePareToPlay?) {
+        binding.playMusicCoverIv.setImageResource(R.drawable.minimusic)
+        artAlbumBytes = null
+        viewModel.getMusicArtPicture(audioPrePareToPlay?.path ?: "")
+        Log.d("changed", "${audioPrePareToPlay?.path}")
+        Toast.makeText(this, "${audioPrePareToPlay?.path}", Toast.LENGTH_LONG).show()
+
         binding.playMusicNameTv.text = audioPrePareToPlay?.musicName ?: ""
         binding.playMusicArtistTv.text = audioPrePareToPlay?.musicArtist ?: ""
-        viewModel.getAllAudioWaveData(requireNotNull(audioPrePareToPlay?.path))
+        // viewModel.getAllAudioWaveData(requireNotNull(audioPrePareToPlay?.path))
     }
 
     private fun drawInitialFrame(frameSize: Int) {
@@ -167,6 +189,7 @@ class PlayerActivity : AppCompatActivity() {
         unbindService(connectToService)
         super.onDestroy()
     }
+
 }
 
 

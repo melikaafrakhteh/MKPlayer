@@ -3,6 +3,8 @@ package com.afrakhteh.musicplayer.views.services
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Binder
 import android.os.Build
@@ -15,10 +17,16 @@ import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.di.builders.PlayerComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.entity.AudioRepeatType
+import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
+import com.afrakhteh.musicplayer.model.repository.musics.MusicRepositoryImpl
 import com.afrakhteh.musicplayer.views.util.PlayerNotificationHelper
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
@@ -44,6 +52,9 @@ class AudioPlayerService : Service(), Player.Listener {
     private val pOnPlayerChangedDataLiveData = MutableLiveData<AudioPrePareToPlay>()
     val onPlayerChangedDataLiveData: LiveData<AudioPrePareToPlay> get() = pOnPlayerChangedDataLiveData
 
+    private lateinit var job: Job
+    private lateinit var repository: MusicRepository
+
     inner class AudioBinder : Binder() {
         fun getService(): AudioPlayerService = this@AudioPlayerService
     }
@@ -66,6 +77,7 @@ class AudioPlayerService : Service(), Player.Listener {
                 getSystemService(NOTIFICATION_SERVICE)
                         as NotificationManager)
         player.addListener(this)
+        repository = MusicRepositoryImpl(this)
     }
 
     override fun onDestroy() {
@@ -75,6 +87,7 @@ class AudioPlayerService : Service(), Player.Listener {
             removeListener(this@AudioPlayerService)
         }
         notificationHelper.cancelNotification()
+        job.cancel()
         super.onDestroy()
     }
 
@@ -91,6 +104,7 @@ class AudioPlayerService : Service(), Player.Listener {
                 updateNotification()
         }
     }
+
     private fun findMusicToPlay(currentPosition: Int): AudioPrePareToPlay {
         if (audioRepeatType == AudioRepeatType.ShuffleMusicList) {
             return shuffledList[currentPosition]
@@ -172,16 +186,30 @@ class AudioPlayerService : Service(), Player.Listener {
 
     private fun updateNotification() {
         if (audioListToPlay.isEmpty()) return
-        notificationHelper.showNotification(applicationContext,
-                audioListToPlay[requireNotNull(currentPosition)], isPlaying())
+        notificationHelper.showNotification(
+                applicationContext,
+                audioListToPlay[requireNotNull(currentPosition)], isPlaying(),
+                //showAlbumArt(getMusicAlbumArt())
+        )
+    }
+
+    fun getVolume(): Float {
+        return player.volume
+    }
+
+    fun setVolume(volume: Float) {
+        player.volume = volume
     }
 
     private fun startForeGroundIfNeeded(): Boolean {
         if (isForegroundServiceStarted) return false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notification = notificationHelper.showNotification(this,
+            val notification = notificationHelper.showNotification(
+                    this,
                     findMusicToPlay(requireNotNull(currentPosition)),
-                    isPlaying())
+                    isPlaying(),
+                    // showAlbumArt(getMusicAlbumArt())
+            )
             startForeground(Numerals.NOTIFICATION_ID, notification)
         }
         isForegroundServiceStarted = true
@@ -192,12 +220,29 @@ class AudioPlayerService : Service(), Player.Listener {
         return player.playWhenReady
     }
 
+    fun getMusicAlbumArt(): ByteArray {
+        var albumByte: ByteArray? = null
+        job = CoroutineScope(Dispatchers.Main).launch {
+            if (currentPosition == null) return@launch
+            else albumByte = repository.getMusicArtPicture(findMusicToPlay(currentPosition!!).path)
+        }
+        return albumByte!!
+    }
+
+    fun showAlbumArt(byte: ByteArray): Bitmap {
+        return BitmapFactory.decodeByteArray(byte, 0, byte.size)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
         super.onPlayWhenReadyChanged(playWhenReady, reason)
-        notificationHelper.showNotification(this,
+
+        notificationHelper.showNotification(
+                this,
                 findMusicToPlay(requireNotNull(currentPosition)),
-                playWhenReady)
+                playWhenReady,
+                //  showAlbumArt(getMusicAlbumArt())
+        )
 
         pOnPlayerChangedLiveData.postValue(playWhenReady)
     }
