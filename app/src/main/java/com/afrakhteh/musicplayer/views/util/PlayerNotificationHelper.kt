@@ -25,18 +25,19 @@ class PlayerNotificationHelper(
 ) {
     fun showNotification(
             context: Context,
-            audio: AudioPrePareToPlay,
+            audioList: List<AudioPrePareToPlay>,
+            position: Int,
             isPlaying: Boolean,
             //  albumArt: Bitmap
     ): Notification {
-        val builder = getBasePlayerNotificationBuilder(context, audio)
+        val builder = getBasePlayerNotificationBuilder(context, audioList, position)
         builder.apply {
             addAction(getNotificationAction(context, AudioActions.ACTION_PREVIOUS))
             addAction(getNotificationAction(context, AudioActions.ACTION_PLAY, isPlaying))
             addAction(getNotificationAction(context, AudioActions.ACTION_NEXT))
 
-            setContentTitle(audio.musicName)
-            setContentText(audio.musicArtist)
+            setContentTitle(audioList[position].musicName)
+            setContentText(audioList[position].musicArtist)
             //  setLargeIcon(albumArt)
 
             setOngoing(isPlaying)
@@ -53,14 +54,15 @@ class PlayerNotificationHelper(
 
     private fun getBasePlayerNotificationBuilder(
             context: Context,
-            audio: AudioPrePareToPlay
+            audioList: List<AudioPrePareToPlay>,
+            position: Int
     ): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, Strings.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_play)
                 .setSound(null)
                 .setVibrate(null)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(getContentIntent(context, audio))
+                .setContentIntent(getContentIntent(context, audioList, position))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setStyle(getMediaStyle(context))
     }
@@ -72,17 +74,18 @@ class PlayerNotificationHelper(
         return MediaStyle().setMediaSession(mediaSessionCompat.sessionToken)
     }
 
-    private fun getContentIntent(context: Context,
-                                 audio: AudioPrePareToPlay
+    private fun getContentIntent(
+            context: Context,
+            audioList: List<AudioPrePareToPlay>,
+            position: Int
     ): PendingIntent {
         return PendingIntent.getActivity(
                 context,
                 0,
                 Intent(context, PlayerActivity::class.java).apply {
                     flags = FLAG_ACTIVITY_SINGLE_TOP
-                    putExtra(Strings.AUDIO_PATH_KEY, audio.path)
-                    putExtra(Strings.AUDIO_NAME_KEY, audio.musicName)
-                    putExtra(Strings.AUDIO_ARTIST_KEY, audio.musicArtist)
+                    putParcelableArrayListExtra(Strings.AUDIO_All_MUSIC_LIST_KEY, ArrayList(audioList))
+                    putExtra(Strings.AUDIO_ACTIVE_POSITION__KEY, position)
                 },
                 PendingIntent.FLAG_UPDATE_CURRENT
         )

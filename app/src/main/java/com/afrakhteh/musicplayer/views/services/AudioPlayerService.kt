@@ -185,7 +185,9 @@ class AudioPlayerService : Service(), Player.Listener {
         if (audioListToPlay.isEmpty()) return
         notificationHelper.showNotification(
                 applicationContext,
-                audioListToPlay[requireNotNull(currentPosition)], isPlaying(),
+                audioListToPlay,
+                requireNotNull(currentPosition),
+                isPlaying(),
                 //showAlbumArt(getMusicAlbumArt())
         )
     }
@@ -203,7 +205,8 @@ class AudioPlayerService : Service(), Player.Listener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notification = notificationHelper.showNotification(
                     this,
-                    findMusicToPlay(requireNotNull(currentPosition)),
+                    audioListToPlay,
+                    requireNotNull(currentPosition),
                     isPlaying(),
                     // showAlbumArt(getMusicAlbumArt())
             )
@@ -236,7 +239,8 @@ class AudioPlayerService : Service(), Player.Listener {
 
         notificationHelper.showNotification(
                 this,
-                findMusicToPlay(requireNotNull(currentPosition)),
+                audioListToPlay,
+                requireNotNull(currentPosition),
                 playWhenReady,
                 //  showAlbumArt(getMusicAlbumArt())
         )
