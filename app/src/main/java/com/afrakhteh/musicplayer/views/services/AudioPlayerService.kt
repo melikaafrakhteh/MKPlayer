@@ -15,6 +15,7 @@ import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.di.builders.PlayerComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.entity.AudioRepeatType
+import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.util.toBitmap
 import com.afrakhteh.musicplayer.views.presenter.ArtAlbumPresenter
@@ -49,8 +50,8 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
     private val pOnPlayerChangedLiveData = MutableLiveData<Boolean>()
     val onPlayerChangedLiveData: LiveData<Boolean> get() = pOnPlayerChangedLiveData
 
-    private val pOnPlayerChangedDataLiveData = MutableLiveData<Int>()
-    val onPlayerChangedDataLiveData: LiveData<Int> get() = pOnPlayerChangedDataLiveData
+    private val pOnPlayerChangedDataLiveData = MutableLiveData<SingleEvent<Int>>()
+    val onPlayerChangedDataLiveData: LiveData<SingleEvent<Int>> get() = pOnPlayerChangedDataLiveData
 
     private var imageByteArray: ByteArray? = null
 
@@ -140,7 +141,7 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
     fun playNext() {
         val nextAudio: Int = findNextPositionToPlay()
         play(nextAudio)
-        pOnPlayerChangedDataLiveData.value = nextAudio
+        pOnPlayerChangedDataLiveData.value = SingleEvent(nextAudio)
         updateNotification()
     }
 
@@ -152,7 +153,7 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
     fun playPrevious() {
         val previousAudio: Int = findPreviousPositionToPlay()
         play(previousAudio)
-        pOnPlayerChangedDataLiveData.value = previousAudio
+        pOnPlayerChangedDataLiveData.value = SingleEvent(previousAudio)
         updateNotification()
     }
 
@@ -177,11 +178,11 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
             }
             AudioActions.ACTION_NEXT -> {
                 playNext()
-                pOnPlayerChangedDataLiveData.value = currentPosition!!
+                pOnPlayerChangedDataLiveData.value = SingleEvent(currentPosition!!)
             }
             AudioActions.ACTION_PREVIOUS -> {
                 playPrevious()
-                pOnPlayerChangedDataLiveData.value = currentPosition!!
+                pOnPlayerChangedDataLiveData.value = SingleEvent(currentPosition!!)
             }
         }
     }

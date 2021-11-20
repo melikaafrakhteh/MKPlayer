@@ -15,11 +15,11 @@ import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.util.getScreenSize
 import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.util.toBitmap
 import com.afrakhteh.musicplayer.viewModel.PlayerViewModel
-import com.afrakhteh.musicplayer.views.mainActivity.MainActivity
 import com.afrakhteh.musicplayer.views.services.AudioPlayerService
 import javax.inject.Inject
 
@@ -118,8 +118,10 @@ class PlayerActivity : AppCompatActivity() {
         binding.playMusicCoverIv.setImageBitmap(image)
     }
 
-    private fun onChangedUiData(position: Int) {
-        viewModel.changeMusicActivePosition(position)
+    private fun onChangedUiData(position: SingleEvent<Int>) {
+        position.ifNotHandled {
+            viewModel.changeMusicActivePosition(it)
+        }
     }
 
     private fun drawInitialFrame(frameSize: Int) {
@@ -165,7 +167,6 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun backButton(view: View?) {
-        startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 
