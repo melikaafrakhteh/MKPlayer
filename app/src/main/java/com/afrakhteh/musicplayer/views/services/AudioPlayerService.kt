@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -76,8 +75,9 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
         presenter.setService(this)
 
         notificationHelper = PlayerNotificationHelper(
-                getSystemService(NOTIFICATION_SERVICE)
-                        as NotificationManager)
+            getSystemService(NOTIFICATION_SERVICE)
+                    as NotificationManager, resources
+        )
         player.addListener(this)
     }
 
@@ -189,11 +189,11 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
     private fun updateNotification() {
         if (audioListToPlay.isEmpty()) return
         notificationHelper.showNotification(
-                applicationContext,
-                audioListToPlay,
-                requireNotNull(currentPosition),
-                isPlaying(),
-                imageByteArray?.toBitmap()?.resize()!!
+            applicationContext,
+            audioListToPlay,
+            requireNotNull(currentPosition),
+            isPlaying(),
+            imageByteArray?.toBitmap()?.resize()
         )
     }
 
@@ -210,11 +210,11 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
         if (isForegroundServiceStarted) return false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notification = notificationHelper.showNotification(
-                    this,
-                    audioListToPlay,
-                    requireNotNull(currentPosition),
-                    isPlaying(),
-                    imageByteArray?.toBitmap()?.resize()!!
+                this,
+                audioListToPlay,
+                requireNotNull(currentPosition),
+                isPlaying(),
+                imageByteArray?.toBitmap()?.resize()
             )
             startForeground(Numerals.NOTIFICATION_ID, notification)
         }
@@ -230,11 +230,11 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
     override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
         super.onPlayWhenReadyChanged(playWhenReady, reason)
         notificationHelper.showNotification(
-                this,
-                audioListToPlay,
-                requireNotNull(currentPosition),
-                playWhenReady,
-                imageByteArray?.toBitmap()?.resize()!!
+            this,
+            audioListToPlay,
+            requireNotNull(currentPosition),
+            playWhenReady,
+            imageByteArray?.toBitmap()?.resize()
         )
         pOnPlayerChangedLiveData.postValue(playWhenReady)
     }
@@ -247,9 +247,8 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
         return audioListToPlay
     }
 
-    override fun setAudioByteArray(byteArray: ByteArray) {
+    override fun setAudioByteArray(byteArray: ByteArray?) {
         imageByteArray = byteArray
-        Log.d("service,ByteArray", "${imageByteArray}")
     }
 
 

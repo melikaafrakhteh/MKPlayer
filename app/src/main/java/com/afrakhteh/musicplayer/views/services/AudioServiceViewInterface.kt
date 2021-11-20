@@ -5,5 +5,5 @@ import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 interface AudioServiceViewInterface {
     fun getPlayingPosition(): Int?
     fun getMusicList(): List<AudioPrePareToPlay>
-    fun setAudioByteArray(byteArray: ByteArray)
+    fun setAudioByteArray(byteArray: ByteArray?)
 }

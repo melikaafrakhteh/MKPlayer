@@ -8,7 +8,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
+import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.core.app.NotificationCompat
@@ -18,12 +20,13 @@ import com.afrakhteh.musicplayer.constant.AudioActions
 import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
-import com.afrakhteh.musicplayer.util.getPlaceHolder
+import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.views.playMusicActivity.PlayerActivity
 import com.afrakhteh.musicplayer.views.services.AudioPlayerService
 
 class PlayerNotificationHelper(
-        private val notificationManager: NotificationManager
+    private val notificationManager: NotificationManager,
+    private val resources: Resources
 ) {
     fun showNotification(
             context: Context,
@@ -41,7 +44,7 @@ class PlayerNotificationHelper(
             setContentTitle(audioList[position].musicName)
             setContentText(audioList[position].musicArtist)
 
-            setLargeIcon(if (albumArt == null) getPlaceHolder() else albumArt)
+            setLargeIcon(albumArt ?: getPlaceHolder())
 
             setOngoing(isPlaying)
 
@@ -131,9 +134,9 @@ class PlayerNotificationHelper(
             return null
         }
         return NotificationChannel(
-                Strings.NOTIFICATION_CHANNEL_ID,
-                Strings.NOTIFICATION_CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_LOW
+            Strings.NOTIFICATION_CHANNEL_ID,
+            Strings.NOTIFICATION_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_LOW
         ).apply {
             description = Strings.NOTIFICATION_CHANNEL_DESCRIPTION
             setSound(null, null)
@@ -141,6 +144,10 @@ class PlayerNotificationHelper(
             enableVibration(false)
             setShowBadge(false)
         }
+    }
+
+    private fun getPlaceHolder(): Bitmap {
+        return BitmapFactory.decodeResource(resources, R.drawable.minimusic).resize()
     }
 
     fun cancelNotification() {

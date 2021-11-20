@@ -8,10 +8,10 @@ import javax.inject.Inject
 
 @PlayerScope
 class ArtAlbumPresenterImpl @Inject constructor(
-        private val repository: MusicRepository
+    private val repository: MusicRepository
 ) : ArtAlbumPresenter {
-    private lateinit var job: Job
-    private lateinit var serviceViewInterface: AudioServiceViewInterface
+    private var job: Job? = null
+    private var serviceViewInterface: AudioServiceViewInterface? = null
 
     override fun setService(service: AudioServiceViewInterface) {
         serviceViewInterface = service
@@ -19,17 +19,20 @@ class ArtAlbumPresenterImpl @Inject constructor(
 
     override fun getAudioByteArray() {
         job = CoroutineScope(Dispatchers.IO).launch {
-            if (serviceViewInterface.getPlayingPosition() == null) return@launch
-            serviceViewInterface.getMusicList()[serviceViewInterface.getPlayingPosition()!!].let {
-                val byteArray = repository.getMusicArtPicture(it.path)!!
-                serviceViewInterface.setAudioByteArray(byteArray)
+            if (serviceViewInterface == null) return@launch
+            if (requireNotNull(serviceViewInterface).getPlayingPosition() == null) return@launch
+            requireNotNull(serviceViewInterface)
+                .getMusicList()[requireNotNull(serviceViewInterface)
+                .getPlayingPosition()!!].let {
+                requireNotNull(serviceViewInterface)
+                    .setAudioByteArray(repository.getMusicArtPicture(it.path))
             }
         }
     }
 
     override fun onDestroy() {
-        serviceViewInterface = null!!
-        job.cancel()
+        serviceViewInterface = null
+        job?.cancel()
     }
 
 }

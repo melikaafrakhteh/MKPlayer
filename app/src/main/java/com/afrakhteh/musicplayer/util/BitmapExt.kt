@@ -1,18 +1,12 @@
 package com.afrakhteh.musicplayer.util
 
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Numerals
 
 
 fun ByteArray.toBitmap(): Bitmap {
     return BitmapFactory.decodeByteArray(this, 0, this.size)
-}
-
-fun getPlaceHolder(): Bitmap {
-    return BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.minimusic)
 }
 
 fun Bitmap.resize(maxSize: Int = Numerals.MAX_BITMAP_SIZE): Bitmap {
