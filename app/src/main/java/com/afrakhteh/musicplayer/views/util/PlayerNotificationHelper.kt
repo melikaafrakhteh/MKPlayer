@@ -8,6 +8,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
+import android.graphics.Bitmap
 import android.os.Build
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.core.app.NotificationCompat
@@ -17,6 +18,7 @@ import com.afrakhteh.musicplayer.constant.AudioActions
 import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.util.getPlaceHolder
 import com.afrakhteh.musicplayer.views.playMusicActivity.PlayerActivity
 import com.afrakhteh.musicplayer.views.services.AudioPlayerService
 
@@ -28,7 +30,7 @@ class PlayerNotificationHelper(
             audioList: List<AudioPrePareToPlay>,
             position: Int,
             isPlaying: Boolean,
-            //  albumArt: Bitmap
+            albumArt: Bitmap?
     ): Notification {
         val builder = getBasePlayerNotificationBuilder(context, audioList, position)
         builder.apply {
@@ -38,11 +40,13 @@ class PlayerNotificationHelper(
 
             setContentTitle(audioList[position].musicName)
             setContentText(audioList[position].musicArtist)
-            //  setLargeIcon(albumArt)
+
+            setLargeIcon(if (albumArt == null) getPlaceHolder() else albumArt)
 
             setOngoing(isPlaying)
 
         }
+
         getNotificationChannel()?.let { notificationChannel ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 notificationManager.createNotificationChannel(notificationChannel)

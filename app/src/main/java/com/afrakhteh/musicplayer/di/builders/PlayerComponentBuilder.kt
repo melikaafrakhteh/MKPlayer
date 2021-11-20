@@ -9,6 +9,7 @@ object PlayerComponentBuilder :
     override fun provideInstance(): PlayerComponent {
         return DaggerPlayerComponent.builder()
                 .applicationComponent(ApplicationComponentBuilder.getInstance())
+                .repositoryComponent(RepositoryComponentBuilder.getInstance())
                 .build()
     }
 }
