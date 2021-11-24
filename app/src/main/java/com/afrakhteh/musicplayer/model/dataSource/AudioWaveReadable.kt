@@ -22,10 +22,12 @@ class AudioWaveReadable(
 
             audioDecoder.setOnFinishDecoding { preparedData ->
                 input.onDataPrepared(mappedData(preparedData))
+        //        Log.d("audioWave","dataPrepare: ${mappedData(preparedData)}")
             }
 
             audioDecoder.setOnFrameAmpsCounted { size ->
                 input.onFrameCounted(size)
+                //        Log.d("audioWave","frame: ${size}")
             }
 
             audioDecoder.startDecoding()

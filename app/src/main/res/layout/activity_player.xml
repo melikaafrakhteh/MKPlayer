@@ -40,7 +40,7 @@
             tools:src="@drawable/minimusic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:layout_constraintBottom_toTopOf="@id/playScrollView"
+            app:layout_constraintBottom_toTopOf="@id/playWaveRecyclerView"
             app:riv_corner_radius="50dp" />
 
         <TextView
@@ -72,22 +72,18 @@
             app:layout_constraintStart_toEndOf="@+id/playMusicCoverIv"
             app:layout_constraintTop_toBottomOf="@+id/playMusicArtistTv" />
 
-        <ScrollView
-            android:id="@+id/playScrollView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/playWaveRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:scrollbars="none"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/playMusicCoverIv">
-
-            <com.afrakhteh.musicplayer.views.playMusicActivity.customs.wave.WaveView
-                android:id="@+id/playWave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </ScrollView>
+            app:layout_constraintTop_toBottomOf="@id/playMusicCoverIv"
+            tools:listitem="@layout/wave_item_row"
+            tools:itemCount="1000" />
 
         <View
             android:id="@+id/playTopShadow"
@@ -96,7 +92,7 @@
             android:background="@drawable/play_shadow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/playScrollView" />
+            app:layout_constraintTop_toTopOf="@id/playWaveRecyclerView" />
 
         <View
             android:id="@+id/playBottomShadow"

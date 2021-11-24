@@ -31,7 +31,7 @@ class WaveView : LinearLayout {
             minimumHeight = halfHeight
         })
         repeat(percents.size) { index ->
-            addView(WaveItem(context, 4f, percents[index], true))
+          //  addView(WaveItem(context, 4f, percents[index], true))
             addView(View(context).apply {
                 minimumHeight = 4.toPx
             })

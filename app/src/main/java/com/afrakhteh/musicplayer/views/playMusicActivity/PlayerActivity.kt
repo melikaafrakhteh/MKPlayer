@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,11 +14,12 @@ import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.WaveModel
 import com.afrakhteh.musicplayer.util.SingleEvent
-import com.afrakhteh.musicplayer.util.getScreenSize
 import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.util.toBitmap
 import com.afrakhteh.musicplayer.viewModel.PlayerViewModel
+import com.afrakhteh.musicplayer.views.playMusicActivity.wavesAdapter.PlayerWaveItemsAdapter
 import com.afrakhteh.musicplayer.views.services.AudioPlayerService
 import javax.inject.Inject
 
@@ -70,29 +70,26 @@ class PlayerActivity : AppCompatActivity() {
             getMusicActivePosition(intent)
         }
 
+        binding.playWaveRecyclerView.adapter = PlayerWaveItemsAdapter()
+
         val startPlayingMusicIntent = Intent(this, AudioPlayerService::class.java)
         startService(startPlayingMusicIntent)
         bindService(startPlayingMusicIntent, connectToService, BIND_AUTO_CREATE)
 
-        viewModel.artPicture.observe(this@PlayerActivity, ::observeArtPicture)
-
-        /* viewModel.apply {
-             waveListLiveData.observe(this@PlayerActivity, ::renderList)
-             frameSizeLiveData.observe(this@PlayerActivity, ::drawInitialFrame)
-             audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
-             activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
-         }*/
+        viewModel.apply {
+            waveListLiveData.observe(this@PlayerActivity, ::renderList)
+            frameSizeLiveData.observe(this@PlayerActivity, ::drawInitialFrame)
+            artPicture.observe(this@PlayerActivity, ::observeArtPicture)
+        }
 
         buttonClicks()
     }
 
     private fun getActiveAudioPosition(position: Int?) {
         if (position == null) return
-        val musicPrePareToPlay = requireNotNull(viewModel.audioListLiveData.value!![position])
+        val musicPrePareToPlay = viewModel.audioListLiveData.value!![position]
         binding.playMusicNameTv.text = musicPrePareToPlay.musicName
-        Log.d("player", "name: ${musicPrePareToPlay.musicName}")
         binding.playMusicArtistTv.text = musicPrePareToPlay.musicArtist
-        Log.d("player", "artist: ${musicPrePareToPlay.musicArtist}")
     }
 
     private fun getListToPlay(list: List<AudioPrePareToPlay>?) {
@@ -111,7 +108,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun observeArtPicture(bytes: ByteArray?) {
         if (bytes == null) {
-            binding.playMusicCoverIv.setImageResource(R.drawable.minimusic)
+            binding.playMusicCoverIv.setImageResource(R.drawable.dog)
             return
         }
         val image = bytes.toBitmap().resize()
@@ -124,18 +121,28 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun drawInitialFrame(frameSize: Int) {
-        binding.playWave.removeAllViews()
-        val frameList = ArrayList<Int>()
-        for (i in 0..frameSize) {
-            frameList.add(1)
+    private fun drawInitialFrame(frameSize: SingleEvent<Int>) {
+        binding.playWaveRecyclerView.removeAllViews()
+        val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
+        val frameList = ArrayList<WaveModel>()
+        frameSize.ifNotHandled {
+            for (i in 0..it) {
+                frameList.add(WaveModel(1, true))
+            }
         }
-        binding.playWave.showWaves(frameList, getScreenSize().y)
+        adapter.submitList(frameList)
     }
 
-    private fun renderList(arrayList: ArrayList<Int>) {
-        binding.playWave.removeAllViews()
-        binding.playWave.showWaves(arrayList, getScreenSize().y)
+    private fun renderList(arrayList: SingleEvent<ArrayList<Int>>) {
+        binding.playWaveRecyclerView.removeAllViews()
+        val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
+        val frameList = ArrayList<WaveModel>()
+        arrayList.ifNotHandled {
+            for (i in 0 until it.size) {
+                frameList.addAll(listOf(WaveModel(it[i], true)))
+            }
+        }
+        adapter.submitList(frameList)
     }
 
     private fun buttonClicks() {

@@ -10,14 +10,11 @@ import com.afrakhteh.musicplayer.di.scopes.ViewModelScope
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepository
+import com.afrakhteh.musicplayer.util.SingleEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @ViewModelScope
@@ -30,11 +27,11 @@ class PlayerViewModel @Inject constructor(
     private lateinit var job2: Job
     private val disposable = CompositeDisposable()
 
-    private val pWaveList = MutableLiveData<ArrayList<Int>>()
-    val waveListLiveData: LiveData<ArrayList<Int>> get() = pWaveList
+    private val pWaveList = MutableLiveData<SingleEvent<ArrayList<Int>>>()
+    val waveListLiveData: LiveData<SingleEvent<ArrayList<Int>>> get() = pWaveList
 
-    private val pFrameSize = MutableLiveData<Int>()
-    val frameSizeLiveData: LiveData<Int> get() = pFrameSize
+    private val pFrameSize = MutableLiveData<SingleEvent<Int>>()
+    val frameSizeLiveData: LiveData<SingleEvent<Int>> get() = pFrameSize
 
     private val pAudioList = MutableLiveData<List<AudioPrePareToPlay>>()
     val audioListLiveData: LiveData<List<AudioPrePareToPlay>> get() = pAudioList
@@ -49,30 +46,32 @@ class PlayerViewModel @Inject constructor(
     val playingPosition: LiveData<Int> get() = pPlayingPosition
 
     fun getAllAudioWaveData() {
-        job = CoroutineScope(Dispatchers.IO).launch {
+        job = CoroutineScope(Dispatchers.Main).launch {
             if (activePositionLiveData.value == null) return@launch
             val audioWaveData = repository.fetchAudioWaveData(
                     audioListLiveData.value!![activePositionLiveData.value!!].path
             )
-            audioWaveData.frameCountObservable
-                    .subscribeOn(Schedulers.computation())
-                    .subscribe {
-                        pFrameSize.postValue(it)
-                        disposable.clear()
-                    }.addTo(disposable)
+            withContext(Dispatchers.IO) {
+                audioWaveData.frameCountObservable
+                        .subscribe {
+                            pFrameSize.postValue(SingleEvent(it))
+                            disposable.clear()
+                        }.addTo(disposable)
 
-            audioWaveData.waveDataObservable
-                    .subscribeOn(Schedulers.computation())
-                    .subscribeBy(
-                            onError = {
-                                Log.e("playerViewModel", "player view model error in subscription: $it")
-                            },
-                            onNext = {
-                                pWaveList.postValue(it)
-                                disposable.clear()
-                            }
-                    ).addTo(disposable)
+                audioWaveData.waveDataObservable
+                        .subscribeBy(
+                                onError = {
+                                    Log.e("playerViewModel", "player view model error in subscription: $it")
+                                },
+                                onNext = {
+                                    pWaveList.postValue(SingleEvent(it))
+                                    disposable.clear()
+                                }
+                        ).addTo(disposable)
+            }
+
         }
+
     }
 
     fun getAllMusicList(intent: Intent) {
@@ -96,6 +95,7 @@ class PlayerViewModel @Inject constructor(
     fun changeMusicActivePosition(position: Int) {
         pActivePosition.value = position
         getMusicArtPicture()
+        getAllAudioWaveData()
     }
 
     fun getMusicArtPicture() {
