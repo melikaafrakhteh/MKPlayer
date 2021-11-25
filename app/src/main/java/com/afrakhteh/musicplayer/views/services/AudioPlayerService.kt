@@ -22,8 +22,14 @@ import com.afrakhteh.musicplayer.views.util.PlayerNotificationHelper
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
 import java.io.File
+import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface {
@@ -52,7 +58,12 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
     private val pOnPlayerChangedDataLiveData = MutableLiveData<SingleEvent<Int>>()
     val onPlayerChangedDataLiveData: LiveData<SingleEvent<Int>> get() = pOnPlayerChangedDataLiveData
 
+    private val pOnPlayBackPositionChanged = MutableLiveData<Long>()
+    val onPlayBackPositionChanged: LiveData<Long> get() = pOnPlayBackPositionChanged
+
     private var imageByteArray: ByteArray? = null
+
+    private var tickerDisposable: Disposable? = null
 
     inner class AudioBinder : Binder() {
         fun getService(): AudioPlayerService = this@AudioPlayerService
@@ -189,11 +200,11 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
     private fun updateNotification() {
         if (audioListToPlay.isEmpty()) return
         notificationHelper.showNotification(
-            applicationContext,
-            audioListToPlay,
-            requireNotNull(currentPosition),
-            isPlaying(),
-            imageByteArray?.toBitmap()?.resize()
+                applicationContext,
+                audioListToPlay,
+                requireNotNull(currentPosition),
+                isPlaying(),
+                imageByteArray?.toBitmap()?.resize()
         )
     }
 
@@ -206,15 +217,38 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
         player.volume = volume
     }
 
+    fun getDuration(): Long {
+        return player.duration
+    }
+
+    private fun startTicking() {
+        tickerDisposable = Observable
+                .interval(0L, 200L, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    checkCurrentPosition()
+                }
+    }
+
+    private fun checkCurrentPosition() {
+        pOnPlayBackPositionChanged.postValue(player.currentPosition)
+    }
+
+    private fun stopTicking() {
+        tickerDisposable?.dispose()
+        tickerDisposable = null
+    }
+
     private fun startForeGroundIfNeeded(): Boolean {
         if (isForegroundServiceStarted) return false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notification = notificationHelper.showNotification(
-                this,
-                audioListToPlay,
-                requireNotNull(currentPosition),
-                isPlaying(),
-                imageByteArray?.toBitmap()?.resize()
+                    this,
+                    audioListToPlay,
+                    requireNotNull(currentPosition),
+                    isPlaying(),
+                    imageByteArray?.toBitmap()?.resize()
             )
             startForeground(Numerals.NOTIFICATION_ID, notification)
         }
@@ -236,6 +270,7 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
             imageByteArray?.toBitmap()?.resize()
         )
         pOnPlayerChangedLiveData.postValue(playWhenReady)
+        if (playWhenReady) startTicking() else stopTicking()
     }
 
     override fun getPlayingPosition(): Int? {

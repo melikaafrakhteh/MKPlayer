@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +38,8 @@ class PlayerActivity : AppCompatActivity() {
 
     private var audioPlayerService: AudioPlayerService? = null
 
+    private var frames: ArrayList<WaveItemModel> = ArrayList()
+
 
     private val connectToService = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -45,6 +48,7 @@ class PlayerActivity : AppCompatActivity() {
             requireNotNull(audioPlayerService).apply {
                 onPlayerChangedLiveData.observe(this@PlayerActivity, ::onPlayedChanged)
                 onPlayerChangedDataLiveData.observe(this@PlayerActivity, ::onChangedUiData)
+                onPlayBackPositionChanged.observe(this@PlayerActivity, ::onPlayBackPositionChanged)
             }
             viewModel.apply {
                 audioListLiveData.observe(this@PlayerActivity, ::getListToPlay)
@@ -126,12 +130,14 @@ class PlayerActivity : AppCompatActivity() {
     private fun drawInitialFrame(frameSize: SingleEvent<Int>) {
         val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
         val frameList = ArrayList<WaveItemModel>()
+
         frameSize.ifNotHandled {
             for (i in 0..it) {
                 frameList.add(WaveModel(1, true))
             }
         }
         adapter.submitList(frameList)
+
     }
 
     private fun renderList(arrayList: SingleEvent<ArrayList<Int>>) {
@@ -143,7 +149,16 @@ class PlayerActivity : AppCompatActivity() {
                 frameList.addAll(listOf(WaveModel(it[i], true)))
             }
         }
+        frames.addAll(frameList)
         adapter.submitList(frameList)
+
+    }
+
+    private fun onPlayBackPositionChanged(currentPosition: Long) {
+        Log.d("player", "position: $currentPosition , duration: ${audioPlayerService?.getDuration()}, size: ${frames.size}")
+        val framePosition = (currentPosition * frames.size) / audioPlayerService?.getDuration()!!
+        Log.d("player", "frame po: $framePosition")
+        binding.playWaveRecyclerView.smoothScrollBy(0, framePosition.toInt())
     }
 
     private fun buttonClicks() {
