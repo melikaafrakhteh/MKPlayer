@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.mainActivity.interfaces
+package com.afrakhteh.musicplayer.views.main.interfaces
 
 interface PermissionController {
 

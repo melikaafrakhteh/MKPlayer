@@ -21,7 +21,7 @@ import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.util.resize
-import com.afrakhteh.musicplayer.views.playMusicActivity.PlayerActivity
+import com.afrakhteh.musicplayer.views.musicPlayer.PlayerActivity
 import com.afrakhteh.musicplayer.views.services.AudioPlayerService
 
 class PlayerNotificationHelper(

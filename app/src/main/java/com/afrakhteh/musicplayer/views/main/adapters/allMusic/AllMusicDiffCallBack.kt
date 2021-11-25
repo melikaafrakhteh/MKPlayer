@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic
+package com.afrakhteh.musicplayer.views.main.adapters.allMusic
 
 import androidx.recyclerview.widget.DiffUtil
 import com.afrakhteh.musicplayer.model.entity.MusicEntity

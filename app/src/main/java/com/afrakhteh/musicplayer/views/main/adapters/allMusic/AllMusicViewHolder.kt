@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic
+package com.afrakhteh.musicplayer.views.main.adapters.allMusic
 
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView

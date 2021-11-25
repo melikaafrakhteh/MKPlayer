@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="top"
     android:paddingBottom="60dp"
-    tools:context=".views.mainActivity.fragments.AllMusicFragment">
+    tools:context=".views.main.fragments.AllMusicFragment">
 
     <TextView
         android:id="@+id/allFragmentTitleTv"

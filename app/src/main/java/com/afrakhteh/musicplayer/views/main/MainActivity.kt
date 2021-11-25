@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.mainActivity
+package com.afrakhteh.musicplayer.views.main
 
 import android.Manifest
 import android.content.Context
@@ -16,8 +16,8 @@ import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.databinding.ActivityMainBinding
 import com.afrakhteh.musicplayer.util.getScreenSize
-import com.afrakhteh.musicplayer.views.mainActivity.adapters.viewPager.ViewPagerAdapter
-import com.afrakhteh.musicplayer.views.mainActivity.interfaces.PermissionController
+import com.afrakhteh.musicplayer.views.main.adapters.viewPager.ViewPagerAdapter
+import com.afrakhteh.musicplayer.views.main.interfaces.PermissionController
 
 
 @Suppress("IMPLICIT_CAST_TO_ANY")

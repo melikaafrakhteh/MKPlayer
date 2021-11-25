@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.playMusicActivity.wavesAdapter
+package com.afrakhteh.musicplayer.views.musicPlayer.adapter
 
 
 import androidx.recyclerview.widget.RecyclerView

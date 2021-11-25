@@ -1,15 +1,15 @@
-package com.afrakhteh.musicplayer.views.mainActivity.adapters.viewPager
+package com.afrakhteh.musicplayer.views.main.adapters.viewPager
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.afrakhteh.musicplayer.views.mainActivity.fragments.AllMusicFragment
-import com.afrakhteh.musicplayer.views.mainActivity.fragments.LikedFragment
-import com.afrakhteh.musicplayer.views.mainActivity.fragments.PlayListFragment
-import com.afrakhteh.musicplayer.views.mainActivity.fragments.RecentlyFragment
+import com.afrakhteh.musicplayer.views.main.fragments.AllMusicFragment
+import com.afrakhteh.musicplayer.views.main.fragments.LikedFragment
+import com.afrakhteh.musicplayer.views.main.fragments.PlayListFragment
+import com.afrakhteh.musicplayer.views.main.fragments.RecentlyFragment
 
 class ViewPagerAdapter(activity: AppCompatActivity, private val fragmentNumber: Int) :
-    FragmentStateAdapter(activity) {
+        FragmentStateAdapter(activity) {
 
 
     override fun getItemCount(): Int {

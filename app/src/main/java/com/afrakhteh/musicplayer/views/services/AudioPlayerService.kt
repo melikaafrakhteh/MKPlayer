@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.afrakhteh.musicplayer.constant.AudioActions
@@ -227,7 +226,6 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
         return player.playWhenReady
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
         super.onPlayWhenReadyChanged(playWhenReady, reason)
         notificationHelper.showNotification(

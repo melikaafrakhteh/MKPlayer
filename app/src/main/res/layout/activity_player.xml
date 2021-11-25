@@ -7,7 +7,7 @@
     android:background="@color/primaryColor"
     android:orientation="horizontal"
     android:weightSum="4"
-    tools:context=".views.playMusicActivity.PlayerActivity"
+    tools:context=".views.musicPlayer.PlayerActivity"
     tools:ignore="DisableBaselineAlignment">
 
     <androidx.constraintlayout.widget.ConstraintLayout

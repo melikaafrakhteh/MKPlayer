@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.afrakhteh.musicplayer.views.playMusicActivity.customs.wave.WaveItem
+    <com.afrakhteh.musicplayer.views.musicPlayer.customs.WaveItem
         android:id="@+id/waveItemRow"
         android:layout_width="match_parent"
         android:layout_height="4dp"

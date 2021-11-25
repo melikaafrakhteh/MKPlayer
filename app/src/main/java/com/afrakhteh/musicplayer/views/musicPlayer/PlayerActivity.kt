@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.playMusicActivity
+package com.afrakhteh.musicplayer.views.musicPlayer
 
 
 import android.content.ComponentName
@@ -19,7 +19,7 @@ import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.util.toBitmap
 import com.afrakhteh.musicplayer.viewModel.PlayerViewModel
-import com.afrakhteh.musicplayer.views.playMusicActivity.wavesAdapter.PlayerWaveItemsAdapter
+import com.afrakhteh.musicplayer.views.musicPlayer.adapter.PlayerWaveItemsAdapter
 import com.afrakhteh.musicplayer.views.services.AudioPlayerService
 import javax.inject.Inject
 
@@ -122,7 +122,6 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun drawInitialFrame(frameSize: SingleEvent<Int>) {
-        binding.playWaveRecyclerView.removeAllViews()
         val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
         val frameList = ArrayList<WaveModel>()
         frameSize.ifNotHandled {
@@ -134,7 +133,6 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun renderList(arrayList: SingleEvent<ArrayList<Int>>) {
-        binding.playWaveRecyclerView.removeAllViews()
         val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
         val frameList = ArrayList<WaveModel>()
         arrayList.ifNotHandled {

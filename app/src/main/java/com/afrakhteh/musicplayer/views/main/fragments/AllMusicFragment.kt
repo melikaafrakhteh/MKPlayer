@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.views.mainActivity.fragments
+package com.afrakhteh.musicplayer.views.main.fragments
 
 
 import android.annotation.SuppressLint
@@ -19,10 +19,10 @@ import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
-import com.afrakhteh.musicplayer.views.mainActivity.adapters.allMusic.AllMusicAdapter
-import com.afrakhteh.musicplayer.views.mainActivity.interfaces.PermissionController
-import com.afrakhteh.musicplayer.views.mainActivity.state.MusicState
-import com.afrakhteh.musicplayer.views.playMusicActivity.PlayerActivity
+import com.afrakhteh.musicplayer.views.main.adapters.allMusic.AllMusicAdapter
+import com.afrakhteh.musicplayer.views.main.interfaces.PermissionController
+import com.afrakhteh.musicplayer.views.main.state.MusicState
+import com.afrakhteh.musicplayer.views.musicPlayer.PlayerActivity
 import javax.inject.Inject
 
 
