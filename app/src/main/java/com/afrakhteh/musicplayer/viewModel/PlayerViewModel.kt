@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.di.scopes.ViewModelScope
-import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepository
 import com.afrakhteh.musicplayer.util.SingleEvent

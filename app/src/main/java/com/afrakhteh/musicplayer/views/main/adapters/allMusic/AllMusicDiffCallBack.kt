@@ -1,7 +1,7 @@
 package com.afrakhteh.musicplayer.views.main.adapters.allMusic
 
 import androidx.recyclerview.widget.DiffUtil
-import com.afrakhteh.musicplayer.model.entity.MusicEntity
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 
 class AllMusicDiffCallBack : DiffUtil.ItemCallback<MusicEntity>() {
 

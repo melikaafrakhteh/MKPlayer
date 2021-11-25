@@ -1,7 +1,7 @@
 package com.afrakhteh.musicplayer.model.repository.musics
 
 
-import com.afrakhteh.musicplayer.model.entity.MusicEntity
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 
 interface MusicRepository {
     fun getAllMusic(): List<MusicEntity>

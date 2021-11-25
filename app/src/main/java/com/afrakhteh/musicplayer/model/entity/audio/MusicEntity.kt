@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.model.entity
+package com.afrakhteh.musicplayer.model.entity.audio
 
 data class MusicEntity(
         var name: String? = null,

@@ -2,7 +2,7 @@ package com.afrakhteh.musicplayer.util
 
 import android.media.MediaExtractor
 import android.media.MediaFormat
-import com.afrakhteh.musicplayer.model.entity.AudioDetails
+import com.afrakhteh.musicplayer.model.entity.audio.AudioDetails
 import java.io.IOException
 
 object AudioUtils {

@@ -8,4 +8,7 @@ object Numerals {
     const val NOTIFICATION_ID = 100
 
     const val MAX_BITMAP_SIZE = 512
+
+    const val WAVE_ITEM_VIEW_TYPE = 1
+    const val EMPTY_VIEW_TYPE = 2
 }

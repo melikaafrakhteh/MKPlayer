@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.MusicItemRowBinding
-import com.afrakhteh.musicplayer.model.entity.MusicEntity
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.util.toBitmap

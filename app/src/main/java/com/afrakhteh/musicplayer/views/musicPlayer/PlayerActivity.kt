@@ -13,9 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
-import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
-import com.afrakhteh.musicplayer.model.entity.WaveModel
+import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.wave.WaveItemModel
+import com.afrakhteh.musicplayer.model.entity.wave.WaveModel
 import com.afrakhteh.musicplayer.util.SingleEvent
+import com.afrakhteh.musicplayer.util.getScreenSize
 import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.util.toBitmap
 import com.afrakhteh.musicplayer.viewModel.PlayerViewModel
@@ -70,7 +72,7 @@ class PlayerActivity : AppCompatActivity() {
             getMusicActivePosition(intent)
         }
 
-        binding.playWaveRecyclerView.adapter = PlayerWaveItemsAdapter()
+        binding.playWaveRecyclerView.adapter = PlayerWaveItemsAdapter(getScreenSize().y)
 
         val startPlayingMusicIntent = Intent(this, AudioPlayerService::class.java)
         startService(startPlayingMusicIntent)
@@ -123,7 +125,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun drawInitialFrame(frameSize: SingleEvent<Int>) {
         val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
-        val frameList = ArrayList<WaveModel>()
+        val frameList = ArrayList<WaveItemModel>()
         frameSize.ifNotHandled {
             for (i in 0..it) {
                 frameList.add(WaveModel(1, true))
@@ -133,8 +135,9 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun renderList(arrayList: SingleEvent<ArrayList<Int>>) {
+        binding.playWaveRecyclerView.removeAllViews()
         val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
-        val frameList = ArrayList<WaveModel>()
+        val frameList = ArrayList<WaveItemModel>()
         arrayList.ifNotHandled {
             for (i in 0 until it.size) {
                 frameList.addAll(listOf(WaveModel(it[i], true)))

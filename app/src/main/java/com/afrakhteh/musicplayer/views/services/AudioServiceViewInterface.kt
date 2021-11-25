@@ -1,6 +1,6 @@
 package com.afrakhteh.musicplayer.views.services
 
-import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 
 interface AudioServiceViewInterface {
     fun getPlayingPosition(): Int?

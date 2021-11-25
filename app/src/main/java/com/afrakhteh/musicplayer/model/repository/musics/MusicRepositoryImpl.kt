@@ -8,7 +8,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioArtPictureReadable
-import com.afrakhteh.musicplayer.model.entity.MusicEntity
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import javax.inject.Inject
 
 @RepoScope

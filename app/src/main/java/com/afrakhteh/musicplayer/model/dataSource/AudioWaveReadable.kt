@@ -3,7 +3,7 @@ package com.afrakhteh.musicplayer.model.dataSource
 import com.afrakhteh.musicplayer.constant.Lists.SUPPORTED_EXT
 import com.afrakhteh.musicplayer.dataSources.Readable
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioDecoderImpl
-import com.afrakhteh.musicplayer.model.entity.AudioWaveDataRequest
+import com.afrakhteh.musicplayer.model.entity.wave.AudioWaveDataRequest
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException

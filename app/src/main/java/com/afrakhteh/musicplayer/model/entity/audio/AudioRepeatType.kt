@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.model.entity
+package com.afrakhteh.musicplayer.model.entity.audio
 
 sealed class AudioRepeatType {
     object RepeatOneMusic : AudioRepeatType()

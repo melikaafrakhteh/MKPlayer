@@ -12,8 +12,8 @@ import androidx.lifecycle.MutableLiveData
 import com.afrakhteh.musicplayer.constant.AudioActions
 import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.di.builders.PlayerComponentBuilder
-import com.afrakhteh.musicplayer.model.entity.AudioPrePareToPlay
-import com.afrakhteh.musicplayer.model.entity.AudioRepeatType
+import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.audio.AudioRepeatType
 import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.util.toBitmap

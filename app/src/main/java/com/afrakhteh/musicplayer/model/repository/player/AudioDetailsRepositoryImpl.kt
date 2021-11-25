@@ -4,8 +4,8 @@ import android.media.MediaExtractor
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.dataSource.AudioWaveReadable
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioDecoderImpl
-import com.afrakhteh.musicplayer.model.entity.AudioWaveDataRequest
-import com.afrakhteh.musicplayer.model.entity.AudioWaveDataResult
+import com.afrakhteh.musicplayer.model.entity.wave.AudioWaveDataRequest
+import com.afrakhteh.musicplayer.model.entity.wave.AudioWaveDataResult
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject

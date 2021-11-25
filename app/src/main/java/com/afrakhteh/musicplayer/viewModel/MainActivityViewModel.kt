@@ -3,7 +3,7 @@ package com.afrakhteh.musicplayer.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.afrakhteh.musicplayer.model.entity.MusicEntity
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.views.main.state.MusicState

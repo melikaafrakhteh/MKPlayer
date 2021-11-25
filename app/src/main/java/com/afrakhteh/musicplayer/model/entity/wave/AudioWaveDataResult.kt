@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.model.entity
+package com.afrakhteh.musicplayer.model.entity.wave
 
 import io.reactivex.Observable
 

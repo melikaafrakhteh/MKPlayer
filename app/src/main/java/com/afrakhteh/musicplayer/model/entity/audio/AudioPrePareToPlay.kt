@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.model.entity
+package com.afrakhteh.musicplayer.model.entity.audio
 
 import android.os.Parcel
 import android.os.Parcelable

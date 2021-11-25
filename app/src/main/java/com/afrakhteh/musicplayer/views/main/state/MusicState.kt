@@ -1,6 +1,6 @@
 package com.afrakhteh.musicplayer.views.main.state
 
-import com.afrakhteh.musicplayer.model.entity.MusicEntity
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.util.SingleEvent
 
 data class MusicState(
