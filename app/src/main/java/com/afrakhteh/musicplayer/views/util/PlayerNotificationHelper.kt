@@ -69,7 +69,7 @@ class PlayerNotificationHelper(
                 .setSmallIcon(R.drawable.ic_play)
                 .setSound(null)
                 .setVibrate(null)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setContentIntent(getContentIntent(context, audioList, position))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setStyle(getMediaStyle(context))
