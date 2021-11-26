@@ -45,6 +45,7 @@ class PlayerActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
 
             audioPlayerService = (service as AudioPlayerService.AudioBinder).getService()
+
             requireNotNull(audioPlayerService).apply {
                 onPlayerChangedLiveData.observe(this@PlayerActivity, ::onPlayedChanged)
                 onPlayerChangedDataLiveData.observe(this@PlayerActivity, ::onChangedUiData)
@@ -89,6 +90,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         buttonClicks()
+
     }
 
     private fun getActiveAudioPosition(position: Int?) {
@@ -155,9 +157,9 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun onPlayBackPositionChanged(currentPosition: Long) {
-        Log.d("player", "position: $currentPosition , duration: ${audioPlayerService?.getDuration()}, size: ${frames.size}")
+        Log.d("player", "position: $currentPosition  size: ${frames.size}")
         val framePosition = (currentPosition * frames.size) / audioPlayerService?.getDuration()!!
-        Log.d("player", "frame po: $framePosition")
+        Log.d("player", "frame po: $framePosition , duration: ${audioPlayerService?.getDuration()}")
         binding.playWaveRecyclerView.smoothScrollBy(0, framePosition.toInt())
     }
 

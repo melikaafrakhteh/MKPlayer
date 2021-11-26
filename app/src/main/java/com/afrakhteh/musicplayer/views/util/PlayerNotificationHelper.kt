@@ -48,6 +48,7 @@ class PlayerNotificationHelper(
 
             setOngoing(isPlaying)
 
+
         }
 
         getNotificationChannel()?.let { notificationChannel ->
