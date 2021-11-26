@@ -136,6 +136,9 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
         rememberedPosition = player.currentPosition
         player.pause()
         updateNotification()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_DETACH)
+        }
     }
 
     fun resume() {
