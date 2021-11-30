@@ -226,7 +226,7 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
 
     private fun startTicking() {
         tickerDisposable = Observable
-                .interval(0L, 200L, TimeUnit.MILLISECONDS)
+                .interval(0L, 250L, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {

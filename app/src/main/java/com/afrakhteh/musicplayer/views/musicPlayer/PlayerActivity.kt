@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -56,6 +55,7 @@ class PlayerActivity : AppCompatActivity() {
                 activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
                 playingPosition.observe(this@PlayerActivity, ::observePlayingPosition)
             }
+
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -127,9 +127,11 @@ class PlayerActivity : AppCompatActivity() {
         position.ifNotHandled {
             viewModel.changeMusicActivePosition(it)
         }
+
     }
 
     private fun drawInitialFrame(frameSize: SingleEvent<Int>) {
+        binding.playWaveRecyclerView.removeAllViews()
         val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
         val frameList = ArrayList<WaveItemModel>()
 
@@ -157,10 +159,11 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun onPlayBackPositionChanged(currentPosition: Long) {
-        Log.d("player", "position: $currentPosition  size: ${frames.size}")
-        val framePosition = (currentPosition * frames.size) / audioPlayerService?.getDuration()!!
-        Log.d("player", "frame po: $framePosition , duration: ${audioPlayerService?.getDuration()}")
-        binding.playWaveRecyclerView.smoothScrollBy(0, framePosition.toInt())
+        val scrollRange = binding.playWaveRecyclerView.computeVerticalScrollRange()
+        val scrollPosition = (currentPosition * scrollRange) / audioPlayerService?.getDuration()!!
+        val currentScrollPosition = binding.playWaveRecyclerView.computeVerticalScrollOffset()
+        binding.playWaveRecyclerView.smoothScrollBy(0, ((scrollPosition - currentScrollPosition).toInt()))
+
     }
 
     private fun buttonClicks() {
