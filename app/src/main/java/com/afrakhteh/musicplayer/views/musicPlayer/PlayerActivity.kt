@@ -85,7 +85,9 @@ class PlayerActivity : AppCompatActivity() {
             getMusicActivePosition(intent)
         }
 
-        binding.playWaveRecyclerView.adapter = PlayerWaveItemsAdapter(getScreenSize().y)
+        binding.playWaveRecyclerView.adapter = PlayerWaveItemsAdapter(
+            getScreenSize().y, mutableListOf(WaveItemModel())
+        )
 
         val startPlayingMusicIntent = Intent(this, AudioPlayerService::class.java)
         startService(startPlayingMusicIntent)
@@ -196,12 +198,14 @@ class PlayerActivity : AppCompatActivity() {
         try {
             val currentScrollPosition = binding.playWaveRecyclerView.computeVerticalScrollOffset()
             val scrollRange = binding.playWaveRecyclerView.computeVerticalScrollRange()
-            val scrollPosition = (currentPosition * scrollRange) / audioPlayerService?.getDuration()!!
+            val scrollPosition =
+                (currentPosition * scrollRange) / audioPlayerService?.getDuration()!!
 
             binding.playWaveRecyclerView.smoothScrollBy(
-                    0, ((scrollPosition - currentScrollPosition).toInt()),
-                    LinearInterpolator(),
-                    240)
+                0, ((scrollPosition - currentScrollPosition).toInt()),
+                LinearInterpolator(),
+                240
+            )
 
         } catch (e: Exception) {
             e.printStackTrace()
