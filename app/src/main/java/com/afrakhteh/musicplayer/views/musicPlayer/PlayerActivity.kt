@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -42,8 +41,6 @@ class PlayerActivity : AppCompatActivity() {
 
     private var audioPlayerService: AudioPlayerService? = null
 
-    private var frames: ArrayList<WaveItemModel> = ArrayList()
-
     private var isUserScrolling: Boolean = false
 
 
@@ -62,7 +59,6 @@ class PlayerActivity : AppCompatActivity() {
                 activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
                 playingPosition.observe(this@PlayerActivity, ::observePlayingPosition)
             }
-            findAudioDuration()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -148,23 +144,27 @@ class PlayerActivity : AppCompatActivity() {
         position.ifNotHandled {
             viewModel.changeMusicActivePosition(it)
         }
-
+        setAudioDuration()
     }
 
-    private fun findAudioDuration() {
-        val duration = requireNotNull(audioPlayerService?.getDuration()) / 1000
-        Log.d("player", "duration: ${audioPlayerService?.getDuration()}")
-        if (duration > 0L) {
-            val min = ((duration / 60) % 60).toInt()
-            val sec = (duration % 60).toInt()
+    private fun setAudioDuration() {
+        val duration = requireNotNull(audioPlayerService?.getDuration())
+        if (checkDurationValidation(duration)) {
+            val durationSet = duration / 1000
+            val min = ((durationSet / 60)).toInt()
+            val sec = (durationSet % 60).toInt()
             setDurationTimer(min, sec)
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setDurationTimer(min: Int, sec: Int) {
-        binding.playMusicDuration.text = "$min:${String.format("%02d", sec)}"
+        binding.playMusicDuration.text = "${String.format("%02d", min)}:${String.format("%02d", sec)}"
     }
 
+    private fun checkDurationValidation(duration:Long) : Boolean{
+        return duration >= 0
+    }
 
     private fun drawInitialFrame(frameSize: SingleEvent<Int>) {
         val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
@@ -180,20 +180,19 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun renderList(arrayList: SingleEvent<ArrayList<Int>>) {
-        binding.playWaveRecyclerView.removeAllViews()
         val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
         val frameList = ArrayList<WaveItemModel>()
+
         arrayList.ifNotHandled {
             for (i in 0 until it.size) {
                 frameList.addAll(listOf(WaveModel(it[i], true)))
             }
         }
-        frames.addAll(frameList)
         adapter.submitList(frameList)
-
     }
 
     private fun onPlayBackPositionChanged(currentPosition: Long) {
+        setAudioDuration()
         if (binding.playWaveRecyclerView.layoutParams == null) return
         try {
             val currentScrollPosition = binding.playWaveRecyclerView.computeVerticalScrollOffset()
