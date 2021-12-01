@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -55,7 +56,7 @@ class PlayerActivity : AppCompatActivity() {
                 activePositionLiveData.observe(this@PlayerActivity, ::getActiveAudioPosition)
                 playingPosition.observe(this@PlayerActivity, ::observePlayingPosition)
             }
-
+            findAudioDuration()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -130,6 +131,21 @@ class PlayerActivity : AppCompatActivity() {
 
     }
 
+    private fun findAudioDuration() {
+        val duration = requireNotNull(audioPlayerService?.getDuration()) / 1000
+        Log.d("player", "duration: ${audioPlayerService?.getDuration()}")
+        if (duration > 0L) {
+            val min = ((duration / 60) % 60).toInt()
+            val sec = (duration % 60).toInt()
+            setDurationTimer(min, sec)
+        }
+    }
+
+    private fun setDurationTimer(min: Int, sec: Int) {
+        binding.playMusicDuration.text = "$min:${String.format("%02d", sec)}"
+    }
+
+
     private fun drawInitialFrame(frameSize: SingleEvent<Int>) {
         binding.playWaveRecyclerView.removeAllViews()
         val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
@@ -159,9 +175,11 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun onPlayBackPositionChanged(currentPosition: Long) {
+        if (binding.playWaveRecyclerView.layoutParams == null) return
+        val currentScrollPosition = binding.playWaveRecyclerView.computeVerticalScrollOffset()
         val scrollRange = binding.playWaveRecyclerView.computeVerticalScrollRange()
         val scrollPosition = (currentPosition * scrollRange) / audioPlayerService?.getDuration()!!
-        val currentScrollPosition = binding.playWaveRecyclerView.computeVerticalScrollOffset()
+
         binding.playWaveRecyclerView.smoothScrollBy(0, ((scrollPosition - currentScrollPosition).toInt()))
 
     }
