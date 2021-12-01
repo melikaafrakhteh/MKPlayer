@@ -66,7 +66,6 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
@@ -95,9 +94,20 @@ class PlayerActivity : AppCompatActivity() {
             artPicture.observe(this@PlayerActivity, ::observeArtPicture)
         }
 
-        buttonClicks()
+        initialiseView()
+    }
 
+    @SuppressLint("ClickableViewAccessibility")
+    private fun initialiseView() {
         binding.playWaveRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (isUserScrolling.not()) return
+                audioPlayerService?.getDuration()?.let { duration ->
+                    audioPlayerService?.seekToPosition(getTargetPosition(duration))
+                }
+            }
         })
         binding.playWaveRecyclerView.setOnTouchListener { v, event ->
             when (event.action) {
@@ -105,9 +115,15 @@ class PlayerActivity : AppCompatActivity() {
                 MotionEvent.ACTION_UP -> isUserScrolling = false
                 MotionEvent.ACTION_DOWN -> isUserScrolling = false
             }
-            return@setOnTouchListener true
+            return@setOnTouchListener false
         }
+        buttonClicks()
+    }
 
+    private fun getTargetPosition(duration: Long): Long {
+        val currentScrollPosition = binding.playWaveRecyclerView.computeVerticalScrollOffset()
+        val scrollRange = binding.playWaveRecyclerView.computeVerticalScrollRange()
+        return (duration * currentScrollPosition) / scrollRange
     }
 
     private fun getActiveAudioPosition(position: Int?) {
@@ -193,6 +209,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun onPlayBackPositionChanged(currentPosition: Long) {
         setAudioDuration()
+        if (isUserScrolling) return
         if (binding.playWaveRecyclerView.layoutParams == null) return
         try {
             val currentScrollPosition = binding.playWaveRecyclerView.computeVerticalScrollOffset()

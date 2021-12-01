@@ -203,17 +203,16 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
     private fun updateNotification() {
         if (audioListToPlay.isEmpty()) return
         notificationHelper.showNotification(
-                applicationContext,
-                audioListToPlay,
-                requireNotNull(currentPosition),
-                isPlaying(),
-                imageByteArray?.toBitmap()?.resize()
+            applicationContext,
+            audioListToPlay,
+            requireNotNull(currentPosition),
+            isPlaying(),
+            imageByteArray?.toBitmap()?.resize()
         )
     }
 
-
-    fun getVolume(): Float {
-        return player.volume
+    fun seekToPosition(position: Long) {
+        player.seekTo(position)
     }
 
     fun setVolume(volume: Float) {
