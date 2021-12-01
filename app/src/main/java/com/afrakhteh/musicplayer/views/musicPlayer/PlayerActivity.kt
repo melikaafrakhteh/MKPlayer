@@ -1,16 +1,19 @@
 package com.afrakhteh.musicplayer.views.musicPlayer
 
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
@@ -40,6 +43,8 @@ class PlayerActivity : AppCompatActivity() {
 
     private var frames: ArrayList<WaveItemModel> = ArrayList()
 
+    private var isUserScrolling: Boolean = false
+
 
     private val connectToService = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -64,6 +69,7 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
@@ -91,6 +97,17 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         buttonClicks()
+
+        binding.playWaveRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        })
+        binding.playWaveRecyclerView.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_MOVE -> isUserScrolling = true
+                MotionEvent.ACTION_UP -> isUserScrolling = false
+                MotionEvent.ACTION_DOWN -> isUserScrolling = false
+            }
+            return@setOnTouchListener true
+        }
 
     }
 
