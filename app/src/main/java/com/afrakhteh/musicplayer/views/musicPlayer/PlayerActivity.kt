@@ -10,6 +10,7 @@ import android.os.IBinder
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.LinearInterpolator
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -164,9 +165,9 @@ class PlayerActivity : AppCompatActivity() {
 
 
     private fun drawInitialFrame(frameSize: SingleEvent<Int>) {
-        binding.playWaveRecyclerView.removeAllViews()
         val adapter = binding.playWaveRecyclerView.adapter as PlayerWaveItemsAdapter
         val frameList = ArrayList<WaveItemModel>()
+        adapter.submitList(frameList)
 
         frameSize.ifNotHandled {
             for (i in 0..it) {
@@ -174,7 +175,6 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
         adapter.submitList(frameList)
-
     }
 
     private fun renderList(arrayList: SingleEvent<ArrayList<Int>>) {
@@ -193,12 +193,19 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun onPlayBackPositionChanged(currentPosition: Long) {
         if (binding.playWaveRecyclerView.layoutParams == null) return
-        val currentScrollPosition = binding.playWaveRecyclerView.computeVerticalScrollOffset()
-        val scrollRange = binding.playWaveRecyclerView.computeVerticalScrollRange()
-        val scrollPosition = (currentPosition * scrollRange) / audioPlayerService?.getDuration()!!
+        try {
+            val currentScrollPosition = binding.playWaveRecyclerView.computeVerticalScrollOffset()
+            val scrollRange = binding.playWaveRecyclerView.computeVerticalScrollRange()
+            val scrollPosition = (currentPosition * scrollRange) / audioPlayerService?.getDuration()!!
 
-        binding.playWaveRecyclerView.smoothScrollBy(0, ((scrollPosition - currentScrollPosition).toInt()))
+            binding.playWaveRecyclerView.smoothScrollBy(
+                    0, ((scrollPosition - currentScrollPosition).toInt()),
+                    LinearInterpolator(),
+                    240)
 
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun buttonClicks() {
