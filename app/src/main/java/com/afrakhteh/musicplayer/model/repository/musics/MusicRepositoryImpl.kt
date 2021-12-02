@@ -17,7 +17,7 @@ class MusicRepositoryImpl @Inject constructor(
         private val metadataRetriever: MediaMetadataRetriever
 ) : MusicRepository {
 
-    override fun getAllMusic(): List<MusicEntity> {
+    override suspend fun getAllMusic(): List<MusicEntity> {
 
         val tempAudioList: MutableList<MusicEntity> = ArrayList()
         val cursor = createQueryForAllMusic(context) ?: return tempAudioList
