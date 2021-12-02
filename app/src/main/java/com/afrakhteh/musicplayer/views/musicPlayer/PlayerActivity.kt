@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.afrakhteh.musicplayer.R
+import com.afrakhteh.musicplayer.constant.Lists
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
@@ -42,6 +43,7 @@ class PlayerActivity : AppCompatActivity() {
     private var audioPlayerService: AudioPlayerService? = null
 
     private var isUserScrolling: Boolean = false
+    private var volumePosition = 1
 
 
     private val connectToService = object : ServiceConnection {
@@ -81,7 +83,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.playWaveRecyclerView.adapter = PlayerWaveItemsAdapter(
-            getScreenSize().y, mutableListOf(WaveItemModel())
+                getScreenSize().y, mutableListOf(WaveItemModel())
         )
 
         val startPlayingMusicIntent = Intent(this, AudioPlayerService::class.java)
@@ -100,7 +102,6 @@ class PlayerActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     private fun initialiseView() {
         binding.playWaveRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (isUserScrolling.not()) return
@@ -117,7 +118,60 @@ class PlayerActivity : AppCompatActivity() {
             }
             return@setOnTouchListener false
         }
+
+        binding.playVolumeProgressBar.setOnTouchListener(::onVolumeTouchListener)
+
+
         buttonClicks()
+    }
+
+    private fun onVolumeTouchListener(view: View?, motionEvent: MotionEvent?): Boolean {
+        val percents = calculateVolumeActiveProgress(requireNotNull(motionEvent))
+        when (motionEvent.action) {
+            MotionEvent.ACTION_MOVE -> {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    binding.playVolumeProgressBar.setProgress(percents.toInt(), true)
+                } else {
+                    binding.playVolumeProgressBar.progress = percents.toInt()
+                }
+                audioPlayerService?.setVolume(percents / 100)
+                changeVolumeIcon(percents / 100)
+            }
+        }
+        return true
+    }
+
+    private fun changeVolumeIcon(percent: Float) {
+        when (percent) {
+            in -0.0f..0.01f -> {
+                binding.playVolume.setImageResource(R.drawable.volume_mute)
+            }
+            in 0.02f..0.29f -> {
+                binding.playVolume.setImageResource(R.drawable.ic_volume_down)
+            }
+            in 0.30f..0.68f -> {
+                binding.playVolume.setImageResource(R.drawable.ic_volume_mid)
+            }
+            in 0.70f..1.20f -> {
+                binding.playVolume.setImageResource(R.drawable.ic_volume_up)
+            }
+        }
+    }
+
+    private fun findTopVolumeProgressBarOnTheScreen(): Int {
+        val locationIntArray = IntArray(2)
+        binding.playVolumeProgressBar.getLocationOnScreen(locationIntArray)
+        return locationIntArray[1]
+    }
+
+    private fun calculateVolumeActiveProgress(motionEvent: MotionEvent): Float {
+        val volumePBBottom = binding.playVolumeProgressBar.height
+        val userPointY = motionEvent.rawY
+
+        val diffY = userPointY - findTopVolumeProgressBarOnTheScreen()
+        val activeY = volumePBBottom - diffY
+
+        return (activeY / volumePBBottom) * 100
     }
 
     private fun getTargetPosition(duration: Long): Long {
@@ -175,10 +229,11 @@ class PlayerActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun setDurationTimer(min: Int, sec: Int) {
-        binding.playMusicDuration.text = "${String.format("%02d", min)}:${String.format("%02d", sec)}"
+        binding.playMusicDuration.text =
+                "${String.format("%02d", min)}:${String.format("%02d", sec)}"
     }
 
-    private fun checkDurationValidation(duration:Long) : Boolean{
+    private fun checkDurationValidation(duration: Long): Boolean {
         return duration >= 0
     }
 
@@ -215,12 +270,12 @@ class PlayerActivity : AppCompatActivity() {
             val currentScrollPosition = binding.playWaveRecyclerView.computeVerticalScrollOffset()
             val scrollRange = binding.playWaveRecyclerView.computeVerticalScrollRange()
             val scrollPosition =
-                (currentPosition * scrollRange) / audioPlayerService?.getDuration()!!
+                    (currentPosition * scrollRange) / audioPlayerService?.getDuration()!!
 
             binding.playWaveRecyclerView.smoothScrollBy(
-                0, ((scrollPosition - currentScrollPosition).toInt()),
-                LinearInterpolator(),
-                240
+                    0, ((scrollPosition - currentScrollPosition).toInt()),
+                    LinearInterpolator(),
+                    240
             )
 
         } catch (e: Exception) {
@@ -245,7 +300,13 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun setVolume(view: View?) {
-        //set volume of music
+        volumePosition++
+        if (volumePosition > 3) {
+            volumePosition = 0
+        }
+        binding.playVolume.setImageResource(Lists.VOLUME_IMAGE_LIST[volumePosition])
+        binding.playVolumeProgressBar.progress = Lists.VOLUME_PB_LIST[volumePosition]
+        audioPlayerService?.setVolume(Lists.VOLUME_LIST[volumePosition])
     }
 
     private fun nextButton(view: View?) {

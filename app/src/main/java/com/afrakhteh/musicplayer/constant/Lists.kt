@@ -1,5 +1,7 @@
 package com.afrakhteh.musicplayer.constant
 
+import com.afrakhteh.musicplayer.R
+
 object Lists {
     val SUPPORTED_EXT = listOf(
             "mp3",
@@ -11,5 +13,26 @@ object Lists {
             "m4a",
             "mid",
             "ogg"
+    )
+
+    val VOLUME_IMAGE_LIST = arrayListOf(
+            R.drawable.volume_mute,
+            R.drawable.ic_volume_down,
+            R.drawable.ic_volume_mid,
+            R.drawable.ic_volume_up
+    )
+
+    val VOLUME_PB_LIST = arrayListOf(
+            0,
+            30,
+            60,
+            90
+    )
+
+    val VOLUME_LIST = arrayListOf(
+            0.0f,
+            0.29f,
+            0.68f,
+            1.1f
     )
 }
