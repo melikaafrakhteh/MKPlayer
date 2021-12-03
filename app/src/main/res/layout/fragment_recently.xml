@@ -42,6 +42,8 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="20dp"
         android:padding="2dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recentlyFragmentTitleTv"

@@ -18,7 +18,7 @@ import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
-import com.afrakhteh.musicplayer.viewModel.MainActivityViewModel
+import com.afrakhteh.musicplayer.viewModel.AllMusicViewModel
 import com.afrakhteh.musicplayer.views.main.adapters.allMusic.AllMusicAdapter
 import com.afrakhteh.musicplayer.views.main.interfaces.PermissionController
 import com.afrakhteh.musicplayer.views.main.state.MusicState
@@ -33,7 +33,7 @@ class AllMusicFragment : Fragment() {
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
 
-    private val viewModel: MainActivityViewModel by viewModels { providerFactory }
+    private val viewModel: AllMusicViewModel by viewModels { providerFactory }
 
     private lateinit var musicAdapter: AllMusicAdapter
 

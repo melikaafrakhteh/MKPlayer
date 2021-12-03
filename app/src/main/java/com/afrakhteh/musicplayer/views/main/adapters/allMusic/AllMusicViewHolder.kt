@@ -8,7 +8,6 @@ import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.util.toBitmap
-import com.bumptech.glide.Glide
 import kotlinx.coroutines.*
 
 class AllMusicViewHolder(
@@ -33,9 +32,7 @@ class AllMusicViewHolder(
             repository.getMusicArtPicture(path).let { artMusicBytes ->
                 if (artMusicBytes == null) {
                     withContext(Dispatchers.Main) {
-                        Glide.with(context)
-                                .load(R.drawable.minimusic)
-                                .into(binding.musicItemRowImageIv)
+                       binding.musicItemRowImageIv.setImageResource(R.drawable.dog)
                         return@withContext
                     }
                     return@let

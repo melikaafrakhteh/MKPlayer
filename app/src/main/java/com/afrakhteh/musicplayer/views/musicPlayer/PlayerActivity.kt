@@ -73,7 +73,7 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewModelComponentBuilder.getInstance().injectPlayer(this)
+        ViewModelComponentBuilder.getInstance().inject(this)
 
         viewModel.apply {
             getMusicArtPicture()

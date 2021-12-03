@@ -13,17 +13,17 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainActivityViewModel @Inject constructor(
+class AllMusicViewModel @Inject constructor(
         var repository: MusicRepository
 ) : ViewModel() {
     private val pState = MutableLiveData(MusicState())
     val state: LiveData<MusicState> get() = pState
 
-    private var job: Job? = null
+    private var allMusicJob: Job? = null
 
     fun fetchAllMusic() {
         try {
-            job = CoroutineScope(Dispatchers.IO).launch {
+            allMusicJob = CoroutineScope(Dispatchers.IO).launch {
                 val resultList: List<MusicEntity> = repository.getAllMusic()
                 pState.postValue(state.value?.copy(musicItems = resultList))
             }
@@ -35,7 +35,7 @@ class MainActivityViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        job?.cancel()
+        allMusicJob?.cancel()
         super.onCleared()
     }
 }
