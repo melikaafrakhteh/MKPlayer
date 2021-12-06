@@ -14,4 +14,6 @@ object Strings {
     const val NOTIFICATION_CHANNEL_DESCRIPTION = "musicChannelDescription"
 
     const val MEDIA_SESSION_TAG = "player"
+
+    const val DATABASE_NAME = "music_db"
 }

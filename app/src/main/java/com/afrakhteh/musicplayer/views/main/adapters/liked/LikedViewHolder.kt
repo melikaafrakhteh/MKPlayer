@@ -1,34 +1,33 @@
-package com.afrakhteh.musicplayer.views.main.adapters.recently
+package com.afrakhteh.musicplayer.views.main.adapters.liked
 
 import androidx.recyclerview.widget.RecyclerView
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.MusicItemRowBinding
-import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
+import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.util.toBitmap
 import kotlinx.coroutines.*
 
-class RecentlyViewHolder(
+class LikedViewHolder(
         private val binding: MusicItemRowBinding,
         private val repository: MusicRepository
 ) : RecyclerView.ViewHolder(binding.root) {
+    private var loadArtByteJob: Job? = null
 
-    private var artAlbumImage: Job? = null
-
-    fun bind(data: MusicEntity, click: (Int) -> Unit) {
+    fun bind(data: AudioPrePareToPlay, click: (Int) -> Unit) {
         with(binding) {
             musicItemRowImageIv.setImageDrawable(null)
-            musicItemRowSingerTv.text = data.artist
-            musicItemRowNameTv.text = data.name
+            musicItemRowNameTv.text = data.musicName
+            musicItemRowSingerTv.text = data.musicArtist
             musicItemRowLinear.setOnClickListener { click.invoke(absoluteAdapterPosition) }
         }
     }
 
-    fun loadArtAlbum(path: String) {
-        artAlbumImage = CoroutineScope(Dispatchers.IO).launch {
-            repository.getMusicArtPicture(path).let { artAlbumByteArray ->
-                if (artAlbumByteArray == null) {
+    fun loadImages(path: String) {
+        loadArtByteJob = CoroutineScope(Dispatchers.IO).launch {
+            repository.getMusicArtPicture(path).let {
+                if (it == null) {
                     withContext(Dispatchers.Main) {
                         binding.musicItemRowImageIv.setImageResource(R.drawable.dog)
                         return@withContext
@@ -36,20 +35,18 @@ class RecentlyViewHolder(
                     return@let
                 }
                 try {
-                    val bitmap = artAlbumByteArray.toBitmap().resize()
+                    val bitmap = it.toBitmap().resize()
                     withContext(Dispatchers.Main) {
                         binding.musicItemRowImageIv.setImageBitmap(bitmap)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-
             }
         }
     }
 
-    fun stopLoadingArtAlbum() {
-        artAlbumImage?.cancel()
+    fun cancelLoadingImages() {
+        loadArtByteJob?.cancel()
     }
-
 }

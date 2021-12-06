@@ -8,7 +8,8 @@ object RepositoryComponentBuilder :
 
     override fun provideInstance(): RepositoryComponent {
         return DaggerRepositoryComponent.builder()
-            .applicationComponent(ApplicationComponentBuilder.getInstance())
+                .applicationComponent(ApplicationComponentBuilder.getInstance())
+                .dataBaseComponent(DataBaseComponentBuilder.getInstance())
             .build()
     }
 }

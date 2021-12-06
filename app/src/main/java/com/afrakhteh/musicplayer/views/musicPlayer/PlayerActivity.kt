@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -121,8 +122,22 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.playVolumeProgressBar.setOnTouchListener(::onVolumeTouchListener)
 
-
+        isFavorite()
         buttonClicks()
+    }
+
+    private fun isFavorite() {
+        val musicPath = viewModel.activePositionLiveData.value?.let {
+            viewModel.audioListLiveData.value?.get(it)?.path
+        }
+        viewModel.getAllFaveList().observe(this) { liked ->
+            liked.forEach {
+                if (it.path == musicPath) {
+                    binding.playFaveToggleButton.isChecked = true
+                    return@forEach
+                }
+            }
+        }
     }
 
     private fun onVolumeTouchListener(view: View?, motionEvent: MotionEvent?): Boolean {
@@ -289,6 +304,21 @@ class PlayerActivity : AppCompatActivity() {
         binding.playPreviousBtnIv.setOnClickListener(::nextButton)
         binding.playVolume.setOnClickListener(::setVolume)
         binding.playToggleBtn.setOnClickListener(::handlePlayOrPause)
+        binding.playFaveToggleButton.setOnClickListener(::faveItem)
+    }
+
+    private fun faveItem(view: View?) {
+        val currentMusicData = viewModel.audioListLiveData.value?.get(viewModel.activePositionLiveData.value!!)
+
+        if (binding.playFaveToggleButton.isChecked) {
+            viewModel.addMusicToFavoriteList(requireNotNull(currentMusicData))
+            Log.d("player", "add to fave")
+            binding.playFaveToggleButton.isChecked = true
+        } else {
+            viewModel.removeMusicFromFavoriteList(requireNotNull(currentMusicData?.path))
+            Log.d("player", "remove fave")
+            binding.playFaveToggleButton.isChecked = false
+        }
     }
 
     private fun handlePlayOrPause(view: View?) {
@@ -325,7 +355,4 @@ class PlayerActivity : AppCompatActivity() {
         unbindService(connectToService)
         super.onDestroy()
     }
-
 }
-
-

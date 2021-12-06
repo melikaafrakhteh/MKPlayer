@@ -2,11 +2,14 @@ package com.afrakhteh.musicplayer.model.entity.audio
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "Audio_table")
 data class AudioPrePareToPlay(
+        @PrimaryKey
         val id: Int,
         val path: String,
-        val album: String,
         val musicName: String,
         val musicArtist: String
 ) : Parcelable {
@@ -14,13 +17,11 @@ data class AudioPrePareToPlay(
             parcel.readInt(),
             requireNotNull(parcel.readString()),
             requireNotNull(parcel.readString()),
-            requireNotNull(parcel.readString()),
             requireNotNull(parcel.readString()))
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
         parcel.writeString(path)
-        parcel.writeString(album)
         parcel.writeString(musicName)
         parcel.writeString(musicArtist)
     }

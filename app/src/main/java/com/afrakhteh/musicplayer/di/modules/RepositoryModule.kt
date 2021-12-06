@@ -1,5 +1,7 @@
 package com.afrakhteh.musicplayer.di.modules
 
+import com.afrakhteh.musicplayer.model.repository.favorite.FavoriteRepository
+import com.afrakhteh.musicplayer.model.repository.favorite.FavoriteRepositoryImpl
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepositoryImpl
 import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepository
@@ -15,4 +17,7 @@ interface RepositoryModule {
 
     @Binds
     fun bindAudioDetailRepository(repo: AudioDetailsRepositoryImpl): AudioDetailsRepository
+
+    @Binds
+    fun bindFavoriteRepository(repo: FavoriteRepositoryImpl): FavoriteRepository
 }

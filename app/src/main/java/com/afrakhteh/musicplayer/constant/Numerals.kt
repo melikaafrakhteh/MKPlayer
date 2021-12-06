@@ -12,4 +12,6 @@ object Numerals {
     const val WAVE_ITEM_VIEW_TYPE = 1
     const val EMPTY_VIEW_TYPE = 2
 
+    const val DATABASE_VERSION = 1
+
 }

@@ -33,6 +33,13 @@
         app:layout_constraintBottom_toBottomOf="@+id/likeFragmentTitleTv"
         app:layout_constraintStart_toEndOf="@+id/likeFragmentTitleTv" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/title_separator_shadow"
+        app:layout_constraintTop_toBottomOf="@id/likeFragmentNumberTv" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/likeFragmentRecycler"
         android:layout_width="match_parent"
@@ -44,6 +51,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/likeFragmentTitleTv"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
         tools:itemCount="1"
         tools:listitem="@layout/music_item_row" />
 

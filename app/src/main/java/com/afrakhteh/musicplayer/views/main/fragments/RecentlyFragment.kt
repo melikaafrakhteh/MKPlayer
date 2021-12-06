@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,7 +66,6 @@ class RecentlyFragment : Fragment() {
             AudioPrePareToPlay(
                     id = musicEntity.index,
                     path = musicEntity.path,
-                    album = "",
                     musicName = musicEntity.name ?: "",
                     musicArtist = musicEntity.artist ?: ""
             )
@@ -80,7 +78,6 @@ class RecentlyFragment : Fragment() {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         }
         recentlyAdapter.submitList(ArrayList(musicState?.musicItems))
-        Log.d("frag", "${musicState?.musicItems}")
         binding.recentlyFragmentNumberTv.text = "${musicState?.musicItems?.size} songs"
     }
 }

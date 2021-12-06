@@ -2,14 +2,15 @@ package com.afrakhteh.musicplayer.viewModel
 
 import android.content.Intent
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.di.scopes.ViewModelScope
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepository
+import com.afrakhteh.musicplayer.model.use_case.AddToFaveUseCase
+import com.afrakhteh.musicplayer.model.use_case.DeleteFromFaveUseCase
+import com.afrakhteh.musicplayer.model.use_case.GetAllFaveListUseCase
 import com.afrakhteh.musicplayer.util.SingleEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -20,7 +21,10 @@ import javax.inject.Inject
 @ViewModelScope
 class PlayerViewModel @Inject constructor(
         private val repository: AudioDetailsRepository,
-        private val musicRepository: MusicRepository
+        private val musicRepository: MusicRepository,
+        private val addUseCases: AddToFaveUseCase,
+        private val removeUseCase: DeleteFromFaveUseCase,
+        private val getAllFaveListUseCase: GetAllFaveListUseCase
 ) : ViewModel() {
 
     private lateinit var job: Job
@@ -105,6 +109,22 @@ class PlayerViewModel @Inject constructor(
                 pArtPicture.postValue(musicRepository.getMusicArtPicture(it!!.path))
             }
         }
+    }
+
+    fun addMusicToFavoriteList(item: AudioPrePareToPlay) {
+        viewModelScope.launch {
+            addUseCases.invoke(item)
+        }
+    }
+
+    fun removeMusicFromFavoriteList(path: String) {
+        viewModelScope.launch {
+            removeUseCase.invoke(path)
+        }
+    }
+
+    fun getAllFaveList(): LiveData<List<AudioPrePareToPlay>> {
+        return getAllFaveListUseCase.invoke().asLiveData()
     }
 
     override fun onCleared() {

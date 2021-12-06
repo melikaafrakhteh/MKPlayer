@@ -88,7 +88,6 @@ class AllMusicFragment : Fragment() {
             AudioPrePareToPlay(
                     id = musicEntity.index,
                     path = musicEntity.path,
-                    album = "",
                     musicName = musicEntity.name ?: "",
                     musicArtist = musicEntity.artist ?: ""
             )

@@ -151,6 +151,18 @@
             app:layout_constraintTop_toBottomOf="@+id/playVolumeProgressBar"
             tools:ignore="ContentDescription,RtlSymmetry" />
 
+        <ToggleButton
+            android:id="@+id/playFaveToggleButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/playPreviousBtnIv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="24dp"
+            android:textOn=""
+            android:textOff=""
+            android:background="@drawable/favorite_button_selector" />
+
         <ImageView
             android:id="@+id/playPreviousBtnIv"
             android:layout_width="28dp"

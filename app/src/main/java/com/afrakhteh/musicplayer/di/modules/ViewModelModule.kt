@@ -3,6 +3,7 @@ package com.afrakhteh.musicplayer.di.modules
 import androidx.lifecycle.ViewModel
 import com.afrakhteh.musicplayer.di.ViewModelKey
 import com.afrakhteh.musicplayer.viewModel.AllMusicViewModel
+import com.afrakhteh.musicplayer.viewModel.LikedViewModel
 import com.afrakhteh.musicplayer.viewModel.PlayerViewModel
 import com.afrakhteh.musicplayer.viewModel.RecentlyAddedViewModel
 import dagger.Binds
@@ -26,4 +27,9 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(RecentlyAddedViewModel::class)
     fun bindRecentlyViewModel(viewModel: RecentlyAddedViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LikedViewModel::class)
+    fun bindLikedViewModel(viewModel: LikedViewModel): ViewModel
 }
