@@ -9,7 +9,7 @@ class FavoriteRepositoryImpl @Inject constructor(
         private val dao: FavoriteDao
 ) : FavoriteRepository {
 
-    override suspend fun addToFave(item: AudioPrePareToPlay): Long {
+    override suspend fun addToFave(item: AudioPrePareToPlay) {
         return dao.addToFave(item)
     }
 

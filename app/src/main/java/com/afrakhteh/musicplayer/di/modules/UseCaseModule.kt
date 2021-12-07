@@ -1,9 +1,9 @@
 package com.afrakhteh.musicplayer.di.modules
 
 import com.afrakhteh.musicplayer.model.repository.favorite.FavoriteRepository
-import com.afrakhteh.musicplayer.model.use_case.AddToFaveUseCase
-import com.afrakhteh.musicplayer.model.use_case.DeleteFromFaveUseCase
-import com.afrakhteh.musicplayer.model.use_case.GetAllFaveListUseCase
+import com.afrakhteh.musicplayer.model.useCase.AddToFaveUseCase
+import com.afrakhteh.musicplayer.model.useCase.DeleteFromFaveUseCase
+import com.afrakhteh.musicplayer.model.useCase.GetAllFaveListUseCase
 import dagger.Module
 import dagger.Provides
 

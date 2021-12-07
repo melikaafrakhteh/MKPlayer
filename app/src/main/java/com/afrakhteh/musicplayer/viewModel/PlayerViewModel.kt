@@ -8,9 +8,9 @@ import com.afrakhteh.musicplayer.di.scopes.ViewModelScope
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepository
-import com.afrakhteh.musicplayer.model.use_case.AddToFaveUseCase
-import com.afrakhteh.musicplayer.model.use_case.DeleteFromFaveUseCase
-import com.afrakhteh.musicplayer.model.use_case.GetAllFaveListUseCase
+import com.afrakhteh.musicplayer.model.useCase.AddToFaveUseCase
+import com.afrakhteh.musicplayer.model.useCase.DeleteFromFaveUseCase
+import com.afrakhteh.musicplayer.model.useCase.GetAllFaveListUseCase
 import com.afrakhteh.musicplayer.util.SingleEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo

@@ -4,9 +4,9 @@ import com.afrakhteh.musicplayer.di.modules.UseCaseModule
 import com.afrakhteh.musicplayer.di.modules.ViewModelFactoryModule
 import com.afrakhteh.musicplayer.di.modules.ViewModelModule
 import com.afrakhteh.musicplayer.di.scopes.ViewModelScope
-import com.afrakhteh.musicplayer.model.use_case.AddToFaveUseCase
-import com.afrakhteh.musicplayer.model.use_case.DeleteFromFaveUseCase
-import com.afrakhteh.musicplayer.model.use_case.GetAllFaveListUseCase
+import com.afrakhteh.musicplayer.model.useCase.AddToFaveUseCase
+import com.afrakhteh.musicplayer.model.useCase.DeleteFromFaveUseCase
+import com.afrakhteh.musicplayer.model.useCase.GetAllFaveListUseCase
 import com.afrakhteh.musicplayer.views.main.fragments.AllMusicFragment
 import com.afrakhteh.musicplayer.views.main.fragments.LikedFragment
 import com.afrakhteh.musicplayer.views.main.fragments.RecentlyFragment

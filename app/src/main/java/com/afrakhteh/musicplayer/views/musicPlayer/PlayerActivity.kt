@@ -44,7 +44,6 @@ class PlayerActivity : AppCompatActivity() {
     private var audioPlayerService: AudioPlayerService? = null
 
     private var isUserScrolling: Boolean = false
-    private var volumePosition = 1
 
 
     private val connectToService = object : ServiceConnection {
@@ -144,11 +143,7 @@ class PlayerActivity : AppCompatActivity() {
         val percents = calculateVolumeActiveProgress(requireNotNull(motionEvent))
         when (motionEvent.action) {
             MotionEvent.ACTION_MOVE -> {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    binding.playVolumeProgressBar.setProgress(percents.toInt(), true)
-                } else {
-                    binding.playVolumeProgressBar.progress = percents.toInt()
-                }
+                binding.playVolumeProgressBar.progress = percents.toInt()
                 audioPlayerService?.setVolume(percents / 100)
                 changeVolumeIcon(percents / 100)
             }
@@ -157,19 +152,22 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun changeVolumeIcon(percent: Float) {
-        when (percent) {
-            in -0.0f..0.01f -> {
-                binding.playVolume.setImageResource(R.drawable.volume_mute)
-            }
-            in 0.02f..0.29f -> {
-                binding.playVolume.setImageResource(R.drawable.ic_volume_down)
-            }
-            in 0.30f..0.68f -> {
-                binding.playVolume.setImageResource(R.drawable.ic_volume_mid)
-            }
-            in 0.70f..1.20f -> {
-                binding.playVolume.setImageResource(R.drawable.ic_volume_up)
-            }
+        binding.playVolume.setImageResource(
+                when (calculateVolumePosition((percent * 100).toInt())) {
+                    0 -> R.drawable.volume_mute
+                    1 -> R.drawable.ic_volume_down
+                    2 -> R.drawable.ic_volume_mid
+                    else -> R.drawable.ic_volume_up
+                })
+    }
+
+    private fun calculateVolumePosition(percent: Int): Int {
+        return when (percent) {
+            in 0..29 -> 0
+            in 30..69 -> 1
+            in 70..99 -> 2
+            in 100..101 -> 3
+            else -> 0
         }
     }
 
@@ -330,6 +328,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun setVolume(view: View?) {
+        var volumePosition = calculateVolumePosition(binding.playVolumeProgressBar.progress)
         volumePosition++
         if (volumePosition > 3) {
             volumePosition = 0

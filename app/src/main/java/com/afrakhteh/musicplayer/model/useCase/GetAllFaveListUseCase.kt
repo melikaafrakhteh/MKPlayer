@@ -1,4 +1,4 @@
-package com.afrakhteh.musicplayer.model.use_case
+package com.afrakhteh.musicplayer.model.useCase
 
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.repository.favorite.FavoriteRepository

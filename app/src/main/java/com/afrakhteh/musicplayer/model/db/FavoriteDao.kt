@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface FavoriteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addToFave(item: AudioPrePareToPlay): Long
+    suspend fun addToFave(item: AudioPrePareToPlay)
 
     @Query("DELETE FROM Audio_table WHERE path = :path")
     suspend fun deleteFromFave(path: String)
