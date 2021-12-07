@@ -11,7 +11,7 @@ import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepository
 import com.afrakhteh.musicplayer.model.useCase.AddToFaveUseCase
 import com.afrakhteh.musicplayer.model.useCase.DeleteFromFaveUseCase
-import com.afrakhteh.musicplayer.model.useCase.GetAllFaveListUseCase
+import com.afrakhteh.musicplayer.model.useCase.IsMusicLikedUseCase
 import com.afrakhteh.musicplayer.util.SingleEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -25,7 +25,7 @@ class PlayerViewModel @Inject constructor(
         private val musicRepository: MusicRepository,
         private val addUseCases: AddToFaveUseCase,
         private val removeUseCase: DeleteFromFaveUseCase,
-        private val getAllFaveListUseCase: GetAllFaveListUseCase
+        private val isMusicLikedUseCase: IsMusicLikedUseCase
 ) : ViewModel() {
 
     private lateinit var job: Job
@@ -112,20 +112,16 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    fun addMusicToFavoriteList(item: FavoriteEntity) {
-        viewModelScope.launch {
-            addUseCases.invoke(item)
-        }
+    suspend fun addMusicToFavoriteList(item: AudioPrePareToPlay) {
+        addUseCases.invoke(FavoriteEntity(item.id, item.path))
     }
 
-    fun removeMusicFromFavoriteList(path: String) {
-        viewModelScope.launch {
-            removeUseCase.invoke(path)
-        }
+    suspend fun removeMusicFromFavoriteList(path: String) {
+        removeUseCase.invoke(path)
     }
 
-    fun getAllFaveList(): LiveData<List<FavoriteEntity>> {
-        return getAllFaveListUseCase.invoke().asLiveData()
+    suspend fun isMusicLiked(path: String): Boolean {
+        return isMusicLikedUseCase.invoke(path)
     }
 
     override fun onCleared() {

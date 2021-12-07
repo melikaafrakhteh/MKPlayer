@@ -11,6 +11,5 @@ import com.afrakhteh.musicplayer.model.entity.db.FavoriteEntity
         exportSchema = false
 )
 abstract class MusicDataBase : RoomDatabase() {
-
     abstract fun faveDao(): FavoriteDao
 }

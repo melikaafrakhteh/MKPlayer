@@ -7,6 +7,7 @@ import com.afrakhteh.musicplayer.di.scopes.ViewModelScope
 import com.afrakhteh.musicplayer.model.useCase.AddToFaveUseCase
 import com.afrakhteh.musicplayer.model.useCase.DeleteFromFaveUseCase
 import com.afrakhteh.musicplayer.model.useCase.GetAllFaveListUseCase
+import com.afrakhteh.musicplayer.model.useCase.IsMusicLikedUseCase
 import com.afrakhteh.musicplayer.views.main.fragments.AllMusicFragment
 import com.afrakhteh.musicplayer.views.main.fragments.LikedFragment
 import com.afrakhteh.musicplayer.views.main.fragments.RecentlyFragment
@@ -25,6 +26,7 @@ interface ViewModelComponent {
     fun exposeAddToFave(): AddToFaveUseCase
     fun exposeDeleteFromFave(): DeleteFromFaveUseCase
     fun exposeGetAllFaveList(): GetAllFaveListUseCase
+    fun exposeIsMusicLiked(): IsMusicLikedUseCase
 
     fun inject(allMusicFragment: AllMusicFragment)
     fun inject(playerActivity: PlayerActivity)

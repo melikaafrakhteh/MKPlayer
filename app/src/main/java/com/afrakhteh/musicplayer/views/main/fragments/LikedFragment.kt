@@ -16,6 +16,7 @@ import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.viewModel.LikedViewModel
 import com.afrakhteh.musicplayer.views.main.adapters.liked.LikedAdapter
+import com.afrakhteh.musicplayer.views.main.state.MusicState
 import com.afrakhteh.musicplayer.views.musicPlayer.PlayerActivity
 import javax.inject.Inject
 
@@ -38,6 +39,11 @@ class LikedFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAllMusicLikedList()
+    }
+
     override fun onAttach(activity: Activity) {
         ViewModelComponentBuilder.getInstance().inject(this)
         super.onAttach(activity)
@@ -47,31 +53,31 @@ class LikedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         likedAdapter = LikedAdapter(::onItemClicked, viewModel.repository)
         binding.likeFragmentRecycler.adapter = likedAdapter
-        subscribeUi(likedAdapter)
+        viewModel.state.observe(viewLifecycleOwner, ::renderList)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun renderList(musicState: MusicState?) {
+        likedAdapter.submitList(musicState?.musicItems)
+        binding.likeFragmentNumberTv.text = "${musicState?.musicItems?.size} songs"
     }
 
     private fun onItemClicked(position: Int) {
         val intent = Intent(requireActivity(), PlayerActivity::class.java).apply {
             putExtra(Strings.AUDIO_ACTIVE_POSITION__KEY, position)
-            putParcelableArrayListExtra(Strings.AUDIO_All_MUSIC_LIST_KEY, ArrayList(getAudioList()))
+            putParcelableArrayListExtra(Strings.AUDIO_All_MUSIC_LIST_KEY, ArrayList(audioPrePareToPlayList()))
         }
         startActivity(intent)
     }
 
-    private fun getAudioList(): List<AudioPrePareToPlay> {
-        var list: List<AudioPrePareToPlay> = emptyList()
-        viewModel.listOfLikedAudio.observe(viewLifecycleOwner) {
-            list = it
-        }
-        return list
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun subscribeUi(adapter: LikedAdapter) {
-        viewModel.listOfLikedAudio.observe(viewLifecycleOwner) { liked ->
-            adapter.submitList(liked)
-            binding.likeFragmentNumberTv.text = "${liked.size} songs"
+    private fun audioPrePareToPlayList(): List<AudioPrePareToPlay>? {
+        return viewModel.state.value?.musicItems?.map { musicEntity ->
+            AudioPrePareToPlay(
+                    id = musicEntity.index,
+                    path = musicEntity.path,
+                    musicName = musicEntity.name ?: "",
+                    musicArtist = musicEntity.artist ?: ""
+            )
         }
     }
-
 }

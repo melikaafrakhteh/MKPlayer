@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.afrakhteh.musicplayer.databinding.MusicItemRowBinding
-import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 
 class LikedAdapter(
         private val click: (Int) -> Unit,
         private val repository: MusicRepository
-) : ListAdapter<AudioPrePareToPlay, LikedViewHolder>(LikedDiffCallBack()) {
+) : ListAdapter<MusicEntity, LikedViewHolder>(LikedDiffCallBack()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LikedViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = MusicItemRowBinding.inflate(inflater, parent, false)

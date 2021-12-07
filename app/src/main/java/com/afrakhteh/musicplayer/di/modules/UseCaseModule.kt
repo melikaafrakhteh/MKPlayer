@@ -1,9 +1,11 @@
 package com.afrakhteh.musicplayer.di.modules
 
 import com.afrakhteh.musicplayer.model.repository.favorite.FavoriteRepository
+import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.useCase.AddToFaveUseCase
 import com.afrakhteh.musicplayer.model.useCase.DeleteFromFaveUseCase
 import com.afrakhteh.musicplayer.model.useCase.GetAllFaveListUseCase
+import com.afrakhteh.musicplayer.model.useCase.IsMusicLikedUseCase
 import dagger.Module
 import dagger.Provides
 
@@ -21,7 +23,15 @@ class UseCaseModule {
     }
 
     @Provides
-    fun provideGetAllFaveListUseCase(repository: FavoriteRepository): GetAllFaveListUseCase {
-        return GetAllFaveListUseCase(repository)
+    fun provideGetAllFaveListUseCase(
+            favoriteRepository: FavoriteRepository,
+            musicRepository: MusicRepository
+    ): GetAllFaveListUseCase {
+        return GetAllFaveListUseCase(favoriteRepository, musicRepository)
+    }
+
+    @Provides
+    fun provideIsMusicLikeUseCase(repository: FavoriteRepository): IsMusicLikedUseCase {
+        return IsMusicLikedUseCase(repository)
     }
 }

@@ -7,13 +7,13 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Lists
@@ -29,6 +29,9 @@ import com.afrakhteh.musicplayer.util.toBitmap
 import com.afrakhteh.musicplayer.viewModel.PlayerViewModel
 import com.afrakhteh.musicplayer.views.musicPlayer.adapter.PlayerWaveItemsAdapter
 import com.afrakhteh.musicplayer.views.services.AudioPlayerService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -129,12 +132,10 @@ class PlayerActivity : AppCompatActivity() {
         val musicPath = viewModel.activePositionLiveData.value?.let {
             viewModel.audioListLiveData.value?.get(it)?.path
         }
-        viewModel.getAllFaveList().observe(this) { liked ->
-            liked.forEach {
-                if (it.path == musicPath) {
-                    binding.playFaveToggleButton.isChecked = true
-                    return@forEach
-                }
+        lifecycleScope.launch(Dispatchers.IO) {
+            val checkLikedMusic = viewModel.isMusicLiked(requireNotNull(musicPath))
+            withContext(Dispatchers.Main) {
+                binding.playFaveToggleButton.isChecked = checkLikedMusic
             }
         }
     }
@@ -309,13 +310,27 @@ class PlayerActivity : AppCompatActivity() {
         val currentMusicData = viewModel.audioListLiveData.value?.get(viewModel.activePositionLiveData.value!!)
 
         if (binding.playFaveToggleButton.isChecked) {
-            viewModel.addMusicToFavoriteList(requireNotNull(currentMusicData))
-            Log.d("player", "add to fave")
-            binding.playFaveToggleButton.isChecked = true
+            addToLiked(requireNotNull(currentMusicData))
         } else {
-            viewModel.removeMusicFromFavoriteList(requireNotNull(currentMusicData?.path))
-            Log.d("player", "remove fave")
-            binding.playFaveToggleButton.isChecked = false
+            removeFromLiked(requireNotNull(currentMusicData).path)
+        }
+    }
+
+    private fun addToLiked(data: AudioPrePareToPlay) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.addMusicToFavoriteList(data)
+            withContext(Dispatchers.Main) {
+                binding.playFaveToggleButton.isChecked = true
+            }
+        }
+    }
+
+    private fun removeFromLiked(path: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.removeMusicFromFavoriteList(path)
+            withContext(Dispatchers.Main) {
+                binding.playFaveToggleButton.isChecked = false
+            }
         }
     }
 

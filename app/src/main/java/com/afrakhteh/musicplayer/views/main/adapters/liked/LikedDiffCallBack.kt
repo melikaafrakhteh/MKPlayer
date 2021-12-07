@@ -1,14 +1,14 @@
 package com.afrakhteh.musicplayer.views.main.adapters.liked
 
 import androidx.recyclerview.widget.DiffUtil
-import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 
-class LikedDiffCallBack : DiffUtil.ItemCallback<AudioPrePareToPlay>() {
-    override fun areItemsTheSame(oldItem: AudioPrePareToPlay, newItem: AudioPrePareToPlay): Boolean {
-        return oldItem.id == newItem.id
+class LikedDiffCallBack : DiffUtil.ItemCallback<MusicEntity>() {
+    override fun areItemsTheSame(oldItem: MusicEntity, newItem: MusicEntity): Boolean {
+        return oldItem.path == newItem.path
     }
 
-    override fun areContentsTheSame(oldItem: AudioPrePareToPlay, newItem: AudioPrePareToPlay): Boolean {
+    override fun areContentsTheSame(oldItem: MusicEntity, newItem: MusicEntity): Boolean {
         return newItem == oldItem
     }
 }

@@ -3,7 +3,7 @@ package com.afrakhteh.musicplayer.views.main.adapters.liked
 import androidx.recyclerview.widget.RecyclerView
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.MusicItemRowBinding
-import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.util.toBitmap
@@ -15,11 +15,11 @@ class LikedViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     private var loadArtByteJob: Job? = null
 
-    fun bind(data: AudioPrePareToPlay, click: (Int) -> Unit) {
+    fun bind(data: MusicEntity, click: (Int) -> Unit) {
         with(binding) {
             musicItemRowImageIv.setImageDrawable(null)
-            musicItemRowNameTv.text = data.musicName
-            musicItemRowSingerTv.text = data.musicArtist
+            musicItemRowNameTv.text = data.name
+            musicItemRowSingerTv.text = data.artist
             musicItemRowLinear.setOnClickListener { click.invoke(absoluteAdapterPosition) }
         }
     }

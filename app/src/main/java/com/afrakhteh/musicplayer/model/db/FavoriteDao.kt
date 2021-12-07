@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.afrakhteh.musicplayer.model.entity.db.FavoriteEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoriteDao {
@@ -17,5 +16,8 @@ interface FavoriteDao {
     suspend fun deleteFromFave(path: String)
 
     @Query("SELECT * FROM FavoriteEntity")
-    fun getAllFaveAudio(): Flow<List<FavoriteEntity>>
+    suspend fun getAllFaveAudio(): List<FavoriteEntity>
+
+    @Query("SELECT COUNT(*) FROM FavoriteEntity WHERE path = :path")
+    suspend fun isMusicLiked(path: String): Int
 }
