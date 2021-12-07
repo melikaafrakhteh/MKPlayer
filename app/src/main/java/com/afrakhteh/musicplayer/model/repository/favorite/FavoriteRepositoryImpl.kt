@@ -1,7 +1,7 @@
 package com.afrakhteh.musicplayer.model.repository.favorite
 
 import com.afrakhteh.musicplayer.model.db.FavoriteDao
-import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.db.FavoriteEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -9,7 +9,7 @@ class FavoriteRepositoryImpl @Inject constructor(
         private val dao: FavoriteDao
 ) : FavoriteRepository {
 
-    override suspend fun addToFave(item: AudioPrePareToPlay) {
+    override suspend fun addToFave(item: FavoriteEntity) {
         return dao.addToFave(item)
     }
 
@@ -17,7 +17,7 @@ class FavoriteRepositoryImpl @Inject constructor(
         return dao.deleteFromFave(path)
     }
 
-    override fun getAllFaveList(): Flow<List<AudioPrePareToPlay>> {
+    override fun getAllFaveList(): Flow<List<FavoriteEntity>> {
         return dao.getAllFaveAudio()
     }
 }

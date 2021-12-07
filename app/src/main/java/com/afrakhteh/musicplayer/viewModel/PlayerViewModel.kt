@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.di.scopes.ViewModelScope
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.db.FavoriteEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepository
 import com.afrakhteh.musicplayer.model.useCase.AddToFaveUseCase
@@ -111,7 +112,7 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    fun addMusicToFavoriteList(item: AudioPrePareToPlay) {
+    fun addMusicToFavoriteList(item: FavoriteEntity) {
         viewModelScope.launch {
             addUseCases.invoke(item)
         }
@@ -123,7 +124,7 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    fun getAllFaveList(): LiveData<List<AudioPrePareToPlay>> {
+    fun getAllFaveList(): LiveData<List<FavoriteEntity>> {
         return getAllFaveListUseCase.invoke().asLiveData()
     }
 
