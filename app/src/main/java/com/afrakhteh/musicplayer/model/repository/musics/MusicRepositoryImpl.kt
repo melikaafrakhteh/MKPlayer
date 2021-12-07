@@ -19,10 +19,38 @@ class MusicRepositoryImpl @Inject constructor(
 ) : MusicRepository {
 
     override suspend fun getAllMusic(): List<MusicEntity> {
+        val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
+        val cursor = createQuerySample(selection, context) ?: return arrayListOf()
+        return getMusicListFromCursor(cursor)
+    }
 
-        val tempAudioList: MutableList<MusicEntity> = ArrayList()
-        val cursor = createQueryForAllMusic(context) ?: return tempAudioList
+    override suspend fun getRecentlyMusic(): List<MusicEntity> {
+        val selection = MediaStore.Audio.Media.DATE_ADDED +
+                ">" + (System.currentTimeMillis() / 1000 - (7 * 60 * 60 * 24))
+        val cursor = createQuerySample(selection, context) ?: return arrayListOf()
+        return getMusicListFromCursor(cursor)
+    }
 
+    override suspend fun getMusicArtPicture(path: String): ByteArray? {
+        return AudioArtPictureReadable(metadataRetriever).read(path)
+    }
+
+    private fun createQuerySample(selection: String, context: Context): Cursor? {
+        val uri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        val projection = arrayOf(
+                MediaStore.Audio.AudioColumns.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.ArtistColumns.ARTIST,
+                MediaStore.Audio.Media._ID
+        )
+        val order = "LOWER(" + MediaStore.Audio.Media.DATE_ADDED + ") DESC"
+        return context.contentResolver.query(
+                uri, projection, selection, null, order
+        )
+    }
+
+    private fun getMusicListFromCursor(cursor: Cursor): List<MusicEntity> {
+        val list: MutableList<MusicEntity> = arrayListOf()
         while (cursor.moveToNext()) {
             val audio = MusicEntity()
             val name = cursor.getString(0)
@@ -35,74 +63,10 @@ class MusicRepositoryImpl @Inject constructor(
             audio.artist = artist
             audio.index = index
 
-            if (checkValidMusicPath(path)) tempAudioList.add(audio)
+            if (checkValidMusicPath(path)) list.add(audio)
         }
         cursor.close()
-        return tempAudioList
-    }
-
-    override suspend fun getRecentlyMusic(): List<MusicEntity> {
-        val tempRecentlyList: MutableList<MusicEntity> = ArrayList()
-        val cursor = createQueryForRecentlyMusic(context) ?: return tempRecentlyList
-
-        while (cursor.moveToNext()) {
-            val recentlyAudio = MusicEntity()
-            val name = cursor.getString(0)
-            val path = cursor.getString(1)
-            val artist = cursor.getString(2)
-            val index = cursor.getInt(3)
-
-            recentlyAudio.name = name
-            recentlyAudio.path = path
-            recentlyAudio.artist = artist
-            recentlyAudio.index = index
-
-            if (checkValidMusicPath(path)) tempRecentlyList.add(recentlyAudio)
-        }
-        cursor.close()
-        return tempRecentlyList
-    }
-
-    override suspend fun getMusicArtPicture(path: String): ByteArray? {
-        return AudioArtPictureReadable(metadataRetriever).read(path)
-    }
-
-    private fun createQueryForRecentlyMusic(context: Context): Cursor? {
-        val uri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        val projection = arrayOf<String>(
-                MediaStore.Audio.AudioColumns.TITLE,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.ArtistColumns.ARTIST,
-                MediaStore.Audio.Media._ID
-        )
-
-        val selection = MediaStore.Audio.Media.DATE_ADDED +
-                ">" + (System.currentTimeMillis() / 1000 - (7 * 60 * 60 * 24))
-
-        val order = "LOWER(" + MediaStore.Audio.Media.DATE_ADDED + ") DESC"
-
-        return context.contentResolver.query(
-                uri, projection, selection, null, order
-        )
-    }
-
-    private fun createQueryForAllMusic(context: Context): Cursor? {
-
-        val uri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        val projection = arrayOf<String>(
-                MediaStore.Audio.AudioColumns.TITLE,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.ArtistColumns.ARTIST,
-                MediaStore.Audio.Media._ID
-        )
-
-        val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
-
-        val order = "LOWER(" + MediaStore.Audio.Media.DATE_ADDED + ") DESC"
-
-        return context.contentResolver.query(
-                uri, projection, selection, null, order
-        )
+        return list
     }
 
     private fun checkValidMusicPath(path: String): Boolean {
