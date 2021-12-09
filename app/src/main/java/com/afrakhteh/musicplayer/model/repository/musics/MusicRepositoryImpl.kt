@@ -6,7 +6,6 @@ import android.database.Cursor
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioArtPictureReadable
 import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
@@ -39,8 +38,6 @@ class MusicRepositoryImpl @Inject constructor(
     override suspend fun getMusicListById(idList: List<Int>): List<MusicEntity> {
         val selection = MediaStore.Audio.Media._ID + " IN (" +
                 idList.joinToString(", ") + ")"
-
-        Log.d("repo", selection)
 
         val cursor = createQuerySample(selection, context) ?: return emptyList()
         return getMusicListFromCursor(cursor)
