@@ -1,3 +1,5 @@
+@file:Suppress("Annotator")
+
 package com.afrakhteh.musicplayer.di.builders
 
 import android.app.Application

@@ -275,6 +275,11 @@ class AudioPlayerService : Service(), Player.Listener, AudioServiceViewInterface
         if (playWhenReady) startTicking() else stopTicking()
     }
 
+    override fun onPlaybackStateChanged(playbackState: Int) {
+        super.onPlaybackStateChanged(playbackState)
+        if (playbackState == Player.STATE_ENDED) playNext()
+    }
+
     override fun getPlayingPosition(): Int? {
         return currentPosition
     }
