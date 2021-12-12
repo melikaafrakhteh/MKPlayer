@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioArtPictureReadable
 import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
+import java.io.File
 import javax.inject.Inject
 
 
@@ -75,6 +76,13 @@ class MusicRepositoryImpl @Inject constructor(
         }
         cursor.close()
         return list
+    }
+
+    private fun deleteItemFromList(path: String) {
+        val file = File(path)
+        if (file.exists()) {
+            file.delete()
+        }
     }
 
     private fun checkValidMusicPath(path: String): Boolean {

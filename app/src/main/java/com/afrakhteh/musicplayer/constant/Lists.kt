@@ -35,4 +35,9 @@ object Lists {
             0.7f,
             1.0f
     )
+
+    val POPUP_MENU_ITEMS_LIST = arrayListOf(
+            "Add To PlayList",
+            "Delete"
+    )
 }

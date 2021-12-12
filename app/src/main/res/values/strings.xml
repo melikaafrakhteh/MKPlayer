@@ -9,4 +9,10 @@
     <string name="playlist_title_tv">PlayList</string>
 
     <string name="deny_message">This application requires access to your music list to work</string>
+
+    <string name="delete_item_message">Music Delete Successfully</string>
+    <string name="delete_dialog_content">Are you sure to Delete this song?</string>
+    <string name="delete_dialog_yes">Delete</string>
+    <string name="delete_dialog_no">Cancel</string>
+
 </resources>

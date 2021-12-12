@@ -50,6 +50,7 @@ class PlayerViewModel @Inject constructor(
     private val pPlayingPosition = MutableLiveData<Int>()
     val playingPosition: LiveData<Int> get() = pPlayingPosition
 
+
     fun getAllAudioWaveData() {
         job = CoroutineScope(Dispatchers.Main).launch {
             if (activePositionLiveData.value == null) return@launch

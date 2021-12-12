@@ -10,6 +10,8 @@ import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 
 class AllMusicAdapter(
         private val click: (Int) -> Unit,
+        private val addToPlayList: (Int) -> Unit,
+        private val delete: (Int) -> Unit,
         private val musicRepository: MusicRepository
 ) : ListAdapter<MusicEntity, AllMusicViewHolder>(AllMusicDiffCallBack()) {
 
@@ -20,7 +22,7 @@ class AllMusicAdapter(
     }
 
     override fun onBindViewHolder(holder: AllMusicViewHolder, position: Int) {
-        holder.bind(getItem(position), click)
+        holder.bind(getItem(position), click, addToPlayList, delete)
     }
 
     override fun onViewAttachedToWindow(holder: AllMusicViewHolder) {

@@ -34,6 +34,12 @@ class AllMusicViewModel @Inject constructor(
         }
     }
 
+    fun deleteMusicFromList(musicEntity: MusicEntity) {
+        val list = pState.value?.musicItems as MutableList
+        list.remove(musicEntity)
+        pState.value = pState.value?.copy(musicItems = list as List<MusicEntity>)
+    }
+
     override fun onCleared() {
         allMusicJob?.cancel()
         super.onCleared()

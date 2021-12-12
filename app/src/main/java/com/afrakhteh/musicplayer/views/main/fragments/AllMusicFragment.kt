@@ -2,6 +2,7 @@ package com.afrakhteh.musicplayer.views.main.fragments
 
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -18,6 +19,7 @@ import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.viewModel.AllMusicViewModel
 import com.afrakhteh.musicplayer.views.main.adapters.allMusic.AllMusicAdapter
 import com.afrakhteh.musicplayer.views.main.interfaces.PermissionController
@@ -68,11 +70,38 @@ class AllMusicFragment : Fragment() {
     }
 
     private fun initialiseView() {
-        musicAdapter = AllMusicAdapter(this::onMusicItemClicked, viewModel.repository)
+        musicAdapter = AllMusicAdapter(
+                this::onMusicItemClicked,
+                this::onMusicAddToPlayListClicked,
+                this::onMusicItemDeleteClicked,
+                viewModel.repository)
         binding.allFragmentRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = musicAdapter
         }
+    }
+
+    private fun onMusicItemDeleteClicked(position: Int) {
+        showRemoveMusicItemConfirmDialog(musicAdapter.currentList[position])
+    }
+
+    private fun showRemoveMusicItemConfirmDialog(item: MusicEntity) {
+        AlertDialog.Builder(context)
+                .setMessage(R.string.delete_dialog_content)
+                .apply {
+                    setPositiveButton(R.string.delete_dialog_yes) { _, _ ->
+                        viewModel.deleteMusicFromList(item)
+                        Toast.makeText(context, R.string.delete_item_message, Toast.LENGTH_LONG).show()
+                    }
+                    setNegativeButton(R.string.delete_dialog_no) { _, _ ->
+                        // cancel
+                    }
+                }
+                .show()
+    }
+
+    private fun onMusicAddToPlayListClicked(position: Int) {
+        // add to playList
     }
 
     private fun onMusicItemClicked(position: Int) {
