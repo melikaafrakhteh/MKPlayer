@@ -4,21 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="56dp"
     tools:context=".views.main.fragments.LikedFragment">
 
     <TextView
         android:id="@+id/likeFragmentTitleTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:paddingStart="2dp"
         android:fontFamily="@font/roboto_bold"
         android:text="@string/like_title_tv"
         android:textColor="@color/darkNavyBlue"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
 
     <TextView
         android:id="@+id/likeFragmentNumberTv"
@@ -26,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/roboto"
-        android:text="123 songs"
+        tools:text="123 songs"
         android:textColor="@color/gray"
         android:textSize="14sp"
         android:paddingBottom="3dp"
@@ -44,10 +47,10 @@
         android:id="@+id/likeFragmentRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="20dp"
-        android:padding="2dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="16dp"
+        android:nestedScrollingEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/likeFragmentTitleTv"
@@ -55,6 +58,5 @@
         android:orientation="vertical"
         tools:itemCount="1"
         tools:listitem="@layout/music_item_row" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

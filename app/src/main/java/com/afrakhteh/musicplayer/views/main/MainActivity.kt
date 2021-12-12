@@ -62,22 +62,30 @@ class MainActivity : AppCompatActivity(), PermissionController {
         //viewPager
         binding.homeViewPager.adapter = ViewPagerAdapter(this, Numerals.FRAGMENTS_NUMBER)
         binding.homeViewPager.registerOnPageChangeCallback(ViewPagerCallBack())
-
+        binding.homeViewPager.offscreenPageLimit = 4
         buttonClick()
     }
 
     //already granted
-    private fun hasReadStoragePermission() = ContextCompat
-            .checkSelfPermission(
-                    this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
+    private fun hasReadStoragePermission(): Boolean {
+        return ContextCompat
+                .checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat
+                        .checkSelfPermission(
+                                this,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ) == PackageManager.PERMISSION_GRANTED
+    }
 
     private fun requestStoragePermission() {
         if (!hasReadStoragePermission()) {
             ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE),
                     Numerals.REQUEST_READ_STORAGE_CODE
             )
         }
