@@ -8,4 +8,5 @@ interface MusicRepository {
     suspend fun getRecentlyMusic(): List<MusicEntity>
     suspend fun getMusicArtPicture(path: String): ByteArray?
     suspend fun getMusicListById(idList: List<Int>): List<MusicEntity>
+    suspend fun deleteItemFromList(path: String)
 }

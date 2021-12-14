@@ -20,6 +20,7 @@ class AllMusicViewModel @Inject constructor(
     val state: LiveData<MusicState> get() = pState
 
     private var allMusicJob: Job? = null
+    private var deleteMusicJob: Job? = null
 
     fun fetchAllMusic() {
         try {
@@ -35,13 +36,17 @@ class AllMusicViewModel @Inject constructor(
     }
 
     fun deleteMusicFromList(musicEntity: MusicEntity) {
-        val list = pState.value?.musicItems as MutableList
-        list.remove(musicEntity)
-        pState.value = pState.value?.copy(musicItems = list as List<MusicEntity>)
+        deleteMusicJob = CoroutineScope(Dispatchers.IO).launch {
+            repository.deleteItemFromList(musicEntity.path)
+            val list = pState.value?.musicItems as MutableList
+            list.remove(musicEntity)
+            pState.postValue(pState.value?.copy(musicItems = list as List<MusicEntity>))
+        }
     }
 
     override fun onCleared() {
         allMusicJob?.cancel()
+        deleteMusicJob?.cancel()
         super.onCleared()
     }
 }

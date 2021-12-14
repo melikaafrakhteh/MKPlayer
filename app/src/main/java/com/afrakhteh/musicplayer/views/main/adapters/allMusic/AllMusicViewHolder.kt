@@ -20,7 +20,7 @@ class AllMusicViewHolder(
         private val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
 
-    var loadingArt: Job? = null
+    private var loadingArt: Job? = null
 
     fun bind(data: MusicEntity,
              click: (Int) -> Unit,

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.FragmentRecentlyBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
@@ -46,11 +47,32 @@ class RecentlyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.fetchRecentlyAddedMusic()
+        /* (requireActivity() as PermissionController).apply {
+             setOnPermissionRequestCallBack (this@RecentlyFragment::onPermissionGranted)
+             if (hasPermission()){
+                 viewModel.fetchRecentlyAddedMusic()
+             }else{
+                 requestPermission()
+             }
+         }*/
         recentlyAdapter = RecentlyAdapter(::onItemClicked, viewModel.repository)
         binding.recentlyFragmentRecycler.adapter = recentlyAdapter
         viewModel.recentlyAddedState.observe(viewLifecycleOwner, ::onItemRecentlyAdded)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchRecentlyAddedMusic()
+    }
+
+    private fun onPermissionGranted(permission: Boolean) {
+        if (permission) {
+            viewModel.fetchRecentlyAddedMusic()
+        } else {
+            Toast.makeText(requireContext(), getString(R.string.deny_message), Toast.LENGTH_LONG)
+                    .show()
+        }
     }
 
     private fun onItemClicked(position: Int) {
