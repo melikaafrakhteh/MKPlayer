@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="260dp"
+    android:orientation="vertical"
+    android:layout_height="200dp">
+
+    <EditText
+        android:id="@+id/newPlayListCreateDialogET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:paddingTop="24dp"
+        android:paddingBottom="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/new_playlist_hint"
+        android:textColor="@color/darkGray"
+        android:textColorHint="@color/gray"
+        android:importantForAutofill="no"
+        tools:ignore="RtlSymmetry" />
+</LinearLayout>

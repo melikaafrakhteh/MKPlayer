@@ -9,9 +9,9 @@ import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.entity.db.FavoriteEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepository
-import com.afrakhteh.musicplayer.model.useCase.AddToFaveUseCase
-import com.afrakhteh.musicplayer.model.useCase.DeleteFromFaveUseCase
-import com.afrakhteh.musicplayer.model.useCase.IsMusicLikedUseCase
+import com.afrakhteh.musicplayer.model.useCase.favorite.AddToFaveUseCase
+import com.afrakhteh.musicplayer.model.useCase.favorite.DeleteFromFaveUseCase
+import com.afrakhteh.musicplayer.model.useCase.favorite.IsMusicLikedUseCase
 import com.afrakhteh.musicplayer.util.SingleEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo

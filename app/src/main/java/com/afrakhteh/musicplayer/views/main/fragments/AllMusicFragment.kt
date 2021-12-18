@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,18 +14,24 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.FragmentAllMusicBinding
+import com.afrakhteh.musicplayer.databinding.PlaylistCreateNewDialogBinding
+import com.afrakhteh.musicplayer.databinding.PlaylistDialogBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
+import com.afrakhteh.musicplayer.model.entity.db.PlayListEntity
 import com.afrakhteh.musicplayer.viewModel.AllMusicViewModel
 import com.afrakhteh.musicplayer.views.main.adapters.allMusic.AllMusicAdapter
+import com.afrakhteh.musicplayer.views.main.adapters.allMusic.dialog.PlayListDialogAdapter
 import com.afrakhteh.musicplayer.views.main.interfaces.PermissionController
 import com.afrakhteh.musicplayer.views.main.state.MusicState
 import com.afrakhteh.musicplayer.views.musicPlayer.PlayerActivity
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -38,7 +45,9 @@ class AllMusicFragment : Fragment() {
     private val viewModel: AllMusicViewModel by viewModels { providerFactory }
 
     private lateinit var musicAdapter: AllMusicAdapter
+    private lateinit var dialogAdapter: PlayListDialogAdapter
 
+    private lateinit var choosePlayListDialog: AlertDialog
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +75,13 @@ class AllMusicFragment : Fragment() {
             } else {
                 requestPermission()
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            viewModel.fetchAllPlayList()
         }
     }
 
@@ -101,7 +117,60 @@ class AllMusicFragment : Fragment() {
     }
 
     private fun onMusicAddToPlayListClicked(position: Int) {
-        // add to playList
+        showChoosePlayListDialog(musicAdapter.currentList[position], position)
+    }
+
+    private fun showChoosePlayListDialog(item: MusicEntity, musicPosition: Int) {
+        dialogAdapter = PlayListDialogAdapter(::onPlayListDialogClick, musicPosition)
+        val binding = PlaylistDialogBinding.inflate(
+                layoutInflater, null, false
+        )
+        binding.playlistDialogRecyclerView.adapter = dialogAdapter
+        dialogAdapter.submitList(viewModel.playList.value)
+        val position = (viewModel.playList.value?.size) ?: 0
+        binding.playlistDialogCreateTitle.setOnClickListener {
+            showCreateNewPlayListDialog(musicPosition, item, position)
+        }
+        choosePlayListDialog = AlertDialog.Builder(context)
+                .setView(binding.root)
+                .setTitle(getString(R.string.choose_playlists_title))
+                .show()
+    }
+
+    private fun onPlayListDialogClick(position: Int, musicPosition: Int) {
+        Log.d("player", "item position: $musicPosition")
+        lifecycleScope.launch {
+            viewModel.addMusicToPlayList(
+                    musicAdapter.currentList[musicPosition], position
+            )
+        }
+        Toast.makeText(context,
+                getString(R.string.added_playList_toast), Toast.LENGTH_LONG).show()
+        choosePlayListDialog.dismiss()
+    }
+
+    private fun showCreateNewPlayListDialog(musicPosition: Int, item: MusicEntity, position: Int) {
+        val binding = PlaylistCreateNewDialogBinding.inflate(
+                layoutInflater, null, false
+        )
+        AlertDialog.Builder(context)
+                .setView(binding.root)
+                .setTitle(getString(R.string.create_playlists_title))
+                .setPositiveButton(R.string.add_to_playlist_dialog) { _, _ ->
+                    val editTextName = binding.newPlayListCreateDialogET.text.toString().trim()
+                    lifecycleScope.launch {
+                        viewModel.createANewPlayList(
+                                PlayListEntity(playListId = position, title = editTextName)
+                        )
+                    }
+                    Toast.makeText(context,
+                            getString(R.string.created_playList_toast), Toast.LENGTH_LONG).show()
+                    showChoosePlayListDialog(item, musicPosition)
+                }
+                .setNegativeButton(R.string.cancel_playlist_dialog) { _, _ ->
+                    //cancel
+                }
+                .show()
     }
 
     private fun onMusicItemClicked(position: Int) {

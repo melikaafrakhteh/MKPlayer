@@ -7,6 +7,7 @@ import com.afrakhteh.musicplayer.di.modules.RepositoryModule
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.repository.favorite.FavoriteRepository
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
+import com.afrakhteh.musicplayer.model.repository.playList.PlayListRepository
 import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepository
 import dagger.Component
 
@@ -22,4 +23,5 @@ interface RepositoryComponent {
     fun exposeAudioDetailRepository(): AudioDetailsRepository
     fun exposeMediaMetaData(): MediaMetadataRetriever
     fun exposeFaveRepository(): FavoriteRepository
+    fun exposePlayListRepository(): PlayListRepository
 }

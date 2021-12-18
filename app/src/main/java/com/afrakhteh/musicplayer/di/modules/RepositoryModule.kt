@@ -4,6 +4,8 @@ import com.afrakhteh.musicplayer.model.repository.favorite.FavoriteRepository
 import com.afrakhteh.musicplayer.model.repository.favorite.FavoriteRepositoryImpl
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepositoryImpl
+import com.afrakhteh.musicplayer.model.repository.playList.PlayListRepository
+import com.afrakhteh.musicplayer.model.repository.playList.PlayListRepositoryImpl
 import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepository
 import com.afrakhteh.musicplayer.model.repository.player.AudioDetailsRepositoryImpl
 import dagger.Binds
@@ -20,4 +22,7 @@ interface RepositoryModule {
 
     @Binds
     fun bindFavoriteRepository(repo: FavoriteRepositoryImpl): FavoriteRepository
+
+    @Binds
+    fun bindPlayListRepository(repository: PlayListRepositoryImpl): PlayListRepository
 }

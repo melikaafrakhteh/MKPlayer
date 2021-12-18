@@ -8,7 +8,9 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.afrakhteh.musicplayer.di.scopes.RepoScope
 import com.afrakhteh.musicplayer.model.dataSource.decoding.AudioArtPictureReadable
+import com.afrakhteh.musicplayer.model.db.PlayListDao
 import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
+import com.afrakhteh.musicplayer.model.entity.db.AllMusicsEntity
 import java.io.File
 import javax.inject.Inject
 
@@ -16,7 +18,8 @@ import javax.inject.Inject
 @RepoScope
 class MusicRepositoryImpl @Inject constructor(
         private val context: Context,
-        private val metadataRetriever: MediaMetadataRetriever
+        private val metadataRetriever: MediaMetadataRetriever,
+        private val dao: PlayListDao
 ) : MusicRepository {
 
     override suspend fun getAllMusic(): List<MusicEntity> {
@@ -83,6 +86,14 @@ class MusicRepositoryImpl @Inject constructor(
         if (file.exists()) {
             file.delete()
         }
+    }
+
+    override suspend fun addMusicToPlayList(item: AllMusicsEntity) {
+        dao.addMusicToPlayList(item)
+    }
+
+    override suspend fun removeMusicFromPlayList(item: AllMusicsEntity) {
+        dao.deleteMusicFromPlayList(item)
     }
 
     private fun checkValidMusicPath(path: String): Boolean {

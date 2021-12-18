@@ -6,6 +6,8 @@ object Strings {
     const val AUDIO_ARTIST_KEY = "artist"
     const val AUDIO_ACTIVE_POSITION__KEY = "activePosition"
     const val AUDIO_All_MUSIC_LIST_KEY = "audioList"
+    const val PLAY_LIST_POSITION_KEY = "position"
+    const val PLAY_LIST_NAME_KEY = "playListName"
 
     const val SERVICE_ACTIONS = "actions"
 

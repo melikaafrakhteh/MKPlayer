@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
-import com.afrakhteh.musicplayer.model.useCase.GetAllFaveListUseCase
+import com.afrakhteh.musicplayer.model.useCase.favorite.GetAllFaveListUseCase
 import com.afrakhteh.musicplayer.views.main.state.MusicState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

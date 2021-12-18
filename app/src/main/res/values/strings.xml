@@ -14,5 +14,19 @@
     <string name="delete_dialog_content">Are you sure to Delete this song?</string>
     <string name="delete_dialog_yes">Delete</string>
     <string name="delete_dialog_no">Cancel</string>
+    <string name="add_to_playlists_title">Add To PlayLists</string>
+    <string name="choose_playlists_title">Choose A PlayList</string>
+    <string name="create_playlists_title">Create  New  PlayList</string>
+    <string name="add_to_playlist_dialog">Ok</string>
+    <string name="cancel_playlist_dialog">Cancel</string>
+    <string name="delete_playlist_popup_menu">Delete PlayList</string>
+    <string name="there_are_not_any_playlists_here">There are not any playLists here</string>
+    <string name="delete_playList_toast">PlayList Deleted Successfully</string>
+    <string name="created_playList_toast">PlayList Created Successfully</string>
+    <string name="added_playList_toast">Music Added To PlayList Successfully</string>
+    <string name="new_playlist_hint">New PlayList</string>
+    <string name="playlist_back_tv">showLists</string>
+    <string name="remove_music_popup_menu">Remove From PlayList</string>
+    <string name="remove_successfully_toast">Music Removed From PlayList SuccessFully</string>
 
 </resources>

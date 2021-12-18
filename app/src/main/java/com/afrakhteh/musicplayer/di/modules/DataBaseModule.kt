@@ -6,6 +6,7 @@ import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.di.scopes.DBScope
 import com.afrakhteh.musicplayer.model.db.FavoriteDao
 import com.afrakhteh.musicplayer.model.db.MusicDataBase
+import com.afrakhteh.musicplayer.model.db.PlayListDao
 import dagger.Module
 import dagger.Provides
 
@@ -26,5 +27,11 @@ class DataBaseModule {
     @Provides
     fun provideDao(room: MusicDataBase): FavoriteDao {
         return room.faveDao()
+    }
+
+    @DBScope
+    @Provides
+    fun providePlayListDao(room: MusicDataBase): PlayListDao {
+        return room.playListDao()
     }
 }
