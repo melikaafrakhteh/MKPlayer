@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/nearWhite"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:context=".views.main.MainActivity">
 
@@ -14,14 +14,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/darkNavyBlue"
-        android:fitsSystemWindows="true"
+        android:fitsSystemWindows="false"
+        app:liftOnScroll="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/homeCollapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
+            android:fitsSystemWindows="false"
             app:contentScrim="@color/darkNavyBlue"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
@@ -40,9 +41,9 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:background="@color/white"
-                    android:fitsSystemWindows="true"
+                    android:fitsSystemWindows="false"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/music"
+                    android:src="@drawable/emptypic"
                     app:layout_collapseMode="parallax"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

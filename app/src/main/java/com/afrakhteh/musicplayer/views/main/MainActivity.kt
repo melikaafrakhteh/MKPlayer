@@ -11,17 +11,24 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Numerals
 import com.afrakhteh.musicplayer.databinding.ActivityMainBinding
 import com.afrakhteh.musicplayer.util.getScreenSize
+import com.afrakhteh.musicplayer.util.resize
+import com.afrakhteh.musicplayer.util.toBitmap
 import com.afrakhteh.musicplayer.views.main.adapters.viewPager.ViewPagerAdapter
+import com.afrakhteh.musicplayer.views.main.interfaces.MainCoverController
 import com.afrakhteh.musicplayer.views.main.interfaces.PermissionController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
-class MainActivity : AppCompatActivity(), PermissionController {
+class MainActivity : AppCompatActivity(), PermissionController, MainCoverController {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var context: Context
@@ -199,6 +206,27 @@ class MainActivity : AppCompatActivity(), PermissionController {
             selectTab(getTabTextView(currentFragment), getTabCircle(currentFragment))
         }
     }
+
+    override fun setCoverImage(artMusicBytes: ByteArray?) {
+        lifecycleScope.launch {
+            if (artMusicBytes == null) {
+                withContext(Dispatchers.Main) {
+                    binding.homeCoverImageIv.setImageResource(R.drawable.emptypic)
+                    return@withContext
+                }
+                return@launch
+            }
+            try {
+                val bitMap = artMusicBytes.toBitmap().resize()
+                withContext(Dispatchers.Main) {
+                    binding.homeCoverImageIv.setImageBitmap(bitMap)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 }
+
 
 
