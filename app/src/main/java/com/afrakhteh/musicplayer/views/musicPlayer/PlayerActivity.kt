@@ -7,21 +7,26 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Lists
+import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
 import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.entity.wave.WaveItemModel
 import com.afrakhteh.musicplayer.model.entity.wave.WaveModel
+import com.afrakhteh.musicplayer.model.sharedPrefrences.PreferenceManager
+import com.afrakhteh.musicplayer.model.sharedPrefrences.PreferenceManagerImpl
 import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.util.getScreenSize
 import com.afrakhteh.musicplayer.util.resize
@@ -48,6 +53,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private var isUserScrolling: Boolean = false
 
+    private var volumeSharedPref: PreferenceManager? = null
 
     private val connectToService = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -104,6 +110,8 @@ class PlayerActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initialiseView() {
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColor)
+
         binding.playWaveRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -124,8 +132,23 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.playVolumeProgressBar.setOnTouchListener(::onVolumeTouchListener)
 
+        getLastVolume()
         isFavorite()
         buttonClicks()
+    }
+
+    private fun getLastVolume() {
+        volumeSharedPref = PreferenceManagerImpl(this)
+        val lastVolume = volumeSharedPref?.readVolumeSharedPref(Strings.VOLUME_SHARED_KEY)!!
+        Log.d("play", "get volume when return: $lastVolume")
+        if (lastVolume == -1f) {
+            binding.playVolumeProgressBar.progress = 30
+            audioPlayerService?.setVolume(30f)
+            return
+        }
+        binding.playVolumeProgressBar.progress = lastVolume.toInt()
+        changeVolumeIcon(lastVolume / 100)
+        audioPlayerService?.setVolume(lastVolume)
     }
 
     private fun isFavorite() {
@@ -147,9 +170,19 @@ class PlayerActivity : AppCompatActivity() {
                 binding.playVolumeProgressBar.progress = percents.toInt()
                 audioPlayerService?.setVolume(percents / 100)
                 changeVolumeIcon(percents / 100)
+                saveVolumeValue(percents)
             }
         }
         return true
+    }
+
+    private fun saveVolumeValue(percent: Float) {
+        val volume = volumeSharedPref?.readVolumeSharedPref(Strings.VOLUME_SHARED_KEY)
+        Log.d("play", "get volume save: $volume")
+        if (volume != percent) {
+            volumeSharedPref?.writeVolumeSharedPref(percent)
+            Log.d("play", " volume save: $percent")
+        }
     }
 
     private fun changeVolumeIcon(percent: Float) {
@@ -164,10 +197,10 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun calculateVolumePosition(percent: Int): Int {
         return when (percent) {
-            in 0..29 -> 0
-            in 30..69 -> 1
+            in 0..9 -> 0
+            in 10..69 -> 1
             in 70..99 -> 2
-            in 100..101 -> 3
+            in 100..130 -> 3
             else -> 0
         }
     }
@@ -217,7 +250,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun observeArtPicture(bytes: ByteArray?) {
         if (bytes == null) {
-            binding.playMusicCoverIv.setImageResource(R.drawable.dog)
+            binding.playMusicCoverIv.setImageResource(R.drawable.emptypic)
             return
         }
         val image = bytes.toBitmap().resize()

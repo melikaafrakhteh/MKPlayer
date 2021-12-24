@@ -37,7 +37,7 @@
             android:layout_height="60dp"
             android:layout_marginStart="24dp"
             android:scaleType="centerCrop"
-            tools:src="@drawable/minimusic"
+            tools:src="@drawable/emptypic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:layout_constraintBottom_toTopOf="@id/playWaveRecyclerView"
@@ -53,7 +53,7 @@
             android:gravity="start"
             tools:text="Trees of Eternity"
             android:textColor="@color/gray"
-            android:textSize="16sp"
+            android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/playMusicCoverIv"
             app:layout_constraintTop_toTopOf="@+id/playMusicCoverIv" />
 
@@ -67,7 +67,7 @@
             android:fontFamily="@font/roboto_bold"
             tools:text="Broken Mirror"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/playMusicCoverIv"
             app:layout_constraintStart_toEndOf="@+id/playMusicCoverIv"
             app:layout_constraintTop_toBottomOf="@+id/playMusicArtistTv" />
@@ -130,7 +130,6 @@
             android:layout_height="200dp"
             android:layout_marginTop="140dp"
             android:max="100"
-            android:progress="30"
             android:progressDrawable="@drawable/custom_seekbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

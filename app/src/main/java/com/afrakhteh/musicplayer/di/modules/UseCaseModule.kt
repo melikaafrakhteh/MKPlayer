@@ -1,5 +1,6 @@
 package com.afrakhteh.musicplayer.di.modules
 
+import com.afrakhteh.musicplayer.di.scopes.UseCaseScope
 import com.afrakhteh.musicplayer.model.repository.favorite.FavoriteRepository
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.repository.playList.PlayListRepository
@@ -14,16 +15,19 @@ import dagger.Provides
 @Module
 class UseCaseModule {
 
+    @UseCaseScope
     @Provides
     fun provideAddToFaveUseCase(repository: FavoriteRepository): AddToFaveUseCase {
         return AddToFaveUseCase(repository)
     }
 
+    @UseCaseScope
     @Provides
     fun provideDeleteFromFaveUseCase(repository: FavoriteRepository): DeleteFromFaveUseCase {
         return DeleteFromFaveUseCase(repository)
     }
 
+    @UseCaseScope
     @Provides
     fun provideGetAllFaveListUseCase(
             favoriteRepository: FavoriteRepository,
@@ -32,16 +36,19 @@ class UseCaseModule {
         return GetAllFaveListUseCase(favoriteRepository, musicRepository)
     }
 
+    @UseCaseScope
     @Provides
     fun provideIsMusicLikeUseCase(repository: FavoriteRepository): IsMusicLikedUseCase {
         return IsMusicLikedUseCase(repository)
     }
 
+    @UseCaseScope
     @Provides
     fun provideAddMusicToPlayListUseCase(repository: MusicRepository): AddMusicToPlayListUseCase {
         return AddMusicToPlayListUseCase(repository)
     }
 
+    @UseCaseScope
     @Provides
     fun provideDeleteMusicFromPlayListUseCase(
             repository: MusicRepository
@@ -49,21 +56,25 @@ class UseCaseModule {
         return DeleteMusicFromPlayListUseCase(repository)
     }
 
+    @UseCaseScope
     @Provides
     fun provideAddNewPlayList(repository: PlayListRepository): AddNewPlayListUseCase {
         return AddNewPlayListUseCase(repository)
     }
 
+    @UseCaseScope
     @Provides
     fun provideDeleteOnePlayList(repository: PlayListRepository): DeleteOnePlayListUseCase {
         return DeleteOnePlayListUseCase(repository)
     }
 
+    @UseCaseScope
     @Provides
     fun provideGetAllPlayListUseCase(repository: PlayListRepository): GetAllPlayListUseCase {
         return GetAllPlayListUseCase(repository)
     }
 
+    @UseCaseScope
     @Provides
     fun provideGetAllPlayListWithMusicsUseCase(
             repository: PlayListRepository

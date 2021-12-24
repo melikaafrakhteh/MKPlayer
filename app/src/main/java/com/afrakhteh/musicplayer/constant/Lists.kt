@@ -24,14 +24,14 @@ object Lists {
 
     val VOLUME_PB_LIST = arrayListOf(
             0,
-            30,
+            10,
             70,
             100
     )
 
     val VOLUME_LIST = arrayListOf(
             0.0f,
-            0.3f,
+            0.1f,
             0.7f,
             1.0f
     )
@@ -39,5 +39,10 @@ object Lists {
     val POPUP_MENU_ITEMS_LIST = arrayListOf(
             "Add To PlayList",
             "Delete"
+    )
+
+    val POPUP_MENU_ITEMS_CHOOSE_PLAY_LIST = arrayListOf(
+            "Add To Existing PlayList",
+            "Create A New"
     )
 }
