@@ -47,15 +47,12 @@ class RecentlyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.fetchRecentlyAddedMusic()
-        /* (requireActivity() as PermissionController).apply {
-             setOnPermissionRequestCallBack (this@RecentlyFragment::onPermissionGranted)
-             if (hasPermission()){
-                 viewModel.fetchRecentlyAddedMusic()
-             }else{
-                 requestPermission()
-             }
-         }*/
+
+        val isPermissionGranted = arguments?.getBoolean(Strings.CHECK_PERMISSION_NOTIFY_RECENTLY_KEY)
+        if (isPermissionGranted != null) {
+            onPermissionGranted(isPermissionGranted)
+        }
+
         recentlyAdapter = RecentlyAdapter(::onItemClicked, viewModel.repository)
         binding.recentlyFragmentRecycler.adapter = recentlyAdapter
         viewModel.recentlyAddedState.observe(viewLifecycleOwner, ::onItemRecentlyAdded)

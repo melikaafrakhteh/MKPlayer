@@ -9,6 +9,7 @@ object Strings {
     const val PLAY_LIST_POSITION_KEY = "position"
     const val PLAY_LIST_NAME_KEY = "playListName"
     const val VOLUME_SHARED_KEY = "volume"
+    const val CHECK_PERMISSION_NOTIFY_RECENTLY_KEY = "isGranted"
 
     const val SERVICE_ACTIONS = "actions"
 

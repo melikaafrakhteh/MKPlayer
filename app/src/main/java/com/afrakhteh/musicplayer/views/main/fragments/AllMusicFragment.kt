@@ -6,14 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListAdapter
-import android.widget.Toast
-import androidx.appcompat.widget.ListPopupWindow
+import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -87,9 +84,7 @@ class AllMusicFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        lifecycleScope.launch {
-            viewModel.fetchAllPlayList()
-        }
+        viewModel.fetchAllPlayList()
     }
 
     private fun initialiseView() {
@@ -118,29 +113,29 @@ class AllMusicFragment : Fragment() {
         DeleteItemsDialog(onDeleteItem).show(requireActivity().supportFragmentManager, "delete")
     }
 
-    private fun onMusicAddToPlayListClicked(position: Int) {
-        showChoosePlayListDialog(position)
+    private fun onMusicAddToPlayListClicked(musicPosition: Int, view: View) {
+        showChoosePlayListDialog(musicPosition, view)
     }
 
-    private fun showChoosePlayListDialog(musicPosition: Int) {
-        //    val playListPosition = (viewModel.playList.value?.size) ?: 0
+    private fun showChoosePlayListDialog(musicPosition: Int, view: View) {
         val menuListAdapter = ArrayAdapter(
                 requireContext(),
                 R.layout.popup_menu_item,
                 Lists.POPUP_MENU_ITEMS_CHOOSE_PLAY_LIST
         )
-        val bind = musicAdapter.bind
-        setUpPopUpMenu(menuListAdapter, bind.musicItemRowImageMenuIv).apply {
+        setUpPopUpMenu(menuListAdapter, view).apply {
             setOnItemClickListener { _, _, position, _ ->
                 when (position) {
                     0 -> {
-                        onPlayListDialogClick(musicPosition, AllPlayListEntity().id)
+                        openChoosePlayLists(musicPosition, view)
+                        this.dismiss()
                     }
                     1 -> {
-                        showCreateNewPlayListDialog(musicPosition, AllPlayListEntity().id)
+                        showCreateNewPlayListDialog()
+                        Log.d("all", "$id")
+                        this.dismiss()
                     }
                 }
-                this.dismiss()
             }
         }.show()
     }
@@ -150,14 +145,41 @@ class AllMusicFragment : Fragment() {
                 .apply {
                     anchorView = view
                     isModal = true
-                    setDropDownGravity(Gravity.TOP)
                     setAdapter(menuListAdapter)
                     width = menuListAdapter.measureContentWidth(requireContext())
                 }
     }
 
+    private fun openChoosePlayLists(musicId: Int, view: View) {
+        viewModel.fetchAllPlayList()
+        dialogAdapter = PlayListDialogAdapter(::onPlayListDialogClick, musicId)
+        val playLists = ArrayAdapter(requireContext(),
+                R.layout.popup_menu_item,
+                viewModel.playListTitle.value as MutableList<String>)
+
+        if (playLists.isEmpty) {
+            Toast.makeText(
+                    requireContext(),
+                    getString(R.string.no_playlist_toast),
+                    Toast.LENGTH_LONG).show()
+        }
+        setUpPopUpMenu(playLists, view).apply {
+            setBackgroundDrawable(
+                    ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.choose_playlist_dialog_shape)
+            )
+            setOnItemClickListener { _, _, position, _ ->
+                onPlayListDialogClick(position = position + 1, musicPosition = musicId)
+                Log.d("all add", position.toString())
+                dismiss()
+            }
+
+        }.show()
+
+    }
+
     private fun onPlayListDialogClick(position: Int, musicPosition: Int) {
-        Log.d("player", "item position: $musicPosition")
         lifecycleScope.launch {
             viewModel.addMusicToPlayList(
                     musicAdapter.currentList[musicPosition], position
@@ -167,16 +189,16 @@ class AllMusicFragment : Fragment() {
                 getString(R.string.added_playList_toast), Toast.LENGTH_LONG).show()
     }
 
-    private fun showCreateNewPlayListDialog(musicPosition: Int, playListPosition: Int) {
+    private fun showCreateNewPlayListDialog() {
         val onNameSelect = object : OnCreateDialogPlayListNameSelectedListener {
             override fun onPlayListNameSelected(name: String) {
                 lifecycleScope.launch {
                     viewModel.createANewPlayList(
-                            AllPlayListEntity(id = playListPosition, title = name)
+                            AllPlayListEntity(title = name)
                     )
                     Toast.makeText(context,
                             getString(R.string.created_playList_toast), Toast.LENGTH_LONG).show()
-                    showChoosePlayListDialog(musicPosition)
+                    //openChoosePlayLists(playListPosition)
                 }
             }
         }
@@ -239,10 +261,18 @@ class AllMusicFragment : Fragment() {
 
     private fun onPermissionGranted(permission: Boolean) {
         if (permission) {
+            notifyRecentlyIfPermissionIsGranted(permission)
             viewModel.fetchAllMusic()
         } else {
             Toast.makeText(requireContext(), getString(R.string.deny_message), Toast.LENGTH_LONG)
                     .show()
         }
+    }
+
+    private fun notifyRecentlyIfPermissionIsGranted(permission: Boolean) {
+        val bundle = Bundle().apply {
+            putBoolean(Strings.CHECK_PERMISSION_NOTIFY_RECENTLY_KEY, permission)
+        }
+        RecentlyFragment().arguments = bundle
     }
 }
