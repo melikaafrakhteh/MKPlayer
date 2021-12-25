@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -140,7 +139,6 @@ class PlayerActivity : AppCompatActivity() {
     private fun getLastVolume() {
         volumeSharedPref = PreferenceManagerImpl(this)
         val lastVolume = volumeSharedPref?.readVolumeSharedPref(Strings.VOLUME_SHARED_KEY)!!
-        Log.d("play", "get volume when return: $lastVolume")
         if (lastVolume == -1f) {
             binding.playVolumeProgressBar.progress = 30
             audioPlayerService?.setVolume(30f)
@@ -178,10 +176,8 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun saveVolumeValue(percent: Float) {
         val volume = volumeSharedPref?.readVolumeSharedPref(Strings.VOLUME_SHARED_KEY)
-        Log.d("play", "get volume save: $volume")
         if (volume != percent) {
             volumeSharedPref?.writeVolumeSharedPref(percent)
-            Log.d("play", " volume save: $percent")
         }
     }
 
@@ -198,8 +194,8 @@ class PlayerActivity : AppCompatActivity() {
     private fun calculateVolumePosition(percent: Int): Int {
         return when (percent) {
             in 0..9 -> 0
-            in 10..69 -> 1
-            in 70..99 -> 2
+            in 10..49 -> 1
+            in 50..99 -> 2
             in 100..130 -> 3
             else -> 0
         }
@@ -261,6 +257,7 @@ class PlayerActivity : AppCompatActivity() {
         position.ifNotHandled {
             viewModel.changeMusicActivePosition(it)
         }
+        isFavorite()
         setAudioDuration()
     }
 

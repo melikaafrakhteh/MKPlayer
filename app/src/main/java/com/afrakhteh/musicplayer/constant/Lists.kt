@@ -25,14 +25,14 @@ object Lists {
     val VOLUME_PB_LIST = arrayListOf(
             0,
             10,
-            70,
+            50,
             100
     )
 
     val VOLUME_LIST = arrayListOf(
             0.0f,
             0.1f,
-            0.7f,
+            0.5f,
             1.0f
     )
 
