@@ -4,15 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.afrakhteh.musicplayer.databinding.MusicItemRowBinding
-import com.afrakhteh.musicplayer.model.entity.db.AllMusicsEntity
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 
 class PlayListWithMusicsAdapter(
         private val click: (Int) -> Unit,
-        private val onRemoveMusic: (AllMusicsEntity) -> Unit,
+        private val onRemoveMusic: (Int) -> Unit,
         val repository: MusicRepository
 
-) : ListAdapter<AllMusicsEntity, PlayListWithMusicsViewHolder>(PlayListWithMusicsDiffCallBack()) {
+) : ListAdapter<MusicEntity, PlayListWithMusicsViewHolder>(PlayListWithMusicsDiffCallBack()) {
 
     override fun onCreateViewHolder(
             parent: ViewGroup,

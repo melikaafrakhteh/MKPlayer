@@ -6,6 +6,7 @@
 
     <color name="darkGray">#5C5B5B</color>
     <color name="gray">#CDCACA</color>
+    <color name="lightGray">#ECECEC</color>
 
     <color name="darkNavyBlue">#14191F</color>
     <color name="shadowNavyBlue">#252B30</color>

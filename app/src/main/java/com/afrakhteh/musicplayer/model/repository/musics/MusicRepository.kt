@@ -11,5 +11,6 @@ interface MusicRepository {
     suspend fun getMusicListById(idList: List<Int>): List<MusicEntity>
     suspend fun deleteItemFromList(path: String)
     suspend fun addMusicToPlayList(item: AllMusicsEntity)
-    suspend fun removeMusicFromPlayList(item: AllMusicsEntity)
+    suspend fun removeMusicFromPlayList(path: String)
+    suspend fun getAllPlayListTitle(): List<String>
 }

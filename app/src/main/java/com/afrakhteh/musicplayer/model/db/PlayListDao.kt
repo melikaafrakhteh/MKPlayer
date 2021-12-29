@@ -11,17 +11,20 @@ interface PlayListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addANewPlayList(item: PlayListEntity)
 
-    @Delete
-    suspend fun deleteOnePlayList(item: PlayListEntity)
+    @Query("DELETE FROM PlayListEntity WHERE playListId = :id")
+    suspend fun deleteOnePlayList(id: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addMusicToPlayList(item: AllMusicsEntity)
 
-    @Delete
-    suspend fun deleteMusicFromPlayList(item: AllMusicsEntity)
+    @Query("DELETE FROM AllMusicsEntity WHERE path = :path ")
+    suspend fun deleteMusicFromPlayList(path: String)
 
     @Query("SELECT * FROM PlayListEntity")
     suspend fun getAllPlayLists(): List<PlayListEntity>
+
+    @Query("SELECT title FROM PlayListEntity")
+    suspend fun getAllPlayListTitle() : List<String>
 
     @Transaction
     @Query("SELECT * FROM PlayListEntity WHERE playListId = :playListId")

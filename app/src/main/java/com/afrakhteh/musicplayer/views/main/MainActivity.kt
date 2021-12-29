@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), PermissionController, MainCoverControl
         //viewPager
         binding.homeViewPager.adapter = ViewPagerAdapter(this, Numerals.FRAGMENTS_NUMBER)
         binding.homeViewPager.registerOnPageChangeCallback(ViewPagerCallBack())
-        binding.homeViewPager.offscreenPageLimit = 4
+       // binding.homeViewPager.offscreenPageLimit = 4
         buttonClick()
     }
 

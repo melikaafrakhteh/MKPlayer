@@ -97,6 +97,8 @@ class RecentlyFragment : Fragment() {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         }
         recentlyAdapter.submitList(ArrayList(musicState?.musicItems))
-        binding.recentlyFragmentNumberTv.text = "${musicState?.musicItems?.size} songs"
+        val size = musicState?.musicItems?.size
+        binding.recentlyFragmentNumberTv.text = "$size song" +
+                if (size == 1 || size == 0) "" else "s"
     }
 }

@@ -26,4 +26,5 @@ interface UseCaseComponent {
     fun exposeDeleteOnePlayList(): DeleteOnePlayListUseCase
     fun exposeGetAllPlayList(): GetAllPlayListUseCase
     fun exposeGetPlayListWithMusics(): GetPlayListWithMusicsUseCase
+    fun exposeGetAllPlayListTitle(): GetAllPlayListTitlesUseCase
 }

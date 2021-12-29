@@ -3,7 +3,7 @@ package com.afrakhteh.musicplayer.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.afrakhteh.musicplayer.model.entity.db.AllMusicsEntity
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.useCase.playList.DeleteMusicFromPlayListUseCase
 import com.afrakhteh.musicplayer.model.useCase.playList.GetPlayListWithMusicsUseCase
@@ -22,20 +22,22 @@ class PlayListMusicsViewModel @Inject constructor(
     private var getMusicsOfPlayListJob: Job? = null
     private var removeMusicOfPlayListJob: Job? = null
 
-    private val pAllPlayListMusics = MutableLiveData<List<AllMusicsEntity>>()
-    val allPlayListMusic: LiveData<List<AllMusicsEntity>> get() = pAllPlayListMusics
+    private val pAllPlayListMusics = MutableLiveData<List<MusicEntity>>()
+    val allPlayListMusic: LiveData<List<MusicEntity>> get() = pAllPlayListMusics
 
     fun fetchMusicOfThisPlayList(position: Int) {
         getMusicsOfPlayListJob = CoroutineScope(Dispatchers.IO).launch {
             getPlayListWithMusicsUseCase.invoke(position).let {
-                pAllPlayListMusics.postValue(it.first().musicList)
+                pAllPlayListMusics.postValue(
+                    it.firstOrNull()?.musicList
+                )
             }
         }
     }
 
-    fun deleteOneMusicFromPlayList(item: AllMusicsEntity) {
+    fun deleteOneMusicFromPlayList(path: String) {
         removeMusicOfPlayListJob = CoroutineScope(Dispatchers.IO).launch {
-            deleteMusicFromPlayListUseCase.invoke(item)
+            deleteMusicFromPlayListUseCase.invoke(path)
         }
     }
 

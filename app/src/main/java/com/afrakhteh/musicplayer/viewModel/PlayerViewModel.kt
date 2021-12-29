@@ -77,7 +77,6 @@ class PlayerViewModel @Inject constructor(
             }
 
         }
-
     }
 
     fun getAllMusicList(intent: Intent) {

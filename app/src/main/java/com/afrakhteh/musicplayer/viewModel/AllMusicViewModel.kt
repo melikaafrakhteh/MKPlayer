@@ -3,13 +3,14 @@ package com.afrakhteh.musicplayer.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.afrakhteh.musicplayer.model.entity.audio.AllPlayListEntity
 import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.model.entity.db.AllMusicsEntity
 import com.afrakhteh.musicplayer.model.entity.db.PlayListEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.useCase.playList.AddMusicToPlayListUseCase
 import com.afrakhteh.musicplayer.model.useCase.playList.AddNewPlayListUseCase
-import com.afrakhteh.musicplayer.model.useCase.playList.GetAllPlayListUseCase
+import com.afrakhteh.musicplayer.model.useCase.playList.GetAllPlayListTitlesUseCase
 import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.views.main.state.MusicState
 import kotlinx.coroutines.CoroutineScope
@@ -21,17 +22,22 @@ import javax.inject.Inject
 class AllMusicViewModel @Inject constructor(
         var repository: MusicRepository,
         private var addNewPlayListUseCase: AddNewPlayListUseCase,
-        private var getAllPlayListUseCase: GetAllPlayListUseCase,
+        private var getAllPlayListTitle: GetAllPlayListTitlesUseCase,
         private var addMusicToPlayListUseCase: AddMusicToPlayListUseCase
 ) : ViewModel() {
     private val pState = MutableLiveData(MusicState())
     val state: LiveData<MusicState> get() = pState
 
-    private val pPlayList = MutableLiveData<List<PlayListEntity>>()
-    val playList: LiveData<List<PlayListEntity>> get() = pPlayList
+    private val pPlayList = MutableLiveData<List<AllPlayListEntity>>()
+    val playList: LiveData<List<AllPlayListEntity>> get() = pPlayList
+
+    private val pPlayListTitle = MutableLiveData<MutableList<String>>()
+    val playListTitle: LiveData<MutableList<String>> get() = pPlayListTitle
+
 
     private var allMusicJob: Job? = null
     private var deleteMusicJob: Job? = null
+    private var playListJob: Job? = null
 
     fun fetchAllMusic() {
         try {
@@ -55,29 +61,37 @@ class AllMusicViewModel @Inject constructor(
         }
     }
 
-    suspend fun createANewPlayList(item: PlayListEntity) {
-        addNewPlayListUseCase.invoke(item)
+    suspend fun createANewPlayList(item: AllPlayListEntity) {
+        addNewPlayListUseCase.invoke(
+                PlayListEntity(
+                        playListId = item.id?: 0,
+                        title = item.title?:""
+                ))
     }
 
-    suspend fun fetchAllPlayList() {
-        getAllPlayListUseCase.invoke().let {
-            pPlayList.postValue(it)
-        }
-    }
+      fun fetchAllPlayListTitle() {
+          playListJob = CoroutineScope(Dispatchers.Main).launch {
+              getAllPlayListTitle.invoke().let {
+                  pPlayListTitle.postValue(it as MutableList<String>)
+              }
+          }
+      }
 
     suspend fun addMusicToPlayList(item: MusicEntity, playListPosition: Int) {
-        addMusicToPlayListUseCase.invoke(AllMusicsEntity(
-                item.index,
-                item.path,
-                item.name ?: "",
-                item.artist ?: "",
-                playListPosition)
+        addMusicToPlayListUseCase.invoke(
+                AllMusicsEntity(
+                        musicId = item.index,
+                        path = item.path,
+                        name = item.name ?: "",
+                        artist = item.artist ?: "",
+                        playListId = playListPosition)
         )
     }
 
     override fun onCleared() {
         allMusicJob?.cancel()
         deleteMusicJob?.cancel()
+        playListJob?.cancel()
         super.onCleared()
     }
 }

@@ -1,15 +1,15 @@
 package com.afrakhteh.musicplayer.di.modules
 
 import android.content.Context
-import com.afrakhteh.musicplayer.di.scopes.SharedScope
 import com.afrakhteh.musicplayer.model.sharedPrefrences.PreferenceManagerImpl
 import dagger.Module
 import dagger.Provides
+import javax.inject.Singleton
 
 @Module
 class SharedPrefModule {
 
-    @SharedScope
+    @Singleton
     @Provides
     fun provideSharedPreferenceManager(context: Context): PreferenceManagerImpl {
         return PreferenceManagerImpl(context)

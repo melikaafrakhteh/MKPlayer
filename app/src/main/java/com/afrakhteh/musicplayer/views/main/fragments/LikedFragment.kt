@@ -59,7 +59,8 @@ class LikedFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun renderList(musicState: MusicState?) {
         likedAdapter.submitList(musicState?.musicItems)
-        binding.likeFragmentNumberTv.text = "${musicState?.musicItems?.size} songs"
+        val size = musicState?.musicItems?.size
+        binding.likeFragmentNumberTv.text = "$size song" + if (size == 0 || size == 1)"" else "s"
     }
 
     private fun onItemClicked(position: Int) {

@@ -29,7 +29,7 @@ class LikedViewHolder(
             repository.getMusicArtPicture(path).let {
                 if (it == null) {
                     withContext(Dispatchers.Main) {
-                        binding.musicItemRowImageIv.setImageResource(R.drawable.dog)
+                       binding.musicItemRowImageIv.setImageResource(R.drawable.emptypic)
                         return@withContext
                     }
                     return@let
@@ -37,7 +37,7 @@ class LikedViewHolder(
                 try {
                     val bitmap = it.toBitmap().resize()
                     withContext(Dispatchers.Main) {
-                        binding.musicItemRowImageIv.setImageBitmap(bitmap)
+                       binding.musicItemRowImageIv.setImageBitmap(bitmap)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()

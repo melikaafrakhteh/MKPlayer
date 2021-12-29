@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,7 +83,7 @@ class AllMusicFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchAllPlayList()
+        viewModel.fetchAllPlayListTitle()
     }
 
     private fun initialiseView() {
@@ -132,7 +131,6 @@ class AllMusicFragment : Fragment() {
                     }
                     1 -> {
                         showCreateNewPlayListDialog()
-                        Log.d("all", "$id")
                         this.dismiss()
                     }
                 }
@@ -151,7 +149,7 @@ class AllMusicFragment : Fragment() {
     }
 
     private fun openChoosePlayLists(musicId: Int, view: View) {
-        viewModel.fetchAllPlayList()
+        viewModel.fetchAllPlayListTitle()
         dialogAdapter = PlayListDialogAdapter(::onPlayListDialogClick, musicId)
         val playLists = ArrayAdapter(requireContext(),
                 R.layout.popup_menu_item,
@@ -171,7 +169,6 @@ class AllMusicFragment : Fragment() {
             )
             setOnItemClickListener { _, _, position, _ ->
                 onPlayListDialogClick(position = position + 1, musicPosition = musicId)
-                Log.d("all add", position.toString())
                 dismiss()
             }
 
@@ -238,7 +235,8 @@ class AllMusicFragment : Fragment() {
         }
         musicAdapter.submitList(ArrayList(state.musicItems))
         val number = state.musicItems.size
-        binding.allFragmentNumberTv.text = "$number songs"
+        binding.allFragmentNumberTv.text = "$number song" +
+                if (number == 0 || number == 1)"" else "s"
 
         loadCoverImage(
                 if (state.musicItems.isEmpty()) null

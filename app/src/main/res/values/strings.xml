@@ -28,5 +28,6 @@
     <string name="playlist_back_tv">showLists</string>
     <string name="remove_music_popup_menu">Remove From PlayList</string>
     <string name="remove_successfully_toast">Music Removed From PlayList SuccessFully</string>
+    <string name="no_playlist_toast">There are no PlayLists, Please create one</string>
 
 </resources>

@@ -44,20 +44,6 @@
         app:layout_constraintBottom_toBottomOf="@id/playListMusicTitleTv"
         app:layout_constraintStart_toEndOf="@id/playListMusicTitleTv" />
 
-    <TextView
-        android:id="@+id/playListMusicBackTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:fontFamily="@font/roboto"
-        android:paddingBottom="3dp"
-        android:text="@string/playlist_back_tv"
-        android:textColor="@color/gray"
-        android:textSize="14sp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@id/playListMusicTitleTv"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playListMusicRecycler"
         android:layout_width="match_parent"

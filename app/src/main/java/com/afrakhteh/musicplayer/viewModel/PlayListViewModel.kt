@@ -3,10 +3,10 @@ package com.afrakhteh.musicplayer.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.afrakhteh.musicplayer.model.entity.db.PlayListEntity
 import com.afrakhteh.musicplayer.model.repository.playList.PlayListRepository
 import com.afrakhteh.musicplayer.model.useCase.playList.DeleteOnePlayListUseCase
 import com.afrakhteh.musicplayer.model.useCase.playList.GetAllPlayListUseCase
+import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.views.main.state.PlayListState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,9 +23,11 @@ class PlayListViewModel @Inject constructor(
     private var playListJob: Job? = null
     private var deletePlayListJob: Job? = null
 
-
     private val pState = MutableLiveData<PlayListState>()
     val state: LiveData<PlayListState> get() = pState
+
+    private val pDeletePlayList = MutableLiveData<SingleEvent<Boolean>>()
+    val deletePlayList: LiveData<SingleEvent<Boolean>> get() = pDeletePlayList
 
     fun fetchAllPlayList() {
         playListJob = CoroutineScope(Dispatchers.IO).launch {
@@ -35,9 +37,10 @@ class PlayListViewModel @Inject constructor(
         }
     }
 
-    fun deleteSelectedPlayList(item: PlayListEntity) {
+    fun deleteSelectedPlayList(id: Int) {
         deletePlayListJob = CoroutineScope(Dispatchers.Main).launch {
-            deleteOnePlayListUseCase.invoke(item)
+            pDeletePlayList.postValue(SingleEvent(true))
+            deleteOnePlayListUseCase.invoke(id)
         }
     }
 

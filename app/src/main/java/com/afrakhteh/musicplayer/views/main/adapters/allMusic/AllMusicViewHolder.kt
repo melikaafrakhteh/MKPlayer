@@ -1,6 +1,7 @@
 package com.afrakhteh.musicplayer.views.main.adapters.allMusic
 
 import android.content.Context
+import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.recyclerview.widget.RecyclerView
@@ -24,10 +25,10 @@ class AllMusicViewHolder(
 
     fun bind(data: MusicEntity,
              click: (Int) -> Unit,
-             addToPlayList: (Int) -> Unit,
+             addToPlayList: (Int, View) -> Unit,
              delete: (Int) -> Unit) {
         with(binding) {
-            musicItemRowImageIv.setImageDrawable(null)
+            musicItemRowImageIv.setImageBitmap(null)
             musicItemRowLinear.setOnClickListener { click.invoke(absoluteAdapterPosition) }
             musicItemRowNameTv.text = data.name
             musicItemRowSingerTv.text = data.artist
@@ -36,7 +37,7 @@ class AllMusicViewHolder(
                 listPopupWindow.apply {
                     setOnItemClickListener { _, _, position, _ ->
                         when (position) {
-                            0 -> addToPlayList.invoke(absoluteAdapterPosition)
+                            0 -> addToPlayList.invoke(absoluteAdapterPosition, it)
                             1 -> delete.invoke(absoluteAdapterPosition)
                         }
                         this.dismiss()
@@ -68,7 +69,7 @@ class AllMusicViewHolder(
             repository.getMusicArtPicture(path).let { artMusicBytes ->
                 if (artMusicBytes == null) {
                     withContext(Dispatchers.Main) {
-                        binding.musicItemRowImageIv.setImageResource(R.drawable.dog)
+                        binding.musicItemRowImageIv.setImageResource(R.drawable.emptypic)
                         return@withContext
                     }
                     return@let

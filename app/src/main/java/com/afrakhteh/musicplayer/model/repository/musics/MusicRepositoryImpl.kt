@@ -92,8 +92,12 @@ class MusicRepositoryImpl @Inject constructor(
         dao.addMusicToPlayList(item)
     }
 
-    override suspend fun removeMusicFromPlayList(item: AllMusicsEntity) {
-        dao.deleteMusicFromPlayList(item)
+    override suspend fun removeMusicFromPlayList(path: String) {
+        dao.deleteMusicFromPlayList(path)
+    }
+
+    override suspend fun getAllPlayListTitle(): List<String> {
+       return dao.getAllPlayListTitle()
     }
 
     private fun checkValidMusicPath(path: String): Boolean {

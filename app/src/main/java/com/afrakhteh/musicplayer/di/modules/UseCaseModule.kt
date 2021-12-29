@@ -82,5 +82,9 @@ class UseCaseModule {
         return GetPlayListWithMusicsUseCase(repository)
     }
 
-
+    @UseCaseScope
+    @Provides
+    fun provideGetAllPlayListTitleUseCase(repository: MusicRepository): GetAllPlayListTitlesUseCase{
+        return GetAllPlayListTitlesUseCase(repository)
+    }
 }

@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.afrakhteh.musicplayer.constant.Strings
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PreferenceManagerImpl @Inject constructor(
         context: Context
 ) : PreferenceManager {

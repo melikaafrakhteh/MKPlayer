@@ -30,7 +30,7 @@ class RecentlyViewHolder(
             repository.getMusicArtPicture(path).let { artAlbumByteArray ->
                 if (artAlbumByteArray == null) {
                     withContext(Dispatchers.Main) {
-                        binding.musicItemRowImageIv.setImageResource(R.drawable.dog)
+                        binding.musicItemRowImageIv.setImageResource(R.drawable.emptypic)
                         return@withContext
                     }
                     return@let

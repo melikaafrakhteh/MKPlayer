@@ -148,7 +148,7 @@ class PlayerNotificationHelper(
     }
 
     private fun getPlaceHolder(): Bitmap {
-        return BitmapFactory.decodeResource(resources, R.drawable.dog).resize()
+        return BitmapFactory.decodeResource(resources, R.drawable.emptypic).resize()
     }
 
     fun cancelNotification() {

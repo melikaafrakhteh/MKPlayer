@@ -5,7 +5,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.MusicItemRowBinding
-import com.afrakhteh.musicplayer.model.entity.db.AllMusicsEntity
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.util.resize
 import com.afrakhteh.musicplayer.util.toBitmap
@@ -20,9 +20,9 @@ class PlayListWithMusicsViewHolder(
     private var albumArtJob: Job? = null
 
     fun bind(
-            data: AllMusicsEntity,
-            onClick: (Int) -> Unit,
-            onRemoveMusic: (AllMusicsEntity) -> Unit
+        data: MusicEntity,
+        onClick: (Int) -> Unit,
+        onRemoveMusic: (Int) -> Unit
     ) {
         binding.apply {
             musicItemRowImageMenuIv.setImageDrawable(null)
@@ -33,7 +33,7 @@ class PlayListWithMusicsViewHolder(
                 PopupMenu(context, it).run {
                     menuInflater.inflate(R.menu.remove_popup_menu, menu)
                     setOnMenuItemClickListener {
-                        onRemoveMusic.invoke(data)
+                        onRemoveMusic.invoke(absoluteAdapterPosition)
                         true
                     }
                     show()
@@ -47,7 +47,7 @@ class PlayListWithMusicsViewHolder(
             musicRepository.getMusicArtPicture(path).let {
                 if (it == null) {
                     withContext(Dispatchers.Main) {
-                        binding.musicItemRowImageIv.setImageResource(R.drawable.dog)
+                        binding.musicItemRowImageIv.setImageResource(R.drawable.emptypic)
                         return@withContext
                     }
                     return@let

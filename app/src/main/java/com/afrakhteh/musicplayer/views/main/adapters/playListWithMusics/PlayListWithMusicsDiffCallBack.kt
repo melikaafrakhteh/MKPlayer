@@ -1,19 +1,19 @@
 package com.afrakhteh.musicplayer.views.main.adapters.playListWithMusics
 
 import androidx.recyclerview.widget.DiffUtil
-import com.afrakhteh.musicplayer.model.entity.db.AllMusicsEntity
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 
-class PlayListWithMusicsDiffCallBack : DiffUtil.ItemCallback<AllMusicsEntity>() {
+class PlayListWithMusicsDiffCallBack : DiffUtil.ItemCallback<MusicEntity>() {
     override fun areItemsTheSame(
-            oldItem: AllMusicsEntity,
-            newItem: AllMusicsEntity
+            oldItem: MusicEntity,
+            newItem: MusicEntity
     ): Boolean {
-        return oldItem.musicId == newItem.musicId
+        return oldItem.index == newItem.index
     }
 
     override fun areContentsTheSame(
-            oldItem: AllMusicsEntity,
-            newItem: AllMusicsEntity
+            oldItem: MusicEntity,
+            newItem: MusicEntity
     ): Boolean {
         return oldItem == newItem
     }

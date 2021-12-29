@@ -137,7 +137,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun getLastVolume() {
-        volumeSharedPref = PreferenceManagerImpl(this)
+        volumeSharedPref = PreferenceManagerImpl(applicationContext)
         val lastVolume = volumeSharedPref?.readVolumeSharedPref(Strings.VOLUME_SHARED_KEY)!!
         if (lastVolume == -1f) {
             binding.playVolumeProgressBar.progress = 30
