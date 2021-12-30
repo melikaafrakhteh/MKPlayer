@@ -5,6 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ListAdapter
+import com.afrakhteh.musicplayer.constant.Numerals
+import com.afrakhteh.musicplayer.util.toPx
+import kotlin.math.max
+
 
 fun ListAdapter.measureContentWidth(context: Context): Int {
     var itemType = 0
@@ -37,5 +41,5 @@ fun ListAdapter.measureContentWidth(context: Context): Int {
             maxWidth = itemWidth
         }
     }
-    return maxWidth
+    return max(maxWidth, Numerals.MAX_POPUP_DIALOG.toPx)
 }

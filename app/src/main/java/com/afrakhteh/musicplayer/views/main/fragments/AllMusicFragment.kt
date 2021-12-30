@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -162,11 +161,6 @@ class AllMusicFragment : Fragment() {
                     Toast.LENGTH_LONG).show()
         }
         setUpPopUpMenu(playLists, view).apply {
-            setBackgroundDrawable(
-                    ContextCompat.getDrawable(
-                            requireContext(),
-                            R.drawable.choose_playlist_dialog_shape)
-            )
             setOnItemClickListener { _, _, position, _ ->
                 onPlayListDialogClick(position = position + 1, musicPosition = musicId)
                 dismiss()
