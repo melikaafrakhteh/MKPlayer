@@ -18,6 +18,7 @@ import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.viewModel.RecentlyAddedViewModel
 import com.afrakhteh.musicplayer.views.main.adapters.recently.RecentlyAdapter
+import com.afrakhteh.musicplayer.views.main.interfaces.PermissionController
 import com.afrakhteh.musicplayer.views.main.state.MusicState
 import com.afrakhteh.musicplayer.views.musicPlayer.PlayerActivity
 import javax.inject.Inject
@@ -48,11 +49,6 @@ class RecentlyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val isPermissionGranted = arguments?.getBoolean(Strings.CHECK_PERMISSION_NOTIFY_RECENTLY_KEY)
-        if (isPermissionGranted != null) {
-            onPermissionGranted(isPermissionGranted)
-        }
-
         recentlyAdapter = RecentlyAdapter(::onItemClicked, viewModel.repository)
         binding.recentlyFragmentRecycler.adapter = recentlyAdapter
         viewModel.recentlyAddedState.observe(viewLifecycleOwner, ::onItemRecentlyAdded)
@@ -60,7 +56,14 @@ class RecentlyFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchRecentlyAddedMusic()
+        (requireActivity() as PermissionController).apply {
+            setOnPermissionRequestCallBack(this@RecentlyFragment::onPermissionGranted)
+            if (hasPermission()) {
+                viewModel.fetchRecentlyAddedMusic()
+            } else {
+                requestPermission()
+            }
+        }
     }
 
     private fun onPermissionGranted(permission: Boolean) {

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -110,7 +109,6 @@ class MainActivity : AppCompatActivity(), PermissionController, MainCoverControl
                 //permission granted
                 permissionRequestCallBack.invoke(true)
             } else {
-                Toast.makeText(context, "deny", Toast.LENGTH_LONG).show()
                 permissionRequestCallBack.invoke(false)
             }
         }

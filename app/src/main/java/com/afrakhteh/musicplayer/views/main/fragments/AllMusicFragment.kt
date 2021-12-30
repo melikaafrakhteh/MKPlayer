@@ -70,6 +70,10 @@ class AllMusicFragment : Fragment() {
         initialiseView()
         initialiseViewModel()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         (requireActivity() as PermissionController).apply {
             setOnPermissionRequestCallBack(this@AllMusicFragment::onPermissionGranted)
             if (hasPermission()) {
@@ -78,10 +82,6 @@ class AllMusicFragment : Fragment() {
                 requestPermission()
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
         viewModel.fetchAllPlayListTitle()
     }
 
@@ -253,7 +253,6 @@ class AllMusicFragment : Fragment() {
 
     private fun onPermissionGranted(permission: Boolean) {
         if (permission) {
-            notifyRecentlyIfPermissionIsGranted(permission)
             viewModel.fetchAllMusic()
         } else {
             Toast.makeText(requireContext(), getString(R.string.deny_message), Toast.LENGTH_LONG)
@@ -261,10 +260,4 @@ class AllMusicFragment : Fragment() {
         }
     }
 
-    private fun notifyRecentlyIfPermissionIsGranted(permission: Boolean) {
-        val bundle = Bundle().apply {
-            putBoolean(Strings.CHECK_PERMISSION_NOTIFY_RECENTLY_KEY, permission)
-        }
-        RecentlyFragment().arguments = bundle
-    }
 }
