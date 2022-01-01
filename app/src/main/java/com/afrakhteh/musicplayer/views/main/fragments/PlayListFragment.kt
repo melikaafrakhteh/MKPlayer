@@ -78,9 +78,10 @@ class PlayListFragment : Fragment() {
     private fun onItemClick(position: Int) {
         val fragment = PlayListMusicsFragment()
         val bundle = Bundle().apply {
-            putInt(Strings.PLAY_LIST_POSITION_KEY, position)
+            putInt(Strings.PLAY_LIST_POSITION_KEY,
+                    requireNotNull(playListAdapter.currentList[position].id))
             putString(Strings.PLAY_LIST_NAME_KEY,
-                    playListAdapter.currentList[position - 1].title
+                    playListAdapter.currentList[position].title
             )
         }
         fragment.arguments = bundle
@@ -89,8 +90,6 @@ class PlayListFragment : Fragment() {
                 .replace(R.id.playListContainer, fragment)
                 .addToBackStack(null)
                 .setReorderingAllowed(true) // optimizing operations within and across transactions
-                //  .detach(this)
-                //  .attach(fragment)
                 .commit()
     }
 

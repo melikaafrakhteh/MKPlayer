@@ -30,13 +30,13 @@ class PlayListViewHolder(
         binding.apply {
             musicItemRowImageIv.setImageResource(R.drawable.emptypic)
             musicItemRowNameTv.text = data.title
-            musicItemRowLinear.setOnClickListener { onclick.invoke(data.id!!) }
-            musicItemRowImageMenuIv.setOnClickListener {makePopUpMenu(it, data.id!!, onDelete)}
+            musicItemRowLinear.setOnClickListener { onclick.invoke(absoluteAdapterPosition) }
+            musicItemRowImageMenuIv.setOnClickListener { makePopUpMenu(it, absoluteAdapterPosition, onDelete) }
 
             //for play list it shows number of musics in play list instead of singer
             numberOfSongsJob = CoroutineScope(Dispatchers.Main).launch {
                 val number = findNumberOfPlayListSongs(data.id!!)
-                    musicItemRowSingerTv.text = "$number song" + if(number == 1) "" else "s"
+                musicItemRowSingerTv.text = "$number song" + if (number == 1) "" else "s"
             }
         }
     }
