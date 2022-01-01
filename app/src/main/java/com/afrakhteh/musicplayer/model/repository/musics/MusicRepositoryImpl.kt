@@ -97,7 +97,11 @@ class MusicRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAllPlayListTitle(): List<String> {
-       return dao.getAllPlayListTitle()
+        return dao.getAllPlayListTitle()
+    }
+
+    override suspend fun increasePlayListSize(playListId: Int) {
+        dao.increasePlayListSize(playListId)
     }
 
     private fun checkValidMusicPath(path: String): Boolean {

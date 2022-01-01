@@ -24,7 +24,10 @@ interface PlayListDao {
     suspend fun getAllPlayLists(): List<PlayListEntity>
 
     @Query("SELECT title FROM PlayListEntity")
-    suspend fun getAllPlayListTitle() : List<String>
+    suspend fun getAllPlayListTitle(): List<String>
+
+    @Query("UPDATE PlayListEntity SET size = (size + 1) WHERE playListId= :playListId")
+    suspend fun increasePlayListSize(playListId: Int)
 
     @Transaction
     @Query("SELECT * FROM PlayListEntity WHERE playListId = :playListId")

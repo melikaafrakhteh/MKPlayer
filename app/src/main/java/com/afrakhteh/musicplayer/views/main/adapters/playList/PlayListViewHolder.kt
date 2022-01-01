@@ -9,18 +9,12 @@ import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.MusicItemRowBinding
 import com.afrakhteh.musicplayer.model.entity.audio.AllPlayListEntity
 import com.afrakhteh.musicplayer.model.repository.playList.PlayListRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 class PlayListViewHolder(
         val binding: MusicItemRowBinding,
         val context: Context,
         val repository: PlayListRepository
 ) : RecyclerView.ViewHolder(binding.root) {
-
-    private var numberOfSongsJob: Job? = null
 
     @SuppressLint("SetTextI18n")
     fun bind(
@@ -34,10 +28,9 @@ class PlayListViewHolder(
             musicItemRowImageMenuIv.setOnClickListener { makePopUpMenu(it, absoluteAdapterPosition, onDelete) }
 
             //for play list it shows number of musics in play list instead of singer
-            numberOfSongsJob = CoroutineScope(Dispatchers.Main).launch {
-                val number = findNumberOfPlayListSongs(data.id!!)
+                val number = data.size
                 musicItemRowSingerTv.text = "$number song" + if (number == 1) "" else "s"
-            }
+
         }
     }
 
@@ -50,14 +43,6 @@ class PlayListViewHolder(
             }
             show()
         }
-    }
-
-    private suspend fun findNumberOfPlayListSongs(id: Int): Int {
-        return repository.getPlayListWithMusics(id).firstOrNull()?.musicList?.size!!
-    }
-
-    fun diAttachNumberOfSongsJob() {
-        numberOfSongsJob?.cancel()
     }
 
 }

@@ -7,5 +7,6 @@ import javax.inject.Inject
 class AddMusicToPlayListUseCase @Inject constructor(private val repository: MusicRepository) {
     suspend operator fun invoke(item: AllMusicsEntity) {
         repository.addMusicToPlayList(item)
+        repository.increasePlayListSize(item.playListId)
     }
 }

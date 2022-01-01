@@ -21,9 +21,4 @@ class PlayListAdapter(
     override fun onBindViewHolder(holder: PlayListViewHolder, position: Int) {
         holder.bind(getItem(position), onClick, onDeletePlayListClick)
     }
-
-    override fun onViewDetachedFromWindow(holder: PlayListViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        holder.diAttachNumberOfSongsJob()
-    }
 }

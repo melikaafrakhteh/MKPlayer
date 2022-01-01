@@ -10,7 +10,11 @@ class GetPlayListWithMusicsUseCase @Inject constructor(private val repository: P
     suspend operator fun invoke(id: Int): List<MusicsOfAPlayList> {
         return repository.getPlayListWithMusics(id).map {
             MusicsOfAPlayList(
-                    playList = AllPlayListEntity(it.playList.playListId, it.playList.title),
+                    playList = AllPlayListEntity(
+                            it.playList.playListId,
+                            it.playList.title,
+                            it.playList.size
+                    ),
                     musicList = it.musicList.map { allMusic ->
                         MusicEntity(
                                 name = allMusic.name,

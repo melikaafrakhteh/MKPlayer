@@ -10,7 +10,8 @@ class GetAllPlayListUseCase @Inject constructor(private val repository: PlayList
         return result.map { playList ->
             AllPlayListEntity(
                     id = playList.playListId,
-                    title = playList.title
+                    title = playList.title,
+                    size = playList.size
             )
         }
     }

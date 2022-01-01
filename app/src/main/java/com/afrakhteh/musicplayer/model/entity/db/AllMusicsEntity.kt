@@ -1,11 +1,9 @@
 package com.afrakhteh.musicplayer.model.entity.db
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity
+@Entity(primaryKeys = ["musicId", "playListId"])
 data class AllMusicsEntity(
-        @PrimaryKey
         val musicId: Int,
         val path: String,
         val name: String,
