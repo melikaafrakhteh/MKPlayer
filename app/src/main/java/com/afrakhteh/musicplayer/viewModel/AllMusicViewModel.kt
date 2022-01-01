@@ -10,6 +10,7 @@ import com.afrakhteh.musicplayer.model.entity.db.PlayListEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.model.useCase.playList.AddMusicToPlayListUseCase
 import com.afrakhteh.musicplayer.model.useCase.playList.AddNewPlayListUseCase
+import com.afrakhteh.musicplayer.model.useCase.playList.FindMusicPlayListIdUseCase
 import com.afrakhteh.musicplayer.model.useCase.playList.GetAllPlayListTitlesUseCase
 import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.views.main.state.MusicState
@@ -23,7 +24,8 @@ class AllMusicViewModel @Inject constructor(
         var repository: MusicRepository,
         private var addNewPlayListUseCase: AddNewPlayListUseCase,
         private var getAllPlayListTitle: GetAllPlayListTitlesUseCase,
-        private var addMusicToPlayListUseCase: AddMusicToPlayListUseCase
+        private var addMusicToPlayListUseCase: AddMusicToPlayListUseCase,
+        private var findMusicPlayListIdUseCase: FindMusicPlayListIdUseCase
 ) : ViewModel() {
     private val pState = MutableLiveData(MusicState())
     val state: LiveData<MusicState> get() = pState
@@ -61,12 +63,21 @@ class AllMusicViewModel @Inject constructor(
         }
     }
 
-    suspend fun createANewPlayList(item: AllPlayListEntity) {
+    suspend fun createANewPlayList(item: AllPlayListEntity, music: MusicEntity) {
         addNewPlayListUseCase.invoke(
                 PlayListEntity(
-                        playListId = item.id?: 0,
-                        title = item.title?:""
-                ))
+                        playListId = item.id,
+                        title = item.title ?: "",
+                        size = item.size
+                ),
+                AllMusicsEntity(
+                        musicId = music.index,
+                        path = music.path,
+                        artist = music.artist ?: "",
+                        name = music.name ?: "",
+                        playListId = findMusicPlayListIdUseCase.invoke()
+                )
+        )
     }
 
       fun fetchAllPlayListTitle() {

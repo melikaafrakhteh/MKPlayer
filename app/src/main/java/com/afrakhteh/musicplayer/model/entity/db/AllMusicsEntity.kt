@@ -8,5 +8,5 @@ data class AllMusicsEntity(
         val path: String,
         val name: String,
         val artist: String,
-        val playListId: Int
+        val playListId: Int = 1
 )

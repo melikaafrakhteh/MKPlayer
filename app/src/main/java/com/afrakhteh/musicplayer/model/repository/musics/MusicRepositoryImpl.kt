@@ -104,6 +104,14 @@ class MusicRepositoryImpl @Inject constructor(
         dao.increasePlayListSize(playListId)
     }
 
+    override suspend fun findPlayListId(): Int {
+        return dao.findPlayListId()
+    }
+
+    override suspend fun findFirstPlayListId(): Int {
+        return dao.findFirstPlayListId()
+    }
+
     private fun checkValidMusicPath(path: String): Boolean {
         return (path.endsWith(".aac", ignoreCase = true)
                 || path.endsWith(".mp3", ignoreCase = true)

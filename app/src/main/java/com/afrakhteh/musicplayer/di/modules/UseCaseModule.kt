@@ -58,8 +58,9 @@ class UseCaseModule {
 
     @UseCaseScope
     @Provides
-    fun provideAddNewPlayList(repository: PlayListRepository): AddNewPlayListUseCase {
-        return AddNewPlayListUseCase(repository)
+    fun provideAddNewPlayList(repository: PlayListRepository,
+                              musicRepository: MusicRepository): AddNewPlayListUseCase {
+        return AddNewPlayListUseCase(repository, musicRepository)
     }
 
     @UseCaseScope
@@ -84,7 +85,13 @@ class UseCaseModule {
 
     @UseCaseScope
     @Provides
-    fun provideGetAllPlayListTitleUseCase(repository: MusicRepository): GetAllPlayListTitlesUseCase{
+    fun provideGetAllPlayListTitleUseCase(repository: MusicRepository): GetAllPlayListTitlesUseCase {
         return GetAllPlayListTitlesUseCase(repository)
+    }
+
+    @UseCaseScope
+    @Provides
+    fun provideFindPlayListIdUseCase(repository: MusicRepository): FindMusicPlayListIdUseCase {
+        return FindMusicPlayListIdUseCase(repository)
     }
 }

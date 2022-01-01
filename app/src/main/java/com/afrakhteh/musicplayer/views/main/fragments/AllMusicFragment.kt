@@ -125,7 +125,7 @@ class AllMusicFragment : Fragment() {
             setOnItemClickListener { _, _, position, _ ->
 
                 if (viewModel.playListTitle.value.isNullOrEmpty()) {
-                    showCreateNewPlayListDialog()
+                    showCreateNewPlayListDialog(musicPosition)
                     this.dismiss()
                     return@setOnItemClickListener
                 }
@@ -136,7 +136,7 @@ class AllMusicFragment : Fragment() {
                         this.dismiss()
                     }
                     1 -> {
-                        showCreateNewPlayListDialog()
+                        showCreateNewPlayListDialog(musicPosition)
                         this.dismiss()
                     }
                 }
@@ -181,11 +181,12 @@ class AllMusicFragment : Fragment() {
                 getString(R.string.added_playList_toast), Toast.LENGTH_LONG).show()
     }
 
-    private fun showCreateNewPlayListDialog() {
+    private fun showCreateNewPlayListDialog(musicPosition: Int) {
         CreatePlayListDialog { playListName ->
             lifecycleScope.launch {
                 viewModel.createANewPlayList(
-                        AllPlayListEntity(title = playListName)
+                        AllPlayListEntity(title = playListName),
+                        musicAdapter.currentList[musicPosition]
                 )
                 Toast.makeText(context,
                         getString(R.string.created_playList_toast), Toast.LENGTH_LONG).show()

@@ -14,4 +14,6 @@ interface MusicRepository {
     suspend fun removeMusicFromPlayList(path: String)
     suspend fun getAllPlayListTitle(): List<String>
     suspend fun increasePlayListSize(playListId: Int)
+    suspend fun findPlayListId(): Int
+    suspend fun findFirstPlayListId(): Int
 }
