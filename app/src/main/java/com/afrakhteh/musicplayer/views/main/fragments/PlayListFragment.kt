@@ -18,7 +18,6 @@ import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.viewModel.PlayListViewModel
 import com.afrakhteh.musicplayer.views.main.adapters.playList.PlayListAdapter
 import com.afrakhteh.musicplayer.views.main.customs.DeleteItemsDialog
-import com.afrakhteh.musicplayer.views.main.interfaces.OnDeleteItemSelectedListener
 import com.afrakhteh.musicplayer.views.main.state.PlayListState
 import javax.inject.Inject
 
@@ -68,14 +67,11 @@ class PlayListFragment : Fragment() {
     }
 
     private fun onMenuItemClick(position: Int) {
-        val delete = object : OnDeleteItemSelectedListener {
-            override fun isItemDeleted() {
-                viewModel.deleteSelectedPlayList(position)
-                Toast.makeText(context,
-                        getString(R.string.delete_playList_toast), Toast.LENGTH_LONG).show()
-            }
+        DeleteItemsDialog {
+            viewModel.deleteSelectedPlayList(position)
+            Toast.makeText(context,
+                    getString(R.string.delete_playList_toast), Toast.LENGTH_LONG).show()
         }
-        DeleteItemsDialog(delete)
                 .show(requireActivity().supportFragmentManager, "delete playlist")
     }
 
@@ -105,7 +101,7 @@ class PlayListFragment : Fragment() {
         }
         playListAdapter.submitList(ArrayList(playListState.playLists))
         val playListSize = playListState.playLists.size
-        binding.playListFragmentNumberTv.text = "$playListSize playList"+
+        binding.playListFragmentNumberTv.text = "$playListSize playList" +
                 if (playListSize == 1 || playListSize == 0) "" else "s"
     }
 }

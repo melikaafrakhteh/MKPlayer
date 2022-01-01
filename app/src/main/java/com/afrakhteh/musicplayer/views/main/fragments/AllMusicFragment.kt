@@ -28,8 +28,6 @@ import com.afrakhteh.musicplayer.views.main.adapters.allMusic.dialog.PlayListDia
 import com.afrakhteh.musicplayer.views.main.customs.CreatePlayListDialog
 import com.afrakhteh.musicplayer.views.main.customs.DeleteItemsDialog
 import com.afrakhteh.musicplayer.views.main.interfaces.MainCoverController
-import com.afrakhteh.musicplayer.views.main.interfaces.OnCreateDialogPlayListNameSelectedListener
-import com.afrakhteh.musicplayer.views.main.interfaces.OnDeleteItemSelectedListener
 import com.afrakhteh.musicplayer.views.main.interfaces.PermissionController
 import com.afrakhteh.musicplayer.views.main.state.MusicState
 import com.afrakhteh.musicplayer.views.musicPlayer.PlayerActivity
@@ -102,13 +100,10 @@ class AllMusicFragment : Fragment() {
     }
 
     private fun showRemoveMusicItemConfirmDialog(item: MusicEntity) {
-        val onDeleteItem = object : OnDeleteItemSelectedListener {
-            override fun isItemDeleted() {
-                viewModel.deleteMusicFromList(item)
-                Toast.makeText(context, R.string.delete_item_message, Toast.LENGTH_LONG).show()
-            }
-        }
-        DeleteItemsDialog(onDeleteItem).show(requireActivity().supportFragmentManager, "delete")
+        DeleteItemsDialog {
+            viewModel.deleteMusicFromList(item)
+            Toast.makeText(context, R.string.delete_item_message, Toast.LENGTH_LONG).show()
+        }.show(requireActivity().supportFragmentManager, "delete")
     }
 
     private fun onMusicAddToPlayListClicked(musicPosition: Int, view: View) {
@@ -119,10 +114,22 @@ class AllMusicFragment : Fragment() {
         val menuListAdapter = ArrayAdapter(
                 requireContext(),
                 R.layout.popup_menu_item,
-                Lists.POPUP_MENU_ITEMS_CHOOSE_PLAY_LIST
+                if (viewModel.playListTitle.value.isNullOrEmpty()) {
+                    Lists.POPUP_MENU_ITEMS_CHOOSE_PLAY_LIST_IF_EMPTY
+                } else {
+                    Lists.POPUP_MENU_ITEMS_CHOOSE_PLAY_LIST
+                }
         )
+
         setUpPopUpMenu(menuListAdapter, view).apply {
             setOnItemClickListener { _, _, position, _ ->
+
+                if (viewModel.playListTitle.value.isNullOrEmpty()) {
+                    showCreateNewPlayListDialog()
+                    this.dismiss()
+                    return@setOnItemClickListener
+                }
+
                 when (position) {
                     0 -> {
                         openChoosePlayLists(musicPosition, view)
@@ -154,12 +161,6 @@ class AllMusicFragment : Fragment() {
                 R.layout.popup_menu_item,
                 viewModel.playListTitle.value as MutableList<String>)
 
-        if (playLists.isEmpty) {
-            Toast.makeText(
-                    requireContext(),
-                    getString(R.string.no_playlist_toast),
-                    Toast.LENGTH_LONG).show()
-        }
         setUpPopUpMenu(playLists, view).apply {
             setOnItemClickListener { _, _, position, _ ->
                 onPlayListDialogClick(position = position + 1, musicPosition = musicId)
@@ -181,19 +182,17 @@ class AllMusicFragment : Fragment() {
     }
 
     private fun showCreateNewPlayListDialog() {
-        val onNameSelect = object : OnCreateDialogPlayListNameSelectedListener {
-            override fun onPlayListNameSelected(name: String) {
-                lifecycleScope.launch {
-                    viewModel.createANewPlayList(
-                            AllPlayListEntity(title = name)
-                    )
-                    Toast.makeText(context,
-                            getString(R.string.created_playList_toast), Toast.LENGTH_LONG).show()
-                    //openChoosePlayLists(playListPosition)
-                }
+        CreatePlayListDialog { playListName ->
+            lifecycleScope.launch {
+                viewModel.createANewPlayList(
+                        AllPlayListEntity(title = playListName)
+                )
+                Toast.makeText(context,
+                        getString(R.string.created_playList_toast), Toast.LENGTH_LONG).show()
+                //openChoosePlayLists(playListPosition)
             }
         }
-        CreatePlayListDialog(onNameSelect).show(requireActivity().supportFragmentManager, "create")
+                .show(requireActivity().supportFragmentManager, "create")
     }
 
     private fun onMusicItemClicked(position: Int) {
@@ -230,7 +229,7 @@ class AllMusicFragment : Fragment() {
         musicAdapter.submitList(ArrayList(state.musicItems))
         val number = state.musicItems.size
         binding.allFragmentNumberTv.text = "$number song" +
-                if (number == 0 || number == 1)"" else "s"
+                if (number == 0 || number == 1) "" else "s"
 
         loadCoverImage(
                 if (state.musicItems.isEmpty()) null

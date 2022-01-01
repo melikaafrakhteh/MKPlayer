@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.PlaylistCreateNewDialogBinding
-import com.afrakhteh.musicplayer.views.main.interfaces.OnCreateDialogPlayListNameSelectedListener
 
 class CreatePlayListDialog(
-        private val onInputSelected: OnCreateDialogPlayListNameSelectedListener
+        private val onInputSelected: (String) -> Unit
 ) : DialogFragment() {
 
     private lateinit var binding: PlaylistCreateNewDialogBinding
@@ -40,9 +40,14 @@ class CreatePlayListDialog(
             newPlayListCreateDialogCancelTv.setOnClickListener { dialog?.dismiss() }
             newPlayListCreateDialogOkTv.setOnClickListener {
                 val input = newPlayListCreateDialogET.text.toString().trim()
-                if (input.isNotEmpty()) {
-                    onInputSelected.onPlayListNameSelected(input)
+                if (input.isEmpty()) {
+                    Toast.makeText(
+                            requireContext(),
+                            getString(R.string.empty_playlist_name_msg),
+                            Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
                 }
+                onInputSelected.invoke(input)
                 dialog?.dismiss()
             }
         }

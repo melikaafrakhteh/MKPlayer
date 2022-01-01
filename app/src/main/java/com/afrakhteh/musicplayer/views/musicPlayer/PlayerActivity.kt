@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -20,12 +21,11 @@ import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.constant.Lists
 import com.afrakhteh.musicplayer.constant.Strings
 import com.afrakhteh.musicplayer.databinding.ActivityPlayerBinding
-import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
+import com.afrakhteh.musicplayer.di.builders.PlayerActivityComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.model.entity.wave.WaveItemModel
 import com.afrakhteh.musicplayer.model.entity.wave.WaveModel
 import com.afrakhteh.musicplayer.model.sharedPrefrences.PreferenceManager
-import com.afrakhteh.musicplayer.model.sharedPrefrences.PreferenceManagerImpl
 import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.util.getScreenSize
 import com.afrakhteh.musicplayer.util.resize
@@ -42,6 +42,9 @@ import javax.inject.Inject
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
+
+    @Inject
+    lateinit var sharedPreferences: PreferenceManager
 
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
@@ -81,7 +84,7 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewModelComponentBuilder.getInstance().inject(this)
+        PlayerActivityComponentBuilder.getInstance().inject(this)
 
         viewModel.apply {
             getMusicArtPicture()
@@ -137,8 +140,8 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun getLastVolume() {
-        volumeSharedPref = PreferenceManagerImpl(applicationContext)
-        val lastVolume = volumeSharedPref?.readVolumeSharedPref(Strings.VOLUME_SHARED_KEY)!!
+        val lastVolume = sharedPreferences.readVolumeSharedPref(Strings.VOLUME_SHARED_KEY) // returns -1
+        Log.d("lastvol", "$lastVolume")
         if (lastVolume == -1f) {
             binding.playVolumeProgressBar.progress = 30
             audioPlayerService?.setVolume(30f)
@@ -175,10 +178,12 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun saveVolumeValue(percent: Float) {
-        val volume = volumeSharedPref?.readVolumeSharedPref(Strings.VOLUME_SHARED_KEY)
+        val volume = volumeSharedPref?.readVolumeSharedPref(Strings.VOLUME_SHARED_KEY) // returns null
+        Log.d("volume", "$volume")
         if (volume != percent) {
             volumeSharedPref?.writeVolumeSharedPref(percent)
         }
+        Log.d("percent", "$percent")
     }
 
     private fun changeVolumeIcon(percent: Float) {

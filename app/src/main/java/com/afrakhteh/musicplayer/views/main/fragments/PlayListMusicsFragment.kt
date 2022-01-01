@@ -19,7 +19,6 @@ import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.viewModel.PlayListMusicsViewModel
 import com.afrakhteh.musicplayer.views.main.adapters.playListWithMusics.PlayListWithMusicsAdapter
 import com.afrakhteh.musicplayer.views.main.customs.DeleteItemsDialog
-import com.afrakhteh.musicplayer.views.main.interfaces.OnDeleteItemSelectedListener
 import com.afrakhteh.musicplayer.views.musicPlayer.PlayerActivity
 import javax.inject.Inject
 
@@ -63,21 +62,19 @@ class PlayListMusicsFragment : Fragment() {
     }
 
     private fun onRemoveItemClick(musicPosition: Int) {
-        val delete = object : OnDeleteItemSelectedListener{
-            override fun isItemDeleted() {
-                viewModel.deleteOneMusicFromPlayList(playListAdapter.currentList[musicPosition].path)
-                Toast.makeText(context,
-                        getString(R.string.remove_successfully_toast), Toast.LENGTH_LONG).show()
-                viewModel.fetchMusicOfThisPlayList(requireNotNull(position))
-            }
-        }
-        DeleteItemsDialog(delete).show(requireActivity().supportFragmentManager,"delete One Music")
+
+        DeleteItemsDialog {
+            viewModel.deleteOneMusicFromPlayList(playListAdapter.currentList[musicPosition].path)
+            Toast.makeText(context,
+                    getString(R.string.remove_successfully_toast), Toast.LENGTH_LONG).show()
+            viewModel.fetchMusicOfThisPlayList(requireNotNull(position))
+        }.show(requireActivity().supportFragmentManager, "delete One Music")
     }
 
 
     private fun renderPlayerList(list: List<MusicEntity>?) {
         playListAdapter.submitList(list)
-        binding.playListMusicNumberTv.text = if(list?.size == null) "0 song" else "${list.size} songs"
+        binding.playListMusicNumberTv.text = if (list?.size == null) "0 song" else "${list.size} songs"
     }
 
     private fun onItemClick(position: Int) {

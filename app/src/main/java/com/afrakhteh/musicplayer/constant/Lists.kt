@@ -45,4 +45,8 @@ object Lists {
             "Add To Existing PlayList",
             "Create A New"
     )
+
+    val POPUP_MENU_ITEMS_CHOOSE_PLAY_LIST_IF_EMPTY = arrayListOf(
+            "Create A New"
+    )
 }

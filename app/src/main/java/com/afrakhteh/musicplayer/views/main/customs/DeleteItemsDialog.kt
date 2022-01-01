@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.RemoveItemDialogBinding
-import com.afrakhteh.musicplayer.views.main.interfaces.OnDeleteItemSelectedListener
 
 class DeleteItemsDialog(
-       private val onDelete: OnDeleteItemSelectedListener
+        private val onDelete: () -> Unit
 ) : DialogFragment() {
 
     private lateinit var binding: RemoveItemDialogBinding
@@ -37,7 +36,7 @@ class DeleteItemsDialog(
         with(binding) {
             deleteDialogCancelTv.setOnClickListener { dialog?.dismiss() }
             deleteDialogDeleteTv.setOnClickListener {
-               onDelete.isItemDeleted()
+                onDelete.invoke()
                 dialog?.dismiss()
             }
         }
