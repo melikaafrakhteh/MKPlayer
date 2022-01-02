@@ -84,7 +84,7 @@ class MusicRepositoryImpl @Inject constructor(
     override suspend fun deleteItemFromList(path: String) {
         val file = File(path)
         if (file.exists()) {
-            file.delete()
+            file.absoluteFile.delete()
         }
     }
 

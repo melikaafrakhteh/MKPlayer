@@ -49,4 +49,9 @@ object Lists {
     val POPUP_MENU_ITEMS_CHOOSE_PLAY_LIST_IF_EMPTY = arrayListOf(
             "Create A New"
     )
+
+    val POPUP_MENU_ITEMS_LIKED_FRAGMENT = arrayListOf(
+            "Remove From Liked List",
+            "Delete"
+    )
 }

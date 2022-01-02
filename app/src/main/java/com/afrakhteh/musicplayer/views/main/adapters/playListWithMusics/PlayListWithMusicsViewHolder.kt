@@ -25,7 +25,7 @@ class PlayListWithMusicsViewHolder(
         onRemoveMusic: (Int) -> Unit
     ) {
         binding.apply {
-            musicItemRowImageMenuIv.setImageDrawable(null)
+            musicItemRowImageIv.setImageDrawable(null)
             musicItemRowNameTv.text = data.name
             musicItemRowSingerTv.text = data.artist
             musicItemRowLinear.setOnClickListener { onClick.invoke(absoluteAdapterPosition) }

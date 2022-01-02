@@ -1,5 +1,8 @@
 package com.afrakhteh.musicplayer.views.main.adapters.recently
 
+import android.content.Context
+import android.view.View
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.afrakhteh.musicplayer.R
 import com.afrakhteh.musicplayer.databinding.MusicItemRowBinding
@@ -11,17 +14,33 @@ import kotlinx.coroutines.*
 
 class RecentlyViewHolder(
         private val binding: MusicItemRowBinding,
-        private val repository: MusicRepository
+        private val repository: MusicRepository,
+        private val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private var artAlbumImage: Job? = null
 
-    fun bind(data: MusicEntity, click: (Int) -> Unit) {
+    fun bind(data: MusicEntity,
+             click: (Int) -> Unit,
+             onDeleteClick: (Int) -> Unit
+    ) {
         with(binding) {
             musicItemRowImageIv.setImageDrawable(null)
             musicItemRowSingerTv.text = data.artist
             musicItemRowNameTv.text = data.name
             musicItemRowLinear.setOnClickListener { click.invoke(absoluteAdapterPosition) }
+            musicItemRowImageMenuIv.setOnClickListener { deleteMusic(it, onDeleteClick) }
+        }
+    }
+
+    private fun deleteMusic(view: View, onDeleteClick: (Int) -> Unit) {
+        PopupMenu(context, view).run {
+            menuInflater.inflate(R.menu.remove_music_popup_menu, menu)
+            setOnMenuItemClickListener {
+                onDeleteClick.invoke(absoluteAdapterPosition)
+                true
+            }
+            show()
         }
     }
 

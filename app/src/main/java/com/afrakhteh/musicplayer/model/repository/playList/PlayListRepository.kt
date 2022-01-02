@@ -8,4 +8,5 @@ interface PlayListRepository {
     suspend fun deleteOnePlayList(id: Int)
     suspend fun getAllPlayLists(): List<PlayListEntity>
     suspend fun getPlayListWithMusics(playListId: Int): List<PlayListWithMusics>
+    suspend fun decreasePlayListSize(playListId: Int)
 }

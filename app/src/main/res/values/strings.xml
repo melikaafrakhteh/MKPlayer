@@ -10,7 +10,7 @@
 
     <string name="deny_message">This application requires access to your music list to work</string>
 
-    <string name="delete_item_message">Music Delete Successfully</string>
+    <string name="delete_item_message">Music Deleted Successfully</string>
     <string name="delete_dialog_content">Are you sure to Delete this?</string>
     <string name="delete_dialog_yes">Delete</string>
     <string name="delete_dialog_no">Cancel</string>
@@ -27,8 +27,10 @@
     <string name="new_playlist_hint">New PlayList</string>
     <string name="playlist_back_tv">showLists</string>
     <string name="remove_music_popup_menu">Remove From PlayList</string>
+    <string name="remove_music_Liked">Remove From Liked List</string>
     <string name="remove_successfully_toast">Music Removed From PlayList SuccessFully</string>
     <string name="no_playlist_toast">There are no PlayLists, Please create one</string>
     <string name="empty_playlist_name_msg">Please Enter A Valid Name For PlayList</string>
+    <string name="delete_music_menu">Delete Music</string>
 
 </resources>

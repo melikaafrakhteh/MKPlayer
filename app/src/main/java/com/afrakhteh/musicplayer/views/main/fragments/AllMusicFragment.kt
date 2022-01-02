@@ -92,6 +92,8 @@ class AllMusicFragment : Fragment() {
         binding.allFragmentRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = musicAdapter
+            setItemViewCacheSize(10)
+            isDrawingCacheEnabled = true
         }
     }
 
@@ -123,13 +125,11 @@ class AllMusicFragment : Fragment() {
 
         setUpPopUpMenu(menuListAdapter, view).apply {
             setOnItemClickListener { _, _, position, _ ->
-
                 if (viewModel.playListTitle.value.isNullOrEmpty()) {
                     showCreateNewPlayListDialog(musicPosition)
                     this.dismiss()
                     return@setOnItemClickListener
                 }
-
                 when (position) {
                     0 -> {
                         openChoosePlayLists(musicPosition, view)

@@ -29,6 +29,9 @@ interface PlayListDao {
     @Query("UPDATE PlayListEntity SET size = (size + 1) WHERE playListId = :playListId")
     suspend fun increasePlayListSize(playListId: Int)
 
+    @Query("UPDATE PlayListEntity SET size = (size - 1) WHERE playListId = :playListId And size > 0")
+    suspend fun decreasePlayListSize(playListId: Int)
+
     @Query("UPDATE PlayListEntity SET playListId = (playListId + 1) WHERE playListId = null")
     suspend fun findFirstPlayListId(): Int
 

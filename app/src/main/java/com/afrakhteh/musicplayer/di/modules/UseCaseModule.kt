@@ -51,9 +51,10 @@ class UseCaseModule {
     @UseCaseScope
     @Provides
     fun provideDeleteMusicFromPlayListUseCase(
-            repository: MusicRepository
+            repository: MusicRepository,
+            playListRepository: PlayListRepository
     ): DeleteMusicFromPlayListUseCase {
-        return DeleteMusicFromPlayListUseCase(repository)
+        return DeleteMusicFromPlayListUseCase(repository, playListRepository)
     }
 
     @UseCaseScope

@@ -51,6 +51,7 @@ class PlayListFragment : Fragment() {
         binding.playListFragmentRecycler.adapter = playListAdapter
         viewModel.state.observe(viewLifecycleOwner, ::renderPlayLists)
         viewModel.deletePlayList.observe(viewLifecycleOwner, ::deletePlayList)
+
     }
 
     private fun deletePlayList(isDeleted: SingleEvent<Boolean>?) {

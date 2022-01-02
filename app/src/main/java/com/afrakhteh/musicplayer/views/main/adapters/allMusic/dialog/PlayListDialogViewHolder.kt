@@ -14,7 +14,7 @@ class PlayListDialogViewHolder(
         binding.apply {
             playlistDialogItemRowTextView.text = data.title
             playlistDialogItemRowLinear.setOnClickListener {
-                onClick.invoke(data.id!!, musicPosition)
+                onClick.invoke(data.id, musicPosition)
             }
         }
     }

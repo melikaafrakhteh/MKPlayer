@@ -26,4 +26,8 @@ class PlayListRepositoryImpl @Inject constructor(
         return dao.getPlayListWithMusics(playListId)
     }
 
+    override suspend fun decreasePlayListSize(playListId: Int) {
+        dao.decreasePlayListSize(playListId)
+    }
+
 }

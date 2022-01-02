@@ -18,6 +18,7 @@ import com.afrakhteh.musicplayer.di.builders.ViewModelComponentBuilder
 import com.afrakhteh.musicplayer.model.entity.audio.AudioPrePareToPlay
 import com.afrakhteh.musicplayer.viewModel.RecentlyAddedViewModel
 import com.afrakhteh.musicplayer.views.main.adapters.recently.RecentlyAdapter
+import com.afrakhteh.musicplayer.views.main.customs.DeleteItemsDialog
 import com.afrakhteh.musicplayer.views.main.interfaces.PermissionController
 import com.afrakhteh.musicplayer.views.main.state.MusicState
 import com.afrakhteh.musicplayer.views.musicPlayer.PlayerActivity
@@ -49,8 +50,12 @@ class RecentlyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recentlyAdapter = RecentlyAdapter(::onItemClicked, viewModel.repository)
-        binding.recentlyFragmentRecycler.adapter = recentlyAdapter
+        recentlyAdapter = RecentlyAdapter(::onItemClicked, ::onDeleteMenuClick, viewModel.repository)
+        binding.recentlyFragmentRecycler.apply {
+            adapter = recentlyAdapter
+            setItemViewCacheSize(10)
+            isDrawingCacheEnabled = true
+        }
         viewModel.recentlyAddedState.observe(viewLifecycleOwner, ::onItemRecentlyAdded)
     }
 
@@ -92,6 +97,13 @@ class RecentlyFragment : Fragment() {
                     musicArtist = musicEntity.artist ?: ""
             )
         }
+    }
+
+    private fun onDeleteMenuClick(musicPosition: Int) {
+        DeleteItemsDialog {
+            viewModel.deleteMusic(recentlyAdapter.currentList[musicPosition])
+            Toast.makeText(requireContext(), R.string.delete_item_message, Toast.LENGTH_LONG).show()
+        }.show(requireActivity().supportFragmentManager, "delete")
     }
 
     @SuppressLint("SetTextI18n")

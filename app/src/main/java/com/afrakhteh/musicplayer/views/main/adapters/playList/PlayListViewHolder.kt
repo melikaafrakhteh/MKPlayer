@@ -25,7 +25,7 @@ class PlayListViewHolder(
             musicItemRowImageIv.setImageResource(R.drawable.emptypic)
             musicItemRowNameTv.text = data.title
             musicItemRowLinear.setOnClickListener { onclick.invoke(absoluteAdapterPosition) }
-            musicItemRowImageMenuIv.setOnClickListener { makePopUpMenu(it, absoluteAdapterPosition, onDelete) }
+            musicItemRowImageMenuIv.setOnClickListener { makePopUpMenu(it, data.id, onDelete) }
 
             //for play list it shows number of musics in play list instead of singer
                 val number = data.size

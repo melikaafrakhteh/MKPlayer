@@ -36,7 +36,7 @@ class PlayListMusicsFragment : Fragment() {
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPlayListMusicsBinding.inflate(
                 layoutInflater, container, false
         )
@@ -50,21 +50,33 @@ class PlayListMusicsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         position = arguments?.getInt(Strings.PLAY_LIST_POSITION_KEY)
         name = arguments?.getString(Strings.PLAY_LIST_NAME_KEY)
         viewModel.fetchMusicOfThisPlayList(requireNotNull(position))
         playListAdapter = PlayListWithMusicsAdapter(::onItemClick,
                 ::onRemoveItemClick, viewModel.repository
         )
-        binding.playListMusicRecycler.adapter = playListAdapter
+        binding.playListMusicRecycler.apply {
+            adapter = playListAdapter
+            setItemViewCacheSize(10)
+            isDrawingCacheEnabled = true
+        }
         binding.playListMusicTitleTv.text = name
         viewModel.allPlayListMusic.observe(viewLifecycleOwner, ::renderPlayerList)
     }
 
-    private fun onRemoveItemClick(musicPosition: Int) {
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchMusicOfThisPlayList(requireNotNull(position))
+    }
 
+    private fun onRemoveItemClick(musicPosition: Int) {
         DeleteItemsDialog {
-            viewModel.deleteOneMusicFromPlayList(playListAdapter.currentList[musicPosition].path)
+            viewModel.deleteOneMusicFromPlayList(
+                    playListAdapter.currentList[musicPosition],
+                    requireNotNull(position)
+            )
             Toast.makeText(context,
                     getString(R.string.remove_successfully_toast), Toast.LENGTH_LONG).show()
             viewModel.fetchMusicOfThisPlayList(requireNotNull(position))
@@ -98,4 +110,6 @@ class PlayListMusicsFragment : Fragment() {
             )
         }
     }
+
+
 }

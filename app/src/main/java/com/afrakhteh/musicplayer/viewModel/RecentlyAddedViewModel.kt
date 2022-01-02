@@ -3,6 +3,7 @@ package com.afrakhteh.musicplayer.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.afrakhteh.musicplayer.model.entity.audio.MusicEntity
 import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 import com.afrakhteh.musicplayer.util.SingleEvent
 import com.afrakhteh.musicplayer.views.main.state.MusicState
@@ -20,6 +21,7 @@ class RecentlyAddedViewModel @Inject constructor(
     val recentlyAddedState: LiveData<MusicState> get() = pRecentlyAddedState
 
     private var recentlyAddedJob: Job? = null
+    private var recentlyDeleteJob: Job? = null
 
     fun fetchRecentlyAddedMusic() {
         try {
@@ -36,8 +38,20 @@ class RecentlyAddedViewModel @Inject constructor(
         }
     }
 
+    fun deleteMusic(music: MusicEntity) {
+        recentlyDeleteJob = CoroutineScope(Dispatchers.Main).launch {
+            repository.deleteItemFromList(music.path)
+            val listAfterDeleteItem = pRecentlyAddedState.value?.musicItems as MutableList
+            listAfterDeleteItem.remove(music)
+            pRecentlyAddedState.postValue(
+                    pRecentlyAddedState.value?.copy(musicItems = listAfterDeleteItem)
+            )
+        }
+    }
+
     override fun onCleared() {
         recentlyAddedJob?.cancel()
+        recentlyDeleteJob?.cancel()
         super.onCleared()
     }
 }

@@ -10,16 +10,17 @@ import com.afrakhteh.musicplayer.model.repository.musics.MusicRepository
 
 class RecentlyAdapter(
         private val click: (Int) -> Unit,
+        private val deleteMusic: (Int) -> Unit,
         private val repository: MusicRepository
 ) : ListAdapter<MusicEntity, RecentlyViewHolder>(RecentlyDiffCallBack()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentlyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = MusicItemRowBinding.inflate(inflater, parent, false)
-        return RecentlyViewHolder(binding, repository)
+        return RecentlyViewHolder(binding, repository, parent.context)
     }
 
     override fun onBindViewHolder(holder: RecentlyViewHolder, position: Int) {
-        holder.bind(getItem(position), click)
+        holder.bind(getItem(position), click, deleteMusic)
     }
 
     override fun onViewAttachedToWindow(holder: RecentlyViewHolder) {
