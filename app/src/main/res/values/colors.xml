@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColor">@color/darkNavyBlue</color>
+    <color name="primaryColor">@color/backgroundDark</color>
     <color name="secondaryColor">@color/white</color>
     <color name="darkPrimaryColor">@color/nearBlack</color>
 
-    <color name="darkGray">#5C5B5B</color>
-    <color name="gray">#CDCACA</color>
-    <color name="lightGray">#ECECEC</color>
+    <color name="darkGray">#A7A79D</color>
+    <color name="gray">#DBD8CF</color>
+    <color name="lightGray">#F6F3EA</color>
 
-    <color name="darkNavyBlue">#14191F</color>
-    <color name="shadowNavyBlue">#252B30</color>
+    <color name="backgroundDark">#3A3B36</color>
+    <color name="shadowBackgroundDark">#2F2F2F</color>
 
     <color name="nearWhite">#FEFDFE</color>
     <color name="white">#FFFFFFFF</color>
@@ -24,7 +24,7 @@
     <color name="startShadow">#33000000</color>
     <color name="middleShadow">#00000000</color>
 
-    <color name="red">#B60102</color>
+    <color name="yellow">#E7A14C</color>
 
-    <color name="disableBlue">#191F26</color>
+    <color name="disableBlue">#4A4944</color>
 </resources>

@@ -38,7 +38,7 @@
             android:maxLines="1"
             android:padding="2dp"
             tools:text="spring"
-            android:textColor="@color/darkNavyBlue"
+            android:textColor="@color/primaryColor"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -65,6 +65,6 @@
         android:src="@drawable/ic_menu"
         android:background="?attr/selectableItemBackgroundBorderless"
         tools:ignore="ContentDescription"
-        app:tint="@color/darkNavyBlue" />
+        app:tint="@color/primaryColor" />
 
 </LinearLayout>

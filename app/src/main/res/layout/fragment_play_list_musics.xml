@@ -16,7 +16,7 @@
         android:paddingStart="2dp"
         android:fontFamily="@font/roboto_bold"
         tools:text="default"
-        android:textColor="@color/darkNavyBlue"
+        android:textColor="@color/primaryColor"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

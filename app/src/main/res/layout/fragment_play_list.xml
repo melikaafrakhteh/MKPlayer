@@ -15,7 +15,7 @@
         android:paddingStart="2dp"
         android:fontFamily="@font/roboto_bold"
         android:text="@string/playlist_title_tv"
-        android:textColor="@color/darkNavyBlue"
+        android:textColor="@color/primaryColor"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

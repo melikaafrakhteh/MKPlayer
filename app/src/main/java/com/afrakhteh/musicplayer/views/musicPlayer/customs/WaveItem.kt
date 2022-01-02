@@ -34,11 +34,11 @@ class WaveItem : View {
     }
     private val activeColor = Paint().apply {
         isAntiAlias = true
-        color = ContextCompat.getColor(context, R.color.red)
+        color = ContextCompat.getColor(context, R.color.yellow)
     }
     private val notActiveColor = Paint().apply {
         isAntiAlias = true
-        color = ContextCompat.getColor(context, R.color.shadowNavyBlue)
+        color = ContextCompat.getColor(context, R.color.shadowBackgroundDark)
     }
 
     var activePercents: Int = 0

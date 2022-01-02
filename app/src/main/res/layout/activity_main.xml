@@ -13,7 +13,7 @@
         android:id="@+id/homeAppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/darkNavyBlue"
+        android:background="@color/primaryColor"
         android:fitsSystemWindows="false"
         app:liftOnScroll="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
@@ -23,11 +23,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="false"
-            app:contentScrim="@color/darkNavyBlue"
+            app:contentScrim="@color/primaryColor"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:statusBarScrim="@color/darkNavyBlue">
+            app:statusBarScrim="@color/primaryColor">
 
             <LinearLayout
                 android:layout_width="match_parent"

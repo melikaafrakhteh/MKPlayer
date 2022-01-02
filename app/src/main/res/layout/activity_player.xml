@@ -26,6 +26,7 @@
                 android:id="@+id/playBackIv"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="24dp"
                 android:src="@drawable/ic_back"
                 tools:ignore="ContentDescription" />
