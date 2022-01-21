@@ -16,7 +16,7 @@ using Kotlin as a programming language.
     (reading the input audio file by Media Extractor,
     then decoding the encoded input audio by Media Codec) and returns the results to the main thread.
 
-For architecture, I use a clean architecture with MVVM, MVI, MVP, and repository pattern.
+For architecture, I use Clean architecture with MVVM, MVI, MVP, and repository pattern.
 
 ## The feature of this application:
  - attractive Ui
