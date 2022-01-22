@@ -4,10 +4,10 @@ using Kotlin as a programming language.
 
 ## Screen Shots
 
-![main page (music list)](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/allmusic.png)
-![main page (cover)](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/cover.png)
-![dialog (add new playlist)](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/dialog.png)
-![player](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/player.png)
+![main page (music list)](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/allmusic.png raw=true) |
+![main page (cover)](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/cover.png raw=true) |
+![dialog (add new playlist)](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/dialog.png raw=true) |
+![player](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/player.png raw=true)
 
 ## Technologies and Methodologies which used:
  - **ExoPlayer 2**: Plays audio files with custom playback controls.
