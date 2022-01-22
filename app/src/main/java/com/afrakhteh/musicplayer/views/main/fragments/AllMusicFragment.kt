@@ -8,7 +8,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.ListAdapter
+import android.widget.ListPopupWindow
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -92,8 +95,6 @@ class AllMusicFragment : Fragment() {
         binding.allFragmentRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = musicAdapter
-            setItemViewCacheSize(10)
-            isDrawingCacheEnabled = true
         }
     }
 
@@ -231,6 +232,7 @@ class AllMusicFragment : Fragment() {
         val number = state.musicItems.size
         binding.allFragmentNumberTv.text = "$number song" +
                 if (number == 0 || number == 1) "" else "s"
+        binding.allFragmentRecycler.setItemViewCacheSize(number)
 
         loadCoverImage(
                 if (state.musicItems.isEmpty()) null

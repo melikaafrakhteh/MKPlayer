@@ -8,6 +8,7 @@ import javax.inject.Provider
 
 @Suppress("UNCHECKED_CAST")
 @ViewModelScope
+@JvmSuppressWildcards
 class ViewModelProviderFactory @Inject constructor(
     private val viewModels: MutableMap<Class<out ViewModel>, Provider<ViewModel>>
 ) : ViewModelProvider.Factory {
