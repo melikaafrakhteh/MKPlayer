@@ -4,6 +4,10 @@ using Kotlin as a programming language.
 
 ## Screen Shots
 
+![main page (music list)] (https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/allmusic.png)
+![main page (cover)] (https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/cover.png)
+![dialog (add new playlist)] (https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/dialog.png)
+![player] (https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/player.png)
 
 ## Technologies and Methodologies which used:
  - **ExoPlayer 2**: Plays audio files with custom playback controls.
@@ -18,10 +22,10 @@ using Kotlin as a programming language.
 
 For architecture, I use Clean architecture with MVVM, MVI, MVP, and repository pattern.
 
-## The feature of this application:
+## The features of this application:
  - attractive Ui
  - Users can create playlists and add or remove music from them.
- - Users can add or remove music from  liked list.
+ - Users can add or remove music from liked list.
  - Users can see which music has been added to their phones in the last week.
 
 ## Supported android version:
