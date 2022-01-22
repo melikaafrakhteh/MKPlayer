@@ -3,11 +3,10 @@ A beautiful looking music player for android which has been implemented
 using Kotlin as a programming language.
 
 ## Screen Shots
-
-![main page (music list)](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/allmusic.png raw=true) |
-![main page (cover)](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/cover.png raw=true) |
-![dialog (add new playlist)](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/dialog.png raw=true) |
-![player](https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/player.png raw=true)
+<img src="https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/cover.png" width="200px"/></a>
+<img src="https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/allmusic.png" width="200px"/></a>
+<img src="https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/dialog.png" width="200px"/></a>
+<img src="https://github.com/melikaafrakhteh/Music-player/blob/main/screenShots/player.png" width="200px"/></a>
 
 ## Technologies and Methodologies which used:
  - **ExoPlayer 2**: Plays audio files with custom playback controls.
