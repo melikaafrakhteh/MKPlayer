@@ -1,4 +1,4 @@
-# Music Player
+# MKPlayer
 A beautiful looking music player for android which has been implemented 
 using Kotlin as a programming language.
 
